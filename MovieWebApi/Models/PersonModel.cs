@@ -1,4 +1,6 @@
-﻿using System;
+﻿using MovieDataLayer.Extentions;
+using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -12,8 +14,10 @@ namespace MovieDataLayer
         public string Name { get; set; }
         public int? BirthYear { get; set; }
         public int? DeathYear { get; set; }
-        //public ICollection<TitleModel> MostRelevantTitles { get; set; }
-        //public ICollection<ProfessionModel> PrimaryProfessions { get; set; }
+        public ICollection<Title> MostRelevantTitles { get; set; }
+        public ICollection<Profession> PrimaryProfessions { get; set; }
+        public IEnumerable<Title> Titles { get; set; }
+
 
 
     }

@@ -10,11 +10,9 @@ namespace MovieWebApi.Controllers
     [Route("api/persons")]
     public class PersonController : ControllerBase
     {
-        private readonly IMovieDataService<PersonModel> _dataService;
+        private readonly IMovieDataRepository<Person> _dataService;
 
-
-
-        public PersonController(IMovieDataService<PersonModel> dataService)
+        public PersonController(IMovieDataRepository<Person> dataService)
         {
             _dataService = dataService;
 

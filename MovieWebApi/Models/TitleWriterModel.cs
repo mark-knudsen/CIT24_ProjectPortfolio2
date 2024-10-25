@@ -1,6 +1,6 @@
-﻿namespace MovieDataLayer.Models
+﻿namespace MovieWebApi.Models
 {
-    public class ProfessionModel
+    public class TitleWriterModel
     {
         public string Id { get; set; }
         public string Name { get; set; }

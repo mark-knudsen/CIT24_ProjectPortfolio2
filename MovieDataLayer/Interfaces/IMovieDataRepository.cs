@@ -6,8 +6,10 @@ using System.Threading.Tasks;
 
 namespace MovieDataLayer.Interfaces
 {
-    public interface IMovieDataService<T>
+    public interface IMovieDataRepository<T>
     {
         IEnumerable<T> GetAll();
+        IEnumerable<T> Get(object id);
+
     }
 }

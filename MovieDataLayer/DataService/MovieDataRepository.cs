@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using MovieDataLayer.Extentions;
 using MovieDataLayer.Interfaces;
 using System;
 using System.Collections.Generic;
@@ -9,12 +10,12 @@ using System.Threading.Tasks;
 namespace MovieDataLayer.DataService
 {
 
-    public class MovieDataService<T> : IMovieDataService<T> where T : class
+    public class MovieDataRepository<T> : IMovieDataRepository<T> where T : Item
     {
-        private readonly MovieContext _context;
+        private readonly IMDBContext _context;
         private readonly DbSet<T> _dbSet;
 
-        public MovieDataService(MovieContext context)
+        public MovieDataRepository(IMDBContext context)
         {
             _context = context;
             _dbSet = _context.Set<T>();
@@ -22,7 +23,10 @@ namespace MovieDataLayer.DataService
         public IEnumerable<T> GetAll()
         {
             return _dbSet.Take(100).ToList(); //Temp, we should NOT get all
-
+        }
+        public IEnumerable<T> Get(object id)
+        {
+            return _dbSet.Where(x => x.GetId().Equals(id)).ToList();//Temp, we should NOT get all
         }
 
     }

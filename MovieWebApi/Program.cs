@@ -9,9 +9,10 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
 
-builder.Services.AddDbContext<MovieContext>();
+builder.Services.AddDbContext<IMDBContext>();
 
-builder.Services.AddScoped<IMovieDataService<PersonModel>, MovieDataService<PersonModel>>(); //Using AddScoped to ensure new instance of DataService is created for each HTTP request
+builder.Services.AddScoped<IMovieDataRepository<Person>, MovieDataRepository<Person>>(); //Using AddScoped to ensure new instance of DataService is created for each HTTP request
+builder.Services.AddScoped<IMovieDataRepository<Title>, MovieDataRepository<Title>>(); //Using AddScoped to ensure new instance of DataService is created for each HTTP request
 
 //builder.Services.AddScoped<MovieContext>();
 
