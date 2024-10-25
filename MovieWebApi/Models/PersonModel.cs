@@ -17,8 +17,5 @@ namespace MovieDataLayer
         public ICollection<Title> MostRelevantTitles { get; set; }
         public ICollection<Profession> PrimaryProfessions { get; set; }
         public IEnumerable<Title> Titles { get; set; }
-
-
-
     }
 }

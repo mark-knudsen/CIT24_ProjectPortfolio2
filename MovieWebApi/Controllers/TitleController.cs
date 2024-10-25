@@ -20,9 +20,17 @@ namespace MovieWebApi.Controllers
         [HttpGet("writers/{id}")]
         public IActionResult GetWriters(string id)
         {
-            var writers = _dataService.Get(id).Select(CreateWriterModel);
-            if (writers == null) return NotFound();
-            return Ok(writers);
+            //var writers = _dataService.Get(id).Select(CreateWriterModel);
+            //if (writers == null) return NotFound();
+            //return Ok(writers);
+            return Ok();
+        }
+
+             
+        [HttpGet]
+        public IActionResult GetAll()
+        {
+            return Ok(_dataService.GetAll());
         }
 
         // Helper methods

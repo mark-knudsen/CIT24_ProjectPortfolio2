@@ -12,8 +12,8 @@ namespace MovieDataLayer.Extentions
         {
             return this.MemberwiseClone();
         }
-        public abstract object GetId();
-        public abstract void SetId(object id);
+        public abstract int GetId();
+        public abstract void SetId(int id);
 
     }
 }

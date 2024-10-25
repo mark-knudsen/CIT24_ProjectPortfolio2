@@ -2,7 +2,7 @@
 
 namespace MovieDataLayer
 {
-    public class LocalizedTitle : Item
+    public class LocalizedTitle //: Item
     {
         // We do not use Ordering...
         public int Id { get; set; }
@@ -13,15 +13,15 @@ namespace MovieDataLayer
         public string Type { get; set; }
         public string Attribute { get; set; }
 
-        public override object GetId()
-        {
-            return Id;
-        }
+        //public override object GetId()
+        //{
+        //    return Id;
+        //}
 
-        public override void SetId(object id)
-        {
-            Id = (int)id;
-        }
+        //public override void SetId(object id)
+        //{
+        //    Id = (int)id;
+        //}
 
     }
 }

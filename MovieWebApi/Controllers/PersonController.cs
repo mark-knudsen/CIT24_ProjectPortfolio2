@@ -15,7 +15,6 @@ namespace MovieWebApi.Controllers
         public PersonController(IMovieDataRepository<Person> dataService)
         {
             _dataService = dataService;
-
         }
 
         [HttpGet]

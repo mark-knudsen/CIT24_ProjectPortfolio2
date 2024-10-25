@@ -15,19 +15,32 @@ namespace MovieDataLayer.DataService
         private readonly IMDBContext _context;
         private readonly DbSet<T> _dbSet;
 
-        public MovieDataRepository(IMDBContext context)
+        public MovieDataRepository()
         {
-            _context = context;
-            _dbSet = _context.Set<T>();
+            //_context = context;
+            //_dbSet = _context.Set<T>();
         }
-        public IEnumerable<T> GetAll()
+        public IList<T> GetAll()
         {
             return _dbSet.Take(100).ToList(); //Temp, we should NOT get all
         }
-        public IEnumerable<T> Get(object id)
+        public T Get(int id)
         {
-            return _dbSet.Where(x => x.GetId().Equals(id)).ToList();//Temp, we should NOT get all
+            IMDBContext db = new IMDBContext();
+            //  return _dbSet.Take(10).ToList();
+            //var d =_dbSet.Take(10).ToList()[0].GetId(); // this doesn't fail, yay
+            //return _dbSet.Take(100).ToList().FindAll(x => x.GetId() == id).ToList(); // this works
+
+            //var genre = dbContext.Genres.AsEnumerable().FirstOrDefault(g => g.GetId() == __id_0);
+            return _context.Set<T>().Where(x => x.GetId() == id).Single();
+            //return _dbSet.Where(x => x.GetId() == id).Single();
+
+            //return _dbSet.Where(x => x.GetId() == id).ToList();//Temp, we should NOT get all
         }
+
+
+
+
 
     }
 }
