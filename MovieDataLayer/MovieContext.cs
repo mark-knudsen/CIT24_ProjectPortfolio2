@@ -31,7 +31,9 @@ namespace MovieDataLayer
         {
             modelBuilder.Entity<PersonModel>().ToTable("person");
             modelBuilder.Entity<PersonModel>().HasKey(p => p.Id);
-            modelBuilder.Entity<PersonModel>().Property(p => p.Name).HasColumnName("person_id");
+
+            modelBuilder.Entity<PersonModel>().Property(p => p.Id).HasColumnName("person_id");
+            modelBuilder.Entity<PersonModel>().Property(p => p.Name).HasColumnName("primary_name");
             modelBuilder.Entity<PersonModel>().Property(p => p.BirthYear).HasColumnName("birth_year");
             modelBuilder.Entity<PersonModel>().Property(p => p.DeathYear).HasColumnName("death_year");
         }

@@ -11,17 +11,18 @@ namespace MovieDataLayer.DataService
 
     public class MovieDataService<T> : IMovieDataService<T> where T : class
     {
-        private readonly DbContext _context;
+        private readonly MovieContext _context;
         private readonly DbSet<T> _dbSet;
 
-        public MovieDataService(DbContext context)
+        public MovieDataService(MovieContext context)
         {
             _context = context;
             _dbSet = _context.Set<T>();
         }
         public IEnumerable<T> GetAll()
         {
-            return _dbSet.ToList();
+            return _dbSet.Take(100).ToList(); //Temp, we should NOT get all
+
         }
 
     }
