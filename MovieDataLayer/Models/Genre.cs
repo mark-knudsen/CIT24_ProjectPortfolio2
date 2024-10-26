@@ -6,15 +6,17 @@ namespace MovieDataLayer
     {
         public int Id { get; set; }
         public string Name { get; set; }
+        public ICollection<Genre> Genres { get; set; }
 
-        public override object GetId()
+
+        public override int GetId()
         {
             return Id;
         }
 
-        public override void SetId(object id)
+        public override void SetId(int id)
         {
-            Id = (int)id;
+            Id = id;
         }
     }
 }

@@ -2,12 +2,14 @@
 
 namespace MovieDataLayer
 {
-    public class Rating 
+    public class EpisodeFromSeries
     {
         public string TitleId { get; set; }
-        public int AverageRating { get; set; }
+        public string SeriesTitleId { get; set; }
+        public int SeasonNumber { get; set; }
+        public int EpisodeNumber { get; set; }
         public Title Title { get; set; } = null!; //required ref. navigation
-        public int VoteCount { get; set; }
+
 
     }
 }

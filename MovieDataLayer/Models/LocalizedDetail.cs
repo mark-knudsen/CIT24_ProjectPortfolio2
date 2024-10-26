@@ -1,25 +1,28 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Reflection.Metadata;
+using MovieDataLayer.Extentions;
 
 namespace MovieDataLayer
 {
-    public class LocalizedDetail
+    public class LocalizedDetail : Item
     {
-        public int Id { get; set; } //FK
-
-        public string Title { get; set; }
-
+        // We do not use Ordering...
+        public int Id { get; set; }
+        public string LocTitle { get; set; } 
         public string Language { get; set; }
-
         public string Region { get; set; }
-
         public string Type { get; set; }
-        public string Attribute { get; set; } //We prob dont need
+        public string Attribute { get; set; }
+        public Title Title { get; set; } = null!; //required ref. navigation
 
-        // Navigation property to LocalizedTitle
-        public LocalizedTitle LocalizedTitle { get; set; }
+        public override int GetId()
+        {
+            return Id;
+        }
+
+        public override void SetId(int id)
+        {
+            Id = id;
+        }
+
     }
 }

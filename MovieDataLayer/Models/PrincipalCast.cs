@@ -10,7 +10,8 @@ namespace MovieDataLayer
         public string CharacterName { get; set; }
         public string Category { get; set; }
         public string Job { get; set; }
-
+        public Title Title { get; set; } = null!; //required ref. navigation
+        public Person Person { get; set; } = null!; //required ref. navigation
 
 
     }

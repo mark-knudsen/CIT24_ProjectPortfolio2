@@ -2,12 +2,13 @@
 
 namespace MovieDataLayer
 {
-    public class Rating 
+    public class Director
     {
         public string TitleId { get; set; }
-        public int AverageRating { get; set; }
+        public string PersonId { get; set; }
         public Title Title { get; set; } = null!; //required ref. navigation
-        public int VoteCount { get; set; }
+        public Person Person { get; set; } = null!; //required ref. navigation
 
+     
     }
 }

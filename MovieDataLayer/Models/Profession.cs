@@ -4,10 +4,9 @@ namespace MovieDataLayer
 {
     public class Profession
     {
-        public string Id { get; set; }
+        public int Id { get; set; }
         public string Name { get; set; }
-        public IList<Person> PersonsList { get; set; }
-
-
+        PrimaryProfession PrimaryProfession { get; set; }
+       
     }
 }

@@ -14,11 +14,10 @@ namespace MovieDataLayer
         public string Name { get; set; }
         public int? BirthYear { get; set; }
         public int? DeathYear { get; set; }
-        public IList<MostRelevant> MostRelevantTitles { get; set; }
-        public IList<Profession> PrimaryProfessions { get; set; }
-        public IList<Title> TitlesList { get; set; }
-
-
+        public ICollection<MostRelevant> MostRelevantTitles { get; set; }
+        public ICollection<PrimaryProfession> PrimaryProfessions { get; set; }
+        public ICollection<Writer> Writers { get; set; }
+       
 
     }
 }
