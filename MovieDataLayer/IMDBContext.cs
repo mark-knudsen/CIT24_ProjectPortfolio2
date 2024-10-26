@@ -13,6 +13,14 @@ namespace MovieDataLayer
         //Nice to have, configure context in Program.cs instead: https://learn.microsoft.com/en-us/ef/core/dbcontext-configuration/
 
         public DbSet<Person> Persons { get; set; }
+        public DbSet<Title> Titles { get; set; }
+        public DbSet<PrincipalCast> PrincipalCasts { get; set; }
+        public DbSet<Genre> Genres { get; set; }
+        public DbSet<LocalizedTitle> LocalizedTitles { get; set; }
+        public DbSet<MostRelevant> MostRelevants { get; set; }
+        public DbSet<Profession> Professions { get; set; }
+        public DbSet<Rating> Ratings { get; set; }
+
 
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
@@ -28,6 +36,65 @@ namespace MovieDataLayer
             MapPerson(modelBuilder);
             MapTitle(modelBuilder);
             MapPrincipalCast(modelBuilder);
+            MapGenres(modelBuilder);
+            MapLocalizedTitles(modelBuilder);
+            MapLocalizedDetails(modelBuilder);
+            MapMostRelevant(modelBuilder);
+            MapRating(modelBuilder);
+
+        }
+
+        private void MapRating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<Rating>().ToTable("rating");
+            modelBuilder.Entity<Rating>().HasKey(r => r.Id);
+            modelBuilder.Entity<Rating>().Property(r => r.Id).HasColumnName("title_id");
+            modelBuilder.Entity<Rating>().Property(r => r.AverageRating).HasColumnName("average_rating");
+            modelBuilder.Entity<Rating>().Property(r => r.VoteCount).HasColumnName("vote_count");
+        }
+
+        private void MapMostRelevant(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<MostRelevant>().ToTable("most_relevant");
+            modelBuilder.Entity<MostRelevant>().HasKey(mr => new { mr.PersonId, mr.TitleId });
+            modelBuilder.Entity<MostRelevant>().Property(mr => mr.PersonId).HasColumnName("person_id");
+            modelBuilder.Entity<MostRelevant>().Property(mr => mr.TitleId).HasColumnName("title_id");
+        }
+
+        private static void MapLocalizedDetails(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<LocalizedDetail>().ToTable("localized_detail");
+            modelBuilder.Entity<LocalizedDetail>().HasKey(ld => ld.Id);
+            modelBuilder.Entity<LocalizedDetail>().Property(ld => ld.Id).HasColumnName("localized_id");
+            modelBuilder.Entity<LocalizedDetail>().Property(ld => ld.Title).HasColumnName("localized_title");
+            modelBuilder.Entity<LocalizedDetail>().Property(ld => ld.Language).HasColumnName("language");
+            modelBuilder.Entity<LocalizedDetail>().Property(ld => ld.Region).HasColumnName("region");
+            modelBuilder.Entity<LocalizedDetail>().Property(ld => ld.Type).HasColumnName("type");
+            modelBuilder.Entity<LocalizedDetail>().Property(ld => ld.Attribute).HasColumnName("attribute");
+        }
+
+        private static void MapLocalizedTitles(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<LocalizedTitle>().ToTable("localized_title");
+
+            modelBuilder.Entity<LocalizedTitle>().HasKey(lt => lt.Id);
+
+            modelBuilder.Entity<LocalizedTitle>().Property(lt => lt.Id).HasColumnName("localized_id");
+
+            modelBuilder.Entity<LocalizedTitle>().Property(lt => lt.TitleId).HasColumnName("title_id");
+
+
+
+
+        }
+
+        private static void MapGenres(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<Genre>().ToTable("genre");
+            modelBuilder.Entity<Genre>().HasKey(p => p.Id);
+
+            modelBuilder.Entity<Genre>().Property(p => p.Id).HasColumnName("genre_id");
+            modelBuilder.Entity<Genre>().Property(p => p.Name).HasColumnName("genre");
         }
 
         private static void MapPerson(ModelBuilder modelBuilder)
@@ -40,8 +107,9 @@ namespace MovieDataLayer
             modelBuilder.Entity<Person>().Property(p => p.BirthYear).HasColumnName("birth_year");
             modelBuilder.Entity<Person>().Property(p => p.DeathYear).HasColumnName("death_year");
             //modelBuilder.Entity<Person>().Navigation(p => p.MostRelevantTitles).AutoInclude();
-            modelBuilder.Entity<Person>().HasMany(t => t.Titles).WithMany(c => c.Persons);
-            modelBuilder.Entity<Person>().HasMany(t => t.PrimaryProfessions).WithOne(t => t.Person);
+
+            //modelBuilder.Entity<Person>().HasMany(t => t.Titles).WithMany(c => c.Persons);
+            //modelBuilder.Entity<Person>().HasMany(t => t.PrimaryProfessions).WithOne(t => t.Person);
 
         }
 
@@ -59,6 +127,15 @@ namespace MovieDataLayer
             modelBuilder.Entity<Title>().Property(t => t.Runtime).HasColumnName("runtime");
             modelBuilder.Entity<Title>().Property(t => t.IsAdult).HasColumnName("isadult");
 
+            modelBuilder.Entity<Title>()
+     .HasOne(t => t.rating) // Navigation property in Title
+     .WithOne(r => r.title) // Navigation property in Rating
+     .HasForeignKey<Rating>(r => r.Id); // Foreign key in Rating
+
+            modelBuilder.Entity<Title>()
+            .HasMany(t => t.WritersList)
+            .WithMany(p => p.TitlesList)
+            .UsingEntity(j => j.ToTable("writers"));
 
             // Configure Many-to-Many relationship
 

@@ -11,8 +11,8 @@ builder.Services.AddControllers();
 
 builder.Services.AddDbContext<IMDBContext>();
 
-builder.Services.AddScoped<IMovieDataRepository<Person>, MovieDataRepository<Person>>(); //Using AddScoped to ensure new instance of DataService is created for each HTTP request
-builder.Services.AddScoped<IMovieDataRepository<Title>, MovieDataRepository<Title>>(); //Using AddScoped to ensure new instance of DataService is created for each HTTP request
+builder.Services.AddScoped<IMovieDataRepository<Person, string>, MovieDataRepository<Person, string>>(); //Using AddScoped to ensure new instance of DataService is created for each HTTP request
+builder.Services.AddScoped<IMovieDataRepository<Title, string>, MovieDataRepository<Title, string>>(); //Using AddScoped to ensure new instance of DataService is created for each HTTP request
 
 //builder.Services.AddScoped<MovieContext>();
 

@@ -10,9 +10,9 @@ namespace MovieWebApi.Controllers
     [Route("api/titles")]
     public class TitleController : ControllerBase
     {
-        private readonly IMovieDataRepository<Title> _dataService;
+        private readonly IMovieDataRepository<Title, string> _dataService;
 
-        public TitleController(IMovieDataRepository<Title> dataService)
+        public TitleController(IMovieDataRepository<Title, string> dataService)
         {
             _dataService = dataService;
         }
@@ -20,8 +20,17 @@ namespace MovieWebApi.Controllers
         [HttpGet("writers/{id}")]
         public IActionResult GetWriters(string id)
         {
-            var writers = _dataService.Get(id).Select(CreateWriterModel);
-            if (writers == null) return NotFound();
+            //var writers = _dataService.Get(id).Select(CreateWriterModel);
+            //var writers = _dataService.GetTitleWithWriters(id).Select(CreateWriterModel);
+
+            //if (writers == null) return NotFound();
+
+            var titles = _dataService.Get(id);
+            if (titles == null) return NotFound();
+
+            var writers = titles.Select(CreateWriterModel).ToList();
+
+            if (!writers.Any()) return NotFound();
             return Ok(writers);
         }
 

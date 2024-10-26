@@ -2,26 +2,20 @@
 
 namespace MovieDataLayer
 {
-    public class LocalizedTitle : Item
+    public class LocalizedTitle
     {
         // We do not use Ordering...
-        public int Id { get; set; }
-        public string TitleId { get; set; }
-        public string Title { get; set; }
-        public string Language { get; set; }
-        public string Region { get; set; }
-        public string Type { get; set; }
-        public string Attribute { get; set; }
+        public int Id { get; set; } //PK
+        public string TitleId { get; set; } //FK to title
+        public string LocalizedTitleName { get; set; }
+        //public string Language { get; set; }
+        //public string Region { get; set; }
+        //public string Type { get; set; }
+        //public string Attribute { get; set; }
 
-        public override object GetId()
-        {
-            return Id;
-        }
+        public Title title { get; set; } //Navigation property to title
 
-        public override void SetId(object id)
-        {
-            Id = (int)id;
-        }
+
 
     }
 }

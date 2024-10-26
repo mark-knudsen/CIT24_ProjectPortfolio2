@@ -6,10 +6,11 @@ using System.Threading.Tasks;
 
 namespace MovieDataLayer.Interfaces
 {
-    public interface IMovieDataRepository<T>
+    public interface IMovieDataRepository<T, K> where T : BaseItem<K>
     {
-        IEnumerable<T> GetAll();
-        IEnumerable<T> Get(object id);
+        IList<T> GetAll();
+        IList<T> Get(object id);
+        //T GetTitleWithWriters(string id);
 
     }
 }

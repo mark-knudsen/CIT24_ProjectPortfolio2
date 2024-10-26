@@ -8,25 +8,19 @@ using System.Threading.Tasks;
 
 namespace MovieDataLayer
 {
-    public class Person : Item
+    public class Person : BaseItem<string>
     {
-        public string Id { get; set; }
+        public override string Id { get; set; }
         public string Name { get; set; }
         public int? BirthYear { get; set; }
         public int? DeathYear { get; set; }
-        //public ICollection<Title> MostRelevantTitles { get; set; }
-        public ICollection<Profession> PrimaryProfessions { get; set; }
-        public IEnumerable<Title> Titles { get; set; }
+        public IList<MostRelevant> MostRelevantTitles { get; set; }
+        public IList<Profession> PrimaryProfessions { get; set; }
+        public IList<Title> TitlesList { get; set; }
 
-        public override object GetId()
-        {
-            return Id;
-        }
+        public override string GetId() => Id;
+        public override void SetId(string id) => Id = id;
 
-        public override void SetId(object id)
-        {
-            Id = (string)id;
-        }
 
     }
 }
