@@ -16,12 +16,12 @@ namespace MovieDataLayer
         public string Plot { get; set; }
         public float AverageRating { get; set; }
         public int VoteCount { get; set; }
-        public IEnumerable<Genre> GenresList { get; set; }
-        public IEnumerable<LocalizedTitle> LocalizedTitlesList { get; set; }
-        public IEnumerable<PrincipalCast> PrincipalCastList { get; set; }
-        public IEnumerable<string> WritersList { get; set; }
-        public IEnumerable<string> DirectorsList { get; set; }
-        public IEnumerable<Person> Persons { get; set; }
+        public ICollection<Genre> GenresList { get; set; }
+        public ICollection<LocalizedTitle> LocalizedTitlesList { get; set; }
+        public ICollection<PrincipalCast> PrincipalCastList { get; set; }
+        public ICollection<string> WritersList { get; set; }
+        public ICollection<string> DirectorsList { get; set; }
+        public ICollection<Person> Persons { get; set; }
 
 
     }

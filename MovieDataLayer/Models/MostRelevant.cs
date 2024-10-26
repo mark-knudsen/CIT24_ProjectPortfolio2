@@ -10,7 +10,8 @@ namespace MovieDataLayer
     {
         public string PersonId { get; set; }
         public string TitleId { get; set; }
-        public Person person { get; set; }
-        public Title title { get; set; }
+        public Title Title { get; set; } = null!; //required ref. navigation
+        public Person Person { get; set; } = null!; //required ref. navigation
+
     }
 }

@@ -3,11 +3,10 @@ using MovieDataLayer.Extentions;
 
 namespace MovieDataLayer
 {
-    public class LocalizedTitle : Item
+    public class LocalizedDetail : Item
     {
         // We do not use Ordering...
         public int Id { get; set; }
-        public string TitleId { get; set; } //required foreign key property
         public string LocTitle { get; set; } 
         public string Language { get; set; }
         public string Region { get; set; }

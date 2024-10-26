@@ -2,7 +2,7 @@
 
 namespace MovieDataLayer
 {
-    public class Title : Item
+    public class Title 
     {
         public string Id { get; set; }
         public string TitleType { get; set; }
@@ -16,21 +16,13 @@ namespace MovieDataLayer
         public string Plot { get; set; }
         public float AverageRating { get; set; }
         public int VoteCount { get; set; }
-        public IEnumerable<Genre> GenresList { get; set; }
-        public IEnumerable<LocalizedTitle> LocalizedTitlesList { get; set; }
-        public IEnumerable<PrincipalCast> PrincipalCastList { get; set; }
-        public IEnumerable<string> WritersList { get; set; }
-        public IEnumerable<string> DirectorsList { get; set; }
-        public IEnumerable<Person> Persons { get; set; }
+        public ICollection<Genre> GenresList { get; set; }
+        public Rating Ratings { get; set; }
+        public ICollection<LocalizedTitle> LocalizedTitlesList { get; } = new List<LocalizedTitle>();
+        public ICollection<PrincipalCast> PrincipalCastList { get; set; }
 
-        public override object GetId()
-        {
-            return Id;
-        }
+        public ICollection<Writer> WritersList { get; set; }
 
-        public override void SetId(object id)
-        {
-            Id = (string)id;
-        }
+
     }
 }

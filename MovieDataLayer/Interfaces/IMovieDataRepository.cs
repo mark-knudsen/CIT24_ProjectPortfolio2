@@ -8,8 +8,7 @@ namespace MovieDataLayer.Interfaces
 {
     public interface IMovieDataRepository<T>
     {
-        IEnumerable<T> GetAll();
-        IEnumerable<T> Get(object id);
-
+        IList<T> GetAll();
+        T Get(int id);
     }
 }
