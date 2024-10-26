@@ -10,37 +10,36 @@ using System.Threading.Tasks;
 namespace MovieDataLayer.DataService
 {
 
-    public class MovieDataRepository<T> : IMovieDataRepository<T> where T : Item
+    public class MovieDataRepository<T, U> : IMovieDataRepository<T, U> where T : Item<U>
     {
         private readonly IMDBContext _context;
         private readonly DbSet<T> _dbSet;
 
-        public MovieDataRepository()
+        public MovieDataRepository(IMDBContext context)
         {
-            //_context = context;
-            //_dbSet = _context.Set<T>();
+            _context = context;
+            _dbSet = _context.Set<T>();
         }
         public IList<T> GetAll()
         {
             return _dbSet.Take(100).ToList(); //Temp, we should NOT get all
         }
-        public T Get(int id)
+        public IList<T> GetAll(object id)
         {
-            IMDBContext db = new IMDBContext();
-            //  return _dbSet.Take(10).ToList();
-            //var d =_dbSet.Take(10).ToList()[0].GetId(); // this doesn't fail, yay
-            //return _dbSet.Take(100).ToList().FindAll(x => x.GetId() == id).ToList(); // this works
-
-            //var genre = dbContext.Genres.AsEnumerable().FirstOrDefault(g => g.GetId() == __id_0);
-            return _context.Set<T>().Where(x => x.GetId() == id).Single();
-            //return _dbSet.Where(x => x.GetId() == id).Single();
-
-            //return _dbSet.Where(x => x.GetId() == id).ToList();//Temp, we should NOT get all
+            switch (id)
+            {
+                case int:
+                    return _context.Set<T>().Where(x => Convert.ToInt32(x.Id) == (int)id).ToList();
+                case string:
+                    return _context.Set<T>().Where(x => x.Id.ToString() == (string)id).ToList();
+                default:
+                    return _context.Set<T>().Where(x => Convert.ToInt32(x.Id) == (int)id).ToList();
+            }
         }
 
-
-
-
-
+        public T Get(object id)
+        {
+            return _dbSet.Find(id);
+        }
     }
 }

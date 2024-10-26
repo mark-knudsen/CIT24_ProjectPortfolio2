@@ -1,26 +1,55 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Mapster;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using MovieDataLayer;
 using MovieDataLayer.DataService;
 using MovieDataLayer.Interfaces;
 
-namespace MovieWebApi.Controllers
+namespace MovieWebApi.Controllers;
+
+[ApiController]
+[Route("api/persons")]
+public class PersonController : ControllerBase
 {
-    [ApiController]
-    [Route("api/persons")]
-    public class PersonController : ControllerBase
+    private readonly IMovieDataRepository<Person, string> _dataService;
+
+    public PersonController(IMovieDataRepository<Person, string> dataService)
     {
-        private readonly IMovieDataRepository<Person> _dataService;
+        _dataService = dataService;
+    }
 
-        public PersonController(IMovieDataRepository<Person> dataService)
-        {
-            _dataService = dataService;
-        }
+    [HttpGet]
+    public IActionResult GetAll()
+    {
+        return Ok(_dataService.GetAll());
+    }
 
-        [HttpGet]
-        public IActionResult GetAll()
-        {
-            return Ok(_dataService.GetAll());
-        }
+    [HttpGet("{id}")]
+    public IActionResult GetAll(string id)
+    {
+        return Ok(_dataService.GetAll(id));
+    }
+
+
+    //[HttpGet("{id}")]
+    //public IActionResult Get(string id)
+    //{
+    //    var person = _dataService.Get(id);
+
+    //    if (person != null)
+    //    {
+    //        var personModel = CreatePersonModel(person);
+    //        return Ok(personModel);
+    //    }
+    //    return NotFound();
+    //}
+
+    private PersonModel? CreatePersonModel(Person? title)
+    {
+        if (title == null) return null;
+
+        var personModel = title.Adapt<PersonModel>();
+        return personModel;
     }
 }
+

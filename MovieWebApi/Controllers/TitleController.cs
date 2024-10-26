@@ -10,9 +10,9 @@ namespace MovieWebApi.Controllers
     [Route("api/titles")]
     public class TitleController : ControllerBase
     {
-        private readonly IMovieDataRepository<Title> _dataService;
+        private readonly IMovieDataRepository<Title, string> _dataService;
 
-        public TitleController(IMovieDataRepository<Title> dataService)
+        public TitleController(IMovieDataRepository<Title, string> dataService)
         {
             _dataService = dataService;
         }
@@ -26,7 +26,20 @@ namespace MovieWebApi.Controllers
             return Ok();
         }
 
-             
+        [HttpGet("{id}")]
+        public IActionResult Get(string id)
+        {
+            var title = _dataService.Get(id);
+
+            if (title != null)
+            {
+                var titleModel = CreateTitleModel(title);
+                return Ok(titleModel);
+            }
+            return NotFound();
+        }
+
+
         [HttpGet]
         public IActionResult GetAll()
         {
@@ -39,6 +52,14 @@ namespace MovieWebApi.Controllers
             if (title == null) return null;
 
             var personModel = title.Adapt<PersonModel>(); // funky name...
+            return personModel;
+        }
+
+        private TitleModel? CreateTitleModel(Title? title)
+        {
+            if (title == null) return null;
+
+            var personModel = title.Adapt<TitleModel>(); // funky name...
             return personModel;
         }
 

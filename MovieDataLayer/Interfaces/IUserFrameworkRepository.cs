@@ -5,11 +5,10 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace MovieDataLayer.Interfaces;
-public interface IMovieDataRepository<T, U>
+public interface IUserFrameworkRepository<T>
 {
     IList<T> GetAll();
     T Get(object id);
     IList<T> GetAll(object id);
-
 }
 
