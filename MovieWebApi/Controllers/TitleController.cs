@@ -4,6 +4,7 @@ using MovieDataLayer.Interfaces;
 using MovieDataLayer;
 using Mapster;
 using MovieDataLayer.DataService;
+using MovieWebApi.Models;
 
 namespace MovieWebApi.Controllers
 {
@@ -26,12 +27,12 @@ namespace MovieWebApi.Controllers
 
             //if (writers == null) return NotFound();
 
-            var writers = _titleRepository.GetWritersByMovieId(id);
+            var writers = _titleRepository.GetWritersByMovieId(id).Select(CreateWriterModel);
             if (writers == null || !writers.Any())
                 return NotFound();
 
-            var writerModels = writers.Select(CreateWriterModel).ToList();
-            return Ok(writerModels);
+            //var writerModels = writers.Select(CreateWriterModel).ToList();
+            return Ok(writers);
         }
 
         [HttpGet("{id}")]
@@ -40,7 +41,6 @@ namespace MovieWebApi.Controllers
             //var title = _dataService.Get(id).FirstOrDefault();
             var title = _titleRepository.GetAllTitleButWithLimit(10).ToList();
 
-            var test = _titleRepository.ge
             if (title == null) return NotFound();
 
             var titleModel = title.Adapt<TitleModel>();
@@ -48,11 +48,11 @@ namespace MovieWebApi.Controllers
         }
 
         // Helper methods
-        private PersonModel? CreateWriterModel(Person? title)
+        private TitleWriterModel? CreateWriterModel(Person? title)
         {
             if (title == null) return null;
 
-            var personModel = title.Adapt<PersonModel>(); // funky name...
+            var personModel = title.Adapt<TitleWriterModel>(); // funky name...
             return personModel;
         }
 

@@ -15,9 +15,8 @@ namespace MovieDataLayer.DataService
         public IList<Person> GetWritersByMovieId(string id)
         {
 
-            var title = _dbSet.Include(t => t.WritersList).FirstOrDefault(t => t.Id == id);
-            return title.WritersList.ToList();
-
+            var title = _dbSet.Where(t => t.Id == id).Include(t => t.WritersList).ThenInclude(w => w.Person).SelectMany(t => t.WritersList.Select(w => w.Person)).ToList();
+            return title;
 
         }
 
