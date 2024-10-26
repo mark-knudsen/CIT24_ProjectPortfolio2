@@ -8,9 +8,9 @@ using System.Threading.Tasks;
 
 namespace MovieDataLayer
 {
-    public class Person : BaseItem<string>
+    public class Person
     {
-        public override string Id { get; set; }
+        public string Id { get; set; }
         public string Name { get; set; }
         public int? BirthYear { get; set; }
         public int? DeathYear { get; set; }
@@ -18,8 +18,6 @@ namespace MovieDataLayer
         public IList<Profession> PrimaryProfessions { get; set; }
         public IList<Title> TitlesList { get; set; }
 
-        public override string GetId() => Id;
-        public override void SetId(string id) => Id = id;
 
 
     }

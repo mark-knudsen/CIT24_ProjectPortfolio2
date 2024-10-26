@@ -132,10 +132,31 @@ namespace MovieDataLayer
      .WithOne(r => r.title) // Navigation property in Rating
      .HasForeignKey<Rating>(r => r.Id); // Foreign key in Rating
 
+            //modelBuilder.Entity<Title>()
+            //.HasMany(t => t.WritersList)
+            //.WithMany(p => p.TitlesList)
+            //.UsingEntity(j => j.ToTable("writer"));
+
             modelBuilder.Entity<Title>()
-            .HasMany(t => t.WritersList)
-            .WithMany(p => p.TitlesList)
-            .UsingEntity(j => j.ToTable("writers"));
+       .HasMany(t => t.WritersList)
+       .WithMany(p => p.TitlesList)
+       .UsingEntity<Dictionary<string, object>>(
+           "WriterTitle",
+           j => j
+               .HasOne<Person>()
+               .WithMany()
+               .HasForeignKey("person_id")
+               .OnDelete(DeleteBehavior.Cascade),
+           j => j
+               .HasOne<Title>()
+               .WithMany()
+               .HasForeignKey("title_id")
+               .OnDelete(DeleteBehavior.Cascade),
+           j =>
+           {
+               j.ToTable("writer");
+               j.HasKey("person_id", "title_id");
+           });
 
             // Configure Many-to-Many relationship
 

@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using MovieDataLayer.Interfaces;
 using MovieDataLayer;
 using Mapster;
+using MovieDataLayer.DataService;
 
 namespace MovieWebApi.Controllers
 {
@@ -10,11 +11,11 @@ namespace MovieWebApi.Controllers
     [Route("api/titles")]
     public class TitleController : ControllerBase
     {
-        private readonly IMovieDataRepository<Title, string> _dataService;
+        private readonly TitleRepository _titleRepository;
 
-        public TitleController(IMovieDataRepository<Title, string> dataService)
+        public TitleController(TitleRepository titleRepository)
         {
-            _dataService = dataService;
+            _titleRepository = titleRepository;
         }
 
         [HttpGet("writers/{id}")]
@@ -25,17 +26,29 @@ namespace MovieWebApi.Controllers
 
             //if (writers == null) return NotFound();
 
-            var titles = _dataService.Get(id);
-            if (titles == null) return NotFound();
+            var writers = _titleRepository.GetWritersByMovieId(id);
+            if (writers == null || !writers.Any())
+                return NotFound();
 
-            var writers = titles.Select(CreateWriterModel).ToList();
+            var writerModels = writers.Select(CreateWriterModel).ToList();
+            return Ok(writerModels);
+        }
 
-            if (!writers.Any()) return NotFound();
-            return Ok(writers);
+        [HttpGet("{id}")]
+        public IActionResult GetTitle(string id)
+        {
+            //var title = _dataService.Get(id).FirstOrDefault();
+            var title = _titleRepository.GetAllTitleButWithLimit(10).ToList();
+
+            var test = _titleRepository.ge
+            if (title == null) return NotFound();
+
+            var titleModel = title.Adapt<TitleModel>();
+            return Ok(titleModel);
         }
 
         // Helper methods
-        private PersonModel? CreateWriterModel(Title? title)
+        private PersonModel? CreateWriterModel(Person? title)
         {
             if (title == null) return null;
 
