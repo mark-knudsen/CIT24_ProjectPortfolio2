@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
@@ -14,13 +15,19 @@ namespace MovieDataLayer
 
         public DbSet<Person> Persons { get; set; }
         public DbSet<Title> Titles { get; set; }
-        public DbSet<PrincipalCast> PrincipalCasts { get; set; }
-        public DbSet<Genre> Genres { get; set; }
-        public DbSet<LocalizedTitle> LocalizedTitles { get; set; }
         public DbSet<MostRelevant> MostRelevants { get; set; }
         public DbSet<Profession> Professions { get; set; }
+        public DbSet<LocalizedTitle> LocalizedTitles { get; set; }
+        public DbSet<PrincipalCast> PrincipalCasts { get; set; }
+        public DbSet<Genre> Genres { get; set; }
+        public DbSet<LocalizedDetail> LocalizedDetails { get; set; }
+        public DbSet<PrimaryProfession> PrimaryProfessions { get; set; }
+        public DbSet<Director> Directors { get; set; }
+        public DbSet<EpisodeFromSeries> EpisodeFromSeries { get; set; }
+        public DbSet<Plot> Plots { get; set; }
+        public DbSet<Poster> Posters { get; set; }
         public DbSet<Rating> Ratings { get; set; }
-
+        public DbSet<Writer> Writers { get; set; }
 
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
@@ -36,80 +43,36 @@ namespace MovieDataLayer
             MapPerson(modelBuilder);
             MapTitle(modelBuilder);
             MapPrincipalCast(modelBuilder);
-            MapGenres(modelBuilder);
-            MapLocalizedTitles(modelBuilder);
-            MapLocalizedDetails(modelBuilder);
+            MapProfession(modelBuilder);
             MapMostRelevant(modelBuilder);
+            MapGenre(modelBuilder);
+            MapLocalizedTitle(modelBuilder);
+            MapLocalizedDetail(modelBuilder);
+            MapPrimaryProfession(modelBuilder);
+            MapDirector(modelBuilder);
+            MapEpisodeFromSeries(modelBuilder);
+            MapPlot(modelBuilder);
+            MapPoster(modelBuilder);
             MapRating(modelBuilder);
+            MapWriter(modelBuilder);
+            MapTitleGenre(modelBuilder);
 
-        }
-
-        private void MapRating(ModelBuilder modelBuilder)
-        {
-            modelBuilder.Entity<Rating>().ToTable("rating");
-            modelBuilder.Entity<Rating>().HasKey(r => r.Id);
-            modelBuilder.Entity<Rating>().Property(r => r.Id).HasColumnName("title_id");
-            modelBuilder.Entity<Rating>().Property(r => r.AverageRating).HasColumnName("average_rating");
-            modelBuilder.Entity<Rating>().Property(r => r.VoteCount).HasColumnName("vote_count");
-        }
-
-        private void MapMostRelevant(ModelBuilder modelBuilder)
-        {
-            modelBuilder.Entity<MostRelevant>().ToTable("most_relevant");
-            modelBuilder.Entity<MostRelevant>().HasKey(mr => new { mr.PersonId, mr.TitleId });
-            modelBuilder.Entity<MostRelevant>().Property(mr => mr.PersonId).HasColumnName("person_id");
-            modelBuilder.Entity<MostRelevant>().Property(mr => mr.TitleId).HasColumnName("title_id");
-        }
-
-        private static void MapLocalizedDetails(ModelBuilder modelBuilder)
-        {
-            modelBuilder.Entity<LocalizedDetail>().ToTable("localized_detail");
-            modelBuilder.Entity<LocalizedDetail>().HasKey(ld => ld.Id);
-            modelBuilder.Entity<LocalizedDetail>().Property(ld => ld.Id).HasColumnName("localized_id");
-            modelBuilder.Entity<LocalizedDetail>().Property(ld => ld.Title).HasColumnName("localized_title");
-            modelBuilder.Entity<LocalizedDetail>().Property(ld => ld.Language).HasColumnName("language");
-            modelBuilder.Entity<LocalizedDetail>().Property(ld => ld.Region).HasColumnName("region");
-            modelBuilder.Entity<LocalizedDetail>().Property(ld => ld.Type).HasColumnName("type");
-            modelBuilder.Entity<LocalizedDetail>().Property(ld => ld.Attribute).HasColumnName("attribute");
-        }
-
-        private static void MapLocalizedTitles(ModelBuilder modelBuilder)
-        {
-            modelBuilder.Entity<LocalizedTitle>().ToTable("localized_title");
-
-            modelBuilder.Entity<LocalizedTitle>().HasKey(lt => lt.Id);
-
-            modelBuilder.Entity<LocalizedTitle>().Property(lt => lt.Id).HasColumnName("localized_id");
-
-            modelBuilder.Entity<LocalizedTitle>().Property(lt => lt.TitleId).HasColumnName("title_id");
-
-
-
-
-        }
-
-        private static void MapGenres(ModelBuilder modelBuilder)
-        {
-            modelBuilder.Entity<Genre>().ToTable("genre");
-            modelBuilder.Entity<Genre>().HasKey(p => p.Id);
-
-            modelBuilder.Entity<Genre>().Property(p => p.Id).HasColumnName("genre_id");
-            modelBuilder.Entity<Genre>().Property(p => p.Name).HasColumnName("genre");
         }
 
         private static void MapPerson(ModelBuilder modelBuilder)
         {
+
             modelBuilder.Entity<Person>().ToTable("person");
             modelBuilder.Entity<Person>().HasKey(p => p.Id);
 
+            //columns
             modelBuilder.Entity<Person>().Property(p => p.Id).HasColumnName("person_id");
             modelBuilder.Entity<Person>().Property(p => p.Name).HasColumnName("primary_name");
             modelBuilder.Entity<Person>().Property(p => p.BirthYear).HasColumnName("birth_year");
             modelBuilder.Entity<Person>().Property(p => p.DeathYear).HasColumnName("death_year");
             //modelBuilder.Entity<Person>().Navigation(p => p.MostRelevantTitles).AutoInclude();
+            ////modelBuilder.Entity<Person>().HasMany(t => t.Titles).WithMany(c => c.Persons);
 
-            //modelBuilder.Entity<Person>().HasMany(t => t.Titles).WithMany(c => c.Persons);
-            //modelBuilder.Entity<Person>().HasMany(t => t.PrimaryProfessions).WithOne(t => t.Person);
 
         }
 
@@ -118,6 +81,7 @@ namespace MovieDataLayer
             modelBuilder.Entity<Title>().ToTable("title");
             modelBuilder.Entity<Title>().HasKey(t => t.Id);
 
+            //columns
             modelBuilder.Entity<Title>().Property(t => t.Id).HasColumnName("title_id");
             modelBuilder.Entity<Title>().Property(t => t.TitleType).HasColumnName("title_type");
             modelBuilder.Entity<Title>().Property(t => t.PrimaryTitle).HasColumnName("primary_title");
@@ -127,36 +91,6 @@ namespace MovieDataLayer
             modelBuilder.Entity<Title>().Property(t => t.Runtime).HasColumnName("runtime");
             modelBuilder.Entity<Title>().Property(t => t.IsAdult).HasColumnName("isadult");
 
-            modelBuilder.Entity<Title>()
-     .HasOne(t => t.rating) // Navigation property in Title
-     .WithOne(r => r.title) // Navigation property in Rating
-     .HasForeignKey<Rating>(r => r.Id); // Foreign key in Rating
-
-            //modelBuilder.Entity<Title>()
-            //.HasMany(t => t.WritersList)
-            //.WithMany(p => p.TitlesList)
-            //.UsingEntity(j => j.ToTable("writer"));
-
-            modelBuilder.Entity<Title>()
-       .HasMany(t => t.WritersList)
-       .WithMany(p => p.TitlesList)
-       .UsingEntity<Dictionary<string, object>>(
-           "WriterTitle",
-           j => j
-               .HasOne<Person>()
-               .WithMany()
-               .HasForeignKey("person_id")
-               .OnDelete(DeleteBehavior.Cascade),
-           j => j
-               .HasOne<Title>()
-               .WithMany()
-               .HasForeignKey("title_id")
-               .OnDelete(DeleteBehavior.Cascade),
-           j =>
-           {
-               j.ToTable("writer");
-               j.HasKey("person_id", "title_id");
-           });
 
             // Configure Many-to-Many relationship
 
@@ -167,25 +101,166 @@ namespace MovieDataLayer
 
 
         }
+
+        private static void MapProfession(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<Profession>().ToTable("profession");
+            modelBuilder.Entity<Profession>().HasKey(x => new { x.Id });
+
+            //columns
+            modelBuilder.Entity<Profession>().Property(x => x.Id).HasColumnName("profession_id");
+            modelBuilder.Entity<Profession>().Property(x => x.Name).HasColumnName("profession_name");
+
+        }
+
+        private static void MapPrimaryProfession(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<PrimaryProfession>().ToTable("primary_profession");
+            modelBuilder.Entity<PrimaryProfession>().HasKey(x => new { x.Id, x.PersonId });
+
+            //columns
+            modelBuilder.Entity<PrimaryProfession>().Property(x => x.Id).HasColumnName("profession_id");
+            modelBuilder.Entity<PrimaryProfession>().Property(x => x.PersonId).HasColumnName("person_id");
+
+            //Relations
+            //modelBuilder.Entity<Person>().HasMany(x => x.PrimaryProfessions).WithOne(c => c.Person);
+        }
         private static void MapPrincipalCast(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<PrincipalCast>().ToTable("principal_cast");
-            modelBuilder.Entity<PrincipalCast>().HasKey(x => new { x.PersonId, x.TitleId });
+            modelBuilder.Entity<PrincipalCast>().HasKey(x => new { x.PersonId, x.TitleId, x.Ordering });
 
+            //columns
             modelBuilder.Entity<PrincipalCast>().Property(x => x.PersonId).HasColumnName("person_id");
+            modelBuilder.Entity<PrincipalCast>().Property(x => x.Ordering).HasColumnName("ordering");
             modelBuilder.Entity<PrincipalCast>().Property(x => x.TitleId).HasColumnName("title_id");
             modelBuilder.Entity<PrincipalCast>().Property(x => x.CharacterName).HasColumnName("character_name");
             modelBuilder.Entity<PrincipalCast>().Property(x => x.Category).HasColumnName("category");
             modelBuilder.Entity<PrincipalCast>().Property(x => x.Job).HasColumnName("job");
         }
 
-        //private static void Map(ModelBuilder modelBuilder)
-        //{
-        //    modelBuilder.Entity<PrincipalCast>().ToTable("principal_cast");
-        //    modelBuilder.Entity<PrincipalCast>().HasKey(x => new { x.PersonId, x.TitleId });
+        private static void MapMostRelevant(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<MostRelevant>().ToTable("most_relevant");
+            modelBuilder.Entity<MostRelevant>().HasKey(x => new { x.PersonId, x.TitleId });
 
-        //    modelBuilder.Entity<PrincipalCast>().Property(x => x.PersonId).HasColumnName("person_id");
-        //    modelBuilder.Entity<PrincipalCast>().Property(x => x.PersonId).HasColumnName("title_id");
-        //}
+            //columns
+            modelBuilder.Entity<MostRelevant>().Property(x => x.PersonId).HasColumnName("person_id");
+            modelBuilder.Entity<MostRelevant>().Property(x => x.TitleId).HasColumnName("title_id");
+
+        }
+
+
+        private static void MapGenre(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<Genre>().ToTable("genre_list");
+            modelBuilder.Entity<Genre>().HasKey(x => new { x.Id });
+
+            //columns
+            modelBuilder.Entity<Genre>().Property(x => x.Id).HasColumnName("genre_id");
+            modelBuilder.Entity<Genre>().Property(x => x.Name).HasColumnName("genre");
+        }
+
+        private static void MapLocalizedTitle(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<LocalizedTitle>().ToTable("localized_title");
+            modelBuilder.Entity<LocalizedTitle>().HasKey(x => new { x.Id, x.TitleId });
+            modelBuilder.Entity<LocalizedTitle>().Property(x => x.Id).HasColumnName("localized_id");
+            modelBuilder.Entity<LocalizedTitle>().Property(x => x.TitleId).HasColumnName("title_id");
+
+        }
+
+        private static void MapLocalizedDetail(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<LocalizedDetail>().ToTable("localized_detail");
+            modelBuilder.Entity<LocalizedDetail>().HasKey(x => new { x.Id });
+
+            //columns
+            modelBuilder.Entity<LocalizedDetail>().Property(x => x.Id).HasColumnName("localized_id");
+            modelBuilder.Entity<LocalizedDetail>().Property(x => x.LocTitle).HasColumnName("localized_title");
+            modelBuilder.Entity<LocalizedDetail>().Property(x => x.Language).HasColumnName("language");
+            modelBuilder.Entity<LocalizedDetail>().Property(x => x.Region).HasColumnName("region");
+            modelBuilder.Entity<LocalizedDetail>().Property(x => x.Type).HasColumnName("type");
+            modelBuilder.Entity<LocalizedDetail>().Property(x => x.Attribute).HasColumnName("attribute");
+
+
+
+
+
+        }
+        private static void MapDirector(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<Director>().ToTable("director");
+            modelBuilder.Entity<Director>().HasKey(x => new { x.TitleId, x.PersonId });
+
+            //columns
+            modelBuilder.Entity<Director>().Property(x => x.TitleId).HasColumnName("title_id");
+            modelBuilder.Entity<Director>().Property(x => x.PersonId).HasColumnName("person_id");
+        }
+        private static void MapEpisodeFromSeries(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<EpisodeFromSeries>().ToTable("episode_from_series");
+            modelBuilder.Entity<EpisodeFromSeries>().HasKey(x => new { x.TitleId, x.SeriesTitleId });
+
+            //columns
+            modelBuilder.Entity<EpisodeFromSeries>().Property(x => x.TitleId).HasColumnName("title_id");
+            modelBuilder.Entity<EpisodeFromSeries>().Property(x => x.SeriesTitleId).HasColumnName("series_title_id");
+            modelBuilder.Entity<EpisodeFromSeries>().Property(x => x.SeasonNumber).HasColumnName("season_num");
+            modelBuilder.Entity<EpisodeFromSeries>().Property(x => x.EpisodeNumber).HasColumnName("episode_num");
+
+        }
+
+        private static void MapPlot(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<Plot>().ToTable("plot");
+            modelBuilder.Entity<Plot>().HasKey(x => new { x.TitleId });
+            modelBuilder.Entity<Plot>().Property(x => x.TitleId).HasColumnName("title_id");
+            modelBuilder.Entity<Plot>().Property(x => x.PlotOfTitle).HasColumnName("plot");
+
+        }
+        private static void MapPoster(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<Poster>().ToTable("poster");
+            modelBuilder.Entity<Poster>().HasKey(x => new { x.TitleId });
+
+            //columns
+            modelBuilder.Entity<Poster>().Property(x => x.TitleId).HasColumnName("title_id");
+            modelBuilder.Entity<Poster>().Property(x => x.PosterUrl).HasColumnName("poster");
+
+        }
+        private static void MapRating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<Rating>().ToTable("rating");
+            modelBuilder.Entity<Rating>().HasKey(x => new { x.TitleId });
+
+            //columns
+            modelBuilder.Entity<Rating>().Property(x => x.TitleId).HasColumnName("title_id");
+            modelBuilder.Entity<Rating>().Property(x => x.AverageRating).HasColumnName("average_rating");
+            modelBuilder.Entity<Rating>().Property(x => x.VoteCount).HasColumnName("vote_count");
+
+        }
+
+        private static void MapWriter(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<Writer>().ToTable("writer");
+            modelBuilder.Entity<Writer>().HasKey(x => new { x.PersonId, x.TitleId });
+
+            //columns
+            modelBuilder.Entity<Writer>().Property(x => x.PersonId).HasColumnName("person_id");
+            modelBuilder.Entity<Writer>().Property(x => x.TitleId).HasColumnName("title_id");
+
+        }
+
+        private static void MapTitleGenre(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<TitleGenre>().ToTable("title_genre");
+            modelBuilder.Entity<TitleGenre>().HasKey(t => t.Id);
+
+            //columns
+            modelBuilder.Entity<TitleGenre>().Property(t => t.Id).HasColumnName("genre_id");
+            modelBuilder.Entity<TitleGenre>().Property(t => t.TitleId).HasColumnName("title_id");
+
+        }
+
     }
 }
