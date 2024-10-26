@@ -6,7 +6,8 @@ namespace MovieDataLayer
     {
         public int Id { get; set; }
         public string Name { get; set; }
-        public Title Title { get; set; } = null!; //required ref. navigation
+        public ICollection<Genre> Genres { get; set; }
+
 
         public override int GetId()
         {

@@ -55,6 +55,8 @@ namespace MovieDataLayer
             MapPoster(modelBuilder);
             MapRating(modelBuilder);
             MapWriter(modelBuilder);
+            MapTitleGenre(modelBuilder);
+
         }
 
         private static void MapPerson(ModelBuilder modelBuilder)
@@ -246,6 +248,17 @@ namespace MovieDataLayer
             //columns
             modelBuilder.Entity<Writer>().Property(x => x.PersonId).HasColumnName("person_id");
             modelBuilder.Entity<Writer>().Property(x => x.TitleId).HasColumnName("title_id");
+
+        }
+
+        private static void MapTitleGenre(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<TitleGenre>().ToTable("title_genre");
+            modelBuilder.Entity<TitleGenre>().HasKey(t => t.Id);
+
+            //columns
+            modelBuilder.Entity<TitleGenre>().Property(t => t.Id).HasColumnName("genre_id");
+            modelBuilder.Entity<TitleGenre>().Property(t => t.TitleId).HasColumnName("title_id");
 
         }
 
