@@ -1,16 +1,10 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using MovieDataLayer.Extentions;
 using MovieDataLayer.Interfaces;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace MovieDataLayer.DataService
 {
 
-    public class MovieDataRepository<T, U> : IMovieDataRepository<T, U> where T : Item<U>
+    public class MovieDataRepository<T, U> : IMovieDataRepository<T, U> where T : Item<U>, new() where U : IComparable<U>
     {
         private readonly IMDBContext _context;
         private readonly DbSet<T> _dbSet;
@@ -24,17 +18,18 @@ namespace MovieDataLayer.DataService
         {
             return _dbSet.Take(100).ToList(); //Temp, we should NOT get all
         }
-        public IList<T> GetAll(object id)
+        public async Task<IList<T>> GetAll(object id)
         {
-            switch (id)
-            {
-                case int:
-                    return _context.Set<T>().Where(x => Convert.ToInt32(x.Id) == (int)id).ToList();
-                case string:
-                    return _context.Set<T>().Where(x => x.Id.ToString() == (string)id).ToList();
-                default:
-                    return _context.Set<T>().Where(x => Convert.ToInt32(x.Id) == (int)id).ToList();
-            }
+            return _context.Set<T>().AsNoTracking().Where(x => x.Id.Equals(id)).ToList(); // it doesn't work when it is made async
+            return await _context.Set<T>().AsNoTracking().Where(x => x.Id.Equals(id)).ToListAsync(); // it doesn't work when it is made async
+
+            //switch (id) // it has to have asEnumerable, but the AsAsyncEnumerable doesn't have a where clause so it can't be done async argh
+            //{
+            //    case int:
+            //        return _context.Set<T>().AsNoTracking().Where(x => x.Id.Equals(id)).ToList(); // as int
+            //    default:
+            //         return _context.Set<T>().AsNoTracking().AsEnumerable().Where(x => Convert.ToString(x.Id) == (string)id).ToList(); // as string
+            //}
         }
 
         public T Get(object id)

@@ -1,9 +1,7 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Mapster;
 using Microsoft.AspNetCore.Mvc;
 using MovieDataLayer;
-using MovieDataLayer.DataService;
 using MovieDataLayer.Interfaces;
-using Npgsql;
 
 namespace MovieWebApi.Controllers;
 [ApiController]
@@ -24,30 +22,30 @@ public class GenreController : ControllerBase
     }
 
     [HttpGet("{id}")]
-    public IActionResult GetById(int id)
+    public async Task<IActionResult> GetById(int id)
     {
-        return Ok(_dataService.GetAll(id));
-    }
-}
-
-
-public class CallSqlFunction(string connectionString)
-{
-    public void Yo()
-    {
-        using var connection = new NpgsqlConnection();
-        connection.Open();
-
-        using var command = new NpgsqlCommand();
-        command.CommandText = "select get_customer(" + "gh1jv3n2@example.com" +")";
-
-        using var reader = command.ExecuteReader(); 
-
-        while (reader.Read())
+        var result = (await _dataService.GetAll(id)).Select(CreateModel<GenreModel, Genre>);
+        if (result != null)
         {
-            Console.WriteLine($"{reader.GetInt32}");
+            return Ok(result);
         }
+        return NotFound();
     }
 
+    //private GenreModel? CreateGenreModel(Genre? genre)  // bro this has to be generic, it is every where
+    //{
+    //    if (genre == null) return null;
+
+    //    var genreModel = genre.Adapt<GenreModel>();
+    //    return genreModel;
+    //}
+
+    public static TModel? CreateModel<TModel, TEntity>(TEntity entity) where TEntity : class, new() where TModel : class // it works, look at that beauty
+    {
+        if (entity == null) return null;
+
+        var model = entity.Adapt<TModel>();
+        return model;
+    }
 }
 

@@ -1,13 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace MovieDataLayer.Extentions
+﻿namespace MovieDataLayer
 {
-    public abstract class Item<U>
+    public abstract class Item<U> 
     {
         public U Id { get; set; }
         public object Clone()

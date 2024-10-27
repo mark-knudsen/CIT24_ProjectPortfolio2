@@ -24,25 +24,19 @@ public class PersonController : ControllerBase
         return Ok(_dataService.GetAll());
     }
 
+
     [HttpGet("{id}")]
-    public IActionResult GetAll(string id)
+    public IActionResult Get(string id)
     {
-        return Ok(_dataService.GetAll(id));
+        var person = _dataService.Get(id);
+
+        if (person != null)
+        {
+            var personModel = CreatePersonModel(person);
+            return Ok(personModel);
+        }
+        return NotFound();
     }
-
-
-    //[HttpGet("{id}")]
-    //public IActionResult Get(string id)
-    //{
-    //    var person = _dataService.Get(id);
-
-    //    if (person != null)
-    //    {
-    //        var personModel = CreatePersonModel(person);
-    //        return Ok(personModel);
-    //    }
-    //    return NotFound();
-    //}
 
     private PersonModel? CreatePersonModel(Person? title)
     {

@@ -9,7 +9,6 @@ public interface IMovieDataRepository<T, U>
 {
     IList<T> GetAll();
     T Get(object id);
-    IList<T> GetAll(object id);
-
+    Task<IList<T>> GetAll(object id);
 }
 

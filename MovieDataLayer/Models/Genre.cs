@@ -1,6 +1,4 @@
-﻿using MovieDataLayer.Extentions;
-
-namespace MovieDataLayer
+﻿namespace MovieDataLayer
 {
     public class Genre : Item<int>
     {

@@ -1,11 +1,4 @@
-﻿using MovieDataLayer.Extentions;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace MovieDataLayer;
+﻿namespace MovieDataLayer;
 public class User : Item<int>
 {
     public string Email { get; set; }

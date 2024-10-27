@@ -18,12 +18,24 @@ namespace MovieWebApi.Controllers
         }
 
         [HttpGet("writers/{id}")]
-        public IActionResult GetWriters(string id)
+        public async Task<IActionResult> GetWriters(string id)
         {
-            //var writers = _dataService.Get(id).Select(CreateWriterModel);
-            //if (writers == null) return NotFound();
-            //return Ok(writers);
-            return Ok();
+            //var writers = _dataService.GetAll(id);
+            // var writers = (await _dataService.GetAll(id)).Select(CreateWriterModel);
+
+            //if (writers != null)
+            //{
+            //    var writerModel = CreateWriterModel(writers);
+            //    return Ok(writerModel);
+            //}
+            //return NotFound();
+
+            var result = (await _dataService.GetAll(id)).Select(CreateWriterModel);
+            if (result != null)
+            {
+                return Ok(result);
+            }
+            return NotFound();
         }
 
         [HttpGet("{id}")]

@@ -1,12 +1,4 @@
-﻿using MovieDataLayer.Extentions;
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace MovieDataLayer
+﻿namespace MovieDataLayer
 {
     public class Person : Item<string>
     {

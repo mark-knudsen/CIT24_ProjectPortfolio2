@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using MovieDataLayer.Extentions;
 using MovieDataLayer.Interfaces;
+using Npgsql;
 
 namespace MovieDataLayer;
 public class UserDataRepository
@@ -13,20 +13,21 @@ public class UserDataRepository
         _dbSet = _context.Set<User>();
     }
 
-    public IList<User> GetAllUsers_InqludeAll()
+    public async Task<IList<User>> GetAllUsers_InqludeAll()
     {
-       // return _dbSet.ToList();
-        return _dbSet.Take(1).Include(x => x.UserSearchHistory).ToList();
-    }   
-    public IList<UserSearchHistory> GetAllUSearchHistoryByUserId(int id)
+        return await _dbSet.AsNoTracking().Take(1).Include(x => x.UserSearchHistory).ToListAsync();
+    }
+    public async Task<IList<UserSearchHistory>> GetAllUSearchHistoryByUserId(int id)
     {
-       // return _dbSet.ToList();
-        return _context.Set<UserSearchHistory>().Where(x => x.Id == id).ToList();
-    }  
-    public IList<User> GetAll(int id) // also have to remember to make them async
+        return await _context.Set<UserSearchHistory>().AsNoTracking().Where(x => x.Id == id).ToListAsync();
+    }
+    public async Task<User> GetAll(int id)
     {
-       // return _dbSet.ToList();
-        return _context.Set<User>().Take(20).IgnoreAutoIncludes().Where(x => x.Id == id).ToList();
+        return await _context.Set<User>().AsNoTracking().IgnoreAutoIncludes().SingleAsync(x => x.Id == id);
+    }
+    public async Task<EmailSearchResult> GetByEmail(string email) // also have to remember to make them async
+    {
+        string query = $"select * from get_customer('{email}')";
+        return (await _context.CallQuery<EmailSearchResult>(query)).Single();
     }
 }
-

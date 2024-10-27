@@ -1,12 +1,4 @@
-﻿using MovieDataLayer.Extentions;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace MovieDataLayer;
-
+﻿namespace MovieDataLayer;
 public class UserRating // : Item<int>
 {
     public int UserId { get; set; }

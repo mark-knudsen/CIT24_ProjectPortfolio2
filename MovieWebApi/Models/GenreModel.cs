@@ -1,7 +1,7 @@
 ﻿namespace MovieWebApi;
-public class TitleWriterModel
+
+public class GenreModel
 {
-    public string Id { get; set; }
+    public int Id { get; set; }
     public string Name { get; set; }
 }
-

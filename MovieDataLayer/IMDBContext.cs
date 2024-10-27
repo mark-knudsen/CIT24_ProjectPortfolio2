@@ -37,6 +37,9 @@ namespace MovieDataLayer
         //public DbSet<UserBookmark> CustomerBookmarks { get; set; }
         public DbSet<UserSearchHistory> CustomerSearchHistorys { get; set; }
 
+        // sql func results
+        public DbSet<EmailSearchResult> EmailSearchResults { get; set; }
+
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             optionsBuilder.EnableSensitiveDataLogging();
@@ -76,6 +79,7 @@ namespace MovieDataLayer
             MapUser(modelBuilder);
             // MapUserRating(modelBuilder);
             MapUserSearchHistory(modelBuilder);
+            MapEmailSearchResult(modelBuilder);
         }
 
         private static void MapPerson(ModelBuilder modelBuilder)
@@ -245,7 +249,14 @@ namespace MovieDataLayer
             modelBuilder.Entity<UserSearchHistory>().Property(x => x.CreatedAt).HasColumnName("created_at");
 
             modelBuilder.Entity<UserSearchHistory>().HasOne(u => u.User).WithMany(u => u.UserSearchHistory).HasForeignKey(u => u.Id);
-
+        }
+        
+        static void MapEmailSearchResult(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<EmailSearchResult>().HasNoKey();
+            //columns
+            modelBuilder.Entity<EmailSearchResult>().Property(x => x.Firstname).HasColumnName("firstname");
+            modelBuilder.Entity<EmailSearchResult>().Property(x => x.Email).HasColumnName("email");
         }
     }
 }
