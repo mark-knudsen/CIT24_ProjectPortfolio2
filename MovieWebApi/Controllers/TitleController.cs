@@ -22,29 +22,26 @@ namespace MovieWebApi.Controllers
         [HttpGet("writers/{id}")]
         public IActionResult GetWriters(string id)
         {
-            //var writers = _dataService.Get(id).Select(CreateWriterModel);
-            //var writers = _dataService.GetTitleWithWriters(id).Select(CreateWriterModel);
 
-            //if (writers == null) return NotFound();
 
-            var writers = _titleRepository.GetWritersByMovieId(id).Select(CreateWriterModel);
+            var writers = _titleRepository.GetWritersByMovieId(id).Select(CreateWriterModel); //Using subclass (TitleRepository) method to get writers by movie id
             if (writers == null || !writers.Any())
-                return NotFound();
+                return NotFound(); //return 404 if writers is null or if list is empty.
 
-            //var writerModels = writers.Select(CreateWriterModel).ToList();
+
             return Ok(writers);
         }
 
         [HttpGet("{id}")]
         public IActionResult GetTitle(string id)
         {
-            //var title = _dataService.Get(id).FirstOrDefault();
-            var title = _titleRepository.GetAllTitleButWithLimit(10).ToList();
+
+            var title = _titleRepository.Get(id); //Using the Get method from inherited Repository class
 
             if (title == null) return NotFound();
 
-            var titleModel = title.Adapt<TitleModel>();
-            return Ok(titleModel);
+
+            return Ok(title);
         }
 
         // Helper methods

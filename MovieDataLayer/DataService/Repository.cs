@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 namespace MovieDataLayer.DataService
 {
     //This Repository class is a generic class that implements the IRepository interface
-    public class Repository<T, K> : IRepository<T, K> where T : class
+    public abstract class Repository<T, K> : IRepository<T, K> where T : class
     {
         protected readonly IMDBContext _context; //Both are protected so that they can be accessed by the derived class
         protected readonly DbSet<T> _dbSet;
@@ -19,7 +19,7 @@ namespace MovieDataLayer.DataService
             _context = context;
             _dbSet = _context.Set<T>();
         }
-        public void Add(T entity)
+        public void Add(T entity) //This and Update, consider making it virtual?
         {
             _dbSet.Add(entity);
             _context.SaveChanges();

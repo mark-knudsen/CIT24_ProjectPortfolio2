@@ -173,7 +173,7 @@ namespace MovieDataLayer
         private static void MapLocalizedDetail(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<LocalizedDetail>().ToTable("localized_detail");
-            modelBuilder.Entity<LocalizedDetail>().HasKey(x => new { x.Id });
+            modelBuilder.Entity<LocalizedDetail>().HasKey(x => new { x.Id }); //this is not PK, we should consider adding it in DB
 
             //columns
             modelBuilder.Entity<LocalizedDetail>().Property(x => x.Id).HasColumnName("localized_id");
@@ -183,6 +183,10 @@ namespace MovieDataLayer
             modelBuilder.Entity<LocalizedDetail>().Property(x => x.Type).HasColumnName("type");
             modelBuilder.Entity<LocalizedDetail>().Property(x => x.Attribute).HasColumnName("attribute");
 
+            modelBuilder.Entity<LocalizedDetail>()
+        .HasOne(ld => ld.LocalizedTitle)
+        .WithOne(lt => lt.LocalizedDetail)
+        .HasForeignKey<LocalizedDetail>(ld => new { ld.Id, ld.TitleId });//specify FK
 
 
 

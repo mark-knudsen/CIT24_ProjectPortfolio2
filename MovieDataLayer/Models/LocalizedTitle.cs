@@ -15,6 +15,7 @@ namespace MovieDataLayer
         public string Attribute { get; set; }
         public Title Title { get; set; } = null!; //required ref. navigation
 
+        public LocalizedDetail LocalizedDetail { get; set; } = null!;
 
     }
 }
