@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 namespace MovieDataLayer.DataService
 {
     //This Repository class is a generic class that implements the IRepository interface
-    public abstract class Repository<T, K> : IRepository<T, K> where T : class
+    public class Repository<T, K> : IRepository<T, K> where T : class
     {
         protected readonly IMDBContext _context; //Both are protected so that they can be accessed by the derived class
         protected readonly DbSet<T> _dbSet;

@@ -36,6 +36,8 @@ namespace MovieDataLayer
             optionsBuilder.LogTo(Console.WriteLine, Microsoft.Extensions.Logging.LogLevel.Information);
 
             optionsBuilder.UseNpgsql("host=cit.ruc.dk; db=cit06; uid=cit06; pwd=6fkEI8NdedtI;");
+
+
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
