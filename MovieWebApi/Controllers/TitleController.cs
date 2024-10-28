@@ -5,6 +5,7 @@ using Mapster;
 using MovieWebApi.Models;
 using MovieDataLayer.DataService.IMDB_Repository;
 using MovieDataLayer.Models.IMDB_Models;
+using MovieWebApi.Extensions;
 
 namespace MovieWebApi.Controllers
 {
@@ -24,7 +25,7 @@ namespace MovieWebApi.Controllers
         {
 
 
-            var writers = (await _titleRepository.GetWritersByMovieId(id)).Select(CreateWriterModel); //Using subclass (TitleRepository) method to get writers by movie id
+            var writers = (await _titleRepository.GetWritersByMovieId(id)).Select(DTO_Extensions.Spawn_DTO<TitleWriterModel,Person>); //Using subclass (TitleRepository) method to get writers by movie id
             if (writers == null || !writers.Any())
                 return NotFound(); //return 404 if writers is null or if list is empty.
 

@@ -44,7 +44,7 @@ namespace MovieDataLayer
             optionsBuilder.EnableSensitiveDataLogging();
             optionsBuilder.LogTo(Console.WriteLine, Microsoft.Extensions.Logging.LogLevel.Information);
 
-            optionsBuilder.UseNpgsql("host=cit.ruc.dk; db=cit06; uid=cit06; pwd=6fkEI8NdedtI;");
+            optionsBuilder.UseNpgsql(SecretData.DB_Connection.ConnectionString); // local
 
 
         }

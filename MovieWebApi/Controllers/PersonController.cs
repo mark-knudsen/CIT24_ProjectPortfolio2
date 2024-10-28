@@ -11,8 +11,8 @@ namespace MovieWebApi.Controllers
     public class PersonController : ControllerBase
     {
 
-        private readonly IRepository<Person, string> _dataService;
-        public PersonController(IRepository<Person, string> dataService)
+        private readonly IRepository<Person> _dataService;
+        public PersonController(IRepository<Person> dataService)
         {
             _dataService = dataService;
 

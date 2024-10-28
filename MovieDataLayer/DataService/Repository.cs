@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 namespace MovieDataLayer.DataService
 {
     //This Repository class is a generic class that implements the IRepository interface
-    public class Repository<T, K> : IRepository<T, K> where T : class
+    public class Repository<T> : IRepository<T> where T : class
     {
         protected readonly IMDBContext _context; //Both are protected so that they can be accessed by the derived class
         protected readonly DbSet<T> _dbSet;
@@ -25,7 +25,7 @@ namespace MovieDataLayer.DataService
             _context.SaveChanges();
         }
 
-        public void Delete(K id)
+        public void Delete(object id)
         {
             var entity = Get(id);
             if (entity != null)
@@ -35,14 +35,14 @@ namespace MovieDataLayer.DataService
             }
         }
 
-        public T Get(K id)
+        public T Get(object id)
         {
             return _dbSet.Find(id);
         }
 
         public IList<T> GetAll()
         {
-            return _dbSet.ToList();
+            return _dbSet.Take(100).ToList();
         }
 
         public void Update(T entity) //maybe add id, and think about serialize

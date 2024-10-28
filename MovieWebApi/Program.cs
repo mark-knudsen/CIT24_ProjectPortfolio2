@@ -15,7 +15,7 @@ builder.Services.AddDbContext<IMDBContext>();
 //builder.Services.AddScoped<IMovieDataRepository<Person, string>, MovieDataRepository<Person, string>>(); //Using AddScoped to ensure new instance of DataService is created for each HTTP request
 //builder.Services.AddScoped<IMovieDataRepository<Title, string>, MovieDataRepository<Title, string>>(); //Using AddScoped to ensure new instance of DataService is created for each HTTP request
 
-builder.Services.AddScoped(typeof(IRepository<,>), typeof(Repository<,>)); //Currently not needed, maybe should be removed? //Dependency Injection for Repository base class.
+builder.Services.AddScoped(typeof(IRepository<>), typeof(Repository<>)); //Currently not needed, maybe should be removed? //Dependency Injection for Repository base class.
 builder.Services.AddScoped<TitleRepository>(); //Dependency Injection for TitleRepository class, concrete.
 
 //builder.Services.AddScoped<MovieContext>();
