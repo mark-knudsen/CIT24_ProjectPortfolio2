@@ -1,7 +1,4 @@
-﻿using MovieDataLayer.Extentions;
-
-namespace MovieDataLayer
-{
+﻿namespace MovieDataLayer;
     public class Rating : Item<string>
     {
         public int AverageRating { get; set; }
@@ -9,4 +6,3 @@ namespace MovieDataLayer
         public int VoteCount { get; set; }
 
     }
-}

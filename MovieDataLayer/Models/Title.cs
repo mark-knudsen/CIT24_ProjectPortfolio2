@@ -1,7 +1,4 @@
-﻿using MovieDataLayer.Extentions;
-
-namespace MovieDataLayer
-{
+﻿namespace MovieDataLayer;
     public class Title : Item<string>
     {
         public string TitleType { get; set; }
@@ -32,4 +29,3 @@ namespace MovieDataLayer
         //    Id = (string)id;
         //}
     }
-}

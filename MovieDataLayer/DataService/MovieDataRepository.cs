@@ -20,17 +20,16 @@ namespace MovieDataLayer.DataService
         }
         public async Task<IList<T>> GetAll(object id)
         {
-            return _context.Set<T>().AsNoTracking().Where(x => x.Id.Equals(id)).ToList(); // it doesn't work when it is made async
-            return await _context.Set<T>().AsNoTracking().Where(x => x.Id.Equals(id)).ToListAsync(); // it doesn't work when it is made async
+            return await _dbSet.AsNoTracking().Where(x => x.Id.Equals(id)).ToListAsync();
 
-            //switch (id) // it has to have asEnumerable, but the AsAsyncEnumerable doesn't have a where clause so it can't be done async argh
-            //{
-            //    case int:
-            //        return _context.Set<T>().AsNoTracking().Where(x => x.Id.Equals(id)).ToList(); // as int
-            //    default:
-            //         return _context.Set<T>().AsNoTracking().AsEnumerable().Where(x => Convert.ToString(x.Id) == (string)id).ToList(); // as string
-            //}
         }
+
+        //public IList<Person> GetWritersByMovieId(string id)
+        //{
+        //    var writers = _dbSet.Where(x => x.Id.Equals(id)).Include(t => t).ThenInclude(w => w.Person).SelectMany(t => t.WritersList.Select(w => w.Person)).ToList(); //Using selectmany to flatten the list of lists. Needed because we are working with nested list here!
+        //    return writers;
+        //}
+
 
         public T Get(object id)
         {

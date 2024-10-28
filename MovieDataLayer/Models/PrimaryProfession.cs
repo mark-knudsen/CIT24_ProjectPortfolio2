@@ -1,7 +1,4 @@
-﻿using MovieDataLayer.Extentions;
-
-namespace MovieDataLayer
-{
+﻿namespace MovieDataLayer;
     public class PrimaryProfession : Item<string>
     {
         public string PersonId { get; set; }
@@ -9,4 +6,3 @@ namespace MovieDataLayer
         public ICollection<Profession> Profession { get; set; }
 
     }
-}

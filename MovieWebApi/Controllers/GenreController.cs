@@ -1,6 +1,7 @@
 ﻿using Mapster;
 using Microsoft.AspNetCore.Mvc;
 using MovieDataLayer;
+using MovieDataLayer.DataService;
 using MovieDataLayer.Interfaces;
 
 namespace MovieWebApi.Controllers;
@@ -8,11 +9,11 @@ namespace MovieWebApi.Controllers;
 [Route("api/genres")]
 public class GenreController : ControllerBase
 {
-    private readonly IMovieDataRepository<Genre, int> _dataService;
+    private readonly MovieDataRepository<Genre, int> _dataService;
 
     public GenreController(IMovieDataRepository<Genre, int> dataService)
     {
-        _dataService = dataService;
+        _dataService = (MovieDataRepository<Genre, int>?)dataService;
     }
 
     [HttpGet]
@@ -32,15 +33,7 @@ public class GenreController : ControllerBase
         return NotFound();
     }
 
-    //private GenreModel? CreateGenreModel(Genre? genre)  // bro this has to be generic, it is every where
-    //{
-    //    if (genre == null) return null;
-
-    //    var genreModel = genre.Adapt<GenreModel>();
-    //    return genreModel;
-    //}
-
-    public static TModel? CreateModel<TModel, TEntity>(TEntity entity) where TEntity : class, new() where TModel : class // it works, look at that beauty
+    public static TModel? CreateModel<TModel, TEntity>(TEntity entity) where TEntity : class where TModel : class
     {
         if (entity == null) return null;
 

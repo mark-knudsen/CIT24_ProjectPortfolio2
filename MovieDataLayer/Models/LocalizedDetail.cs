@@ -1,8 +1,4 @@
-﻿using System.Reflection.Metadata;
-using MovieDataLayer.Extentions;
-
-namespace MovieDataLayer
-{
+﻿namespace MovieDataLayer;
     public class LocalizedDetail : Item<int>
     {
         // We do not use Ordering...
@@ -13,4 +9,3 @@ namespace MovieDataLayer
         public string Attribute { get; set; }
         public Title Title { get; set; } = null!; //required ref. navigation
     }
-}

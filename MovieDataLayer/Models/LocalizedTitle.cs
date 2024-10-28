@@ -1,7 +1,4 @@
-﻿using MovieDataLayer.Extentions;
-
-namespace MovieDataLayer
-{
+﻿namespace MovieDataLayer;
     public class LocalizedTitle : Item<int>
     {
         // We do not use Ordering...
@@ -14,4 +11,3 @@ namespace MovieDataLayer
 
 
     }
-}

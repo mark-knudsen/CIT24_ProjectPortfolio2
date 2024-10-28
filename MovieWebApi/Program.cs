@@ -10,12 +10,14 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
 builder.Services.AddDbContext<IMDBContext>();
 
-builder.Services.AddScoped<IMovieDataRepository<Genre, int>, MovieDataRepository<Genre, int>>();
-builder.Services.AddScoped<IMovieDataRepository<Title, string>, MovieDataRepository<Title, string>>();
-builder.Services.AddScoped<IMovieDataRepository<Person, string>, MovieDataRepository<Person, string>>();
+builder.Services.AddScoped(typeof( IMovieDataRepository<,>), typeof( MovieDataRepository<,>));
+
+//builder.Services.AddScoped<IMovieDataRepository<Genre, int>, MovieDataRepository<Genre, int>>();
+//builder.Services.AddScoped<IMovieDataRepository<Title, string>, MovieDataRepository<Title, string>>();
+//builder.Services.AddScoped<IMovieDataRepository<Person, string>, MovieDataRepository<Person, string>>();
 
 
-builder.Services.AddScoped<IMovieDataRepository<User, int>, MovieDataRepository<User, int>>();
+//builder.Services.AddScoped<IMovieDataRepository<User, int>, MovieDataRepository<User, int>>();
 builder.Services.AddScoped<UserDataRepository>();
 
 builder.Services.AddMapster(); //Utilizing Mapster for mapping between models
