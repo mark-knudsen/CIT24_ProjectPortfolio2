@@ -1,4 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Diagnostics;
+using MovieDataLayer.Models.IMDB_Models;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -13,6 +15,7 @@ namespace MovieDataLayer
     {
         //Nice to have, configure context in Program.cs instead: https://learn.microsoft.com/en-us/ef/core/dbcontext-configuration/
 
+        //IMDB tables:
         public DbSet<Person> Persons { get; set; }
         public DbSet<Title> Titles { get; set; }
         public DbSet<MostRelevant> MostRelevants { get; set; }
@@ -29,6 +32,12 @@ namespace MovieDataLayer
         public DbSet<Rating> Ratings { get; set; }
         public DbSet<Writer> Writers { get; set; }
 
+        //UserFramework tables:
+        public DbSet<User> Users { get; set; }
+        public DbSet<UserBookmark> UserBookmarks { get; set; }
+        public DbSet<UserRating> UserRatings { get; set; }
+        public DbSet<UserSearchHistory> UserSearchHistory { get; set; }
+
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -42,6 +51,7 @@ namespace MovieDataLayer
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            // Configure the IMDB model
             MapPerson(modelBuilder);
             MapTitle(modelBuilder);
             MapPrincipalCast(modelBuilder);
@@ -58,6 +68,80 @@ namespace MovieDataLayer
             MapRating(modelBuilder);
             MapWriter(modelBuilder);
             MapTitleGenre(modelBuilder);
+
+            //Configure the UserFramework model
+            MapUser(modelBuilder);
+            MapUserTitleBookmark(modelBuilder);
+            MapUserPersonBookmark(modelBuilder);
+            MapUserRating(modelBuilder);
+            MapUserSearchHistory(modelBuilder);
+
+        }
+
+        private void MapUser(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<User>().ToTable("customer");
+            modelBuilder.Entity<User>().HasKey(p => p.Id);
+
+            modelBuilder.Entity<User>().Property(p => p.Id).HasColumnName("customer_id");
+            modelBuilder.Entity<User>().Property(p => p.Email).HasColumnName("email");
+            modelBuilder.Entity<User>().Property(p => p.FirstName).HasColumnName("firstname");
+            modelBuilder.Entity<User>().Property(p => p.Password).HasColumnName("password");
+
+            //modelBuilder.Entity<>().Property(p => p.Id).HasColumnName("");
+
+
+        }
+
+        private void MapUserTitleBookmark(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<UserBookmark>().ToTable("customer_title_bookmark");
+            modelBuilder.Entity<UserBookmark>().HasKey(p => new { p.UserId, p.CreatedAt });
+
+            //columns
+            modelBuilder.Entity<UserBookmark>().Property(p => p.UserId).HasColumnName("customer_id");
+            modelBuilder.Entity<UserBookmark>().Property(p => p.ItemId).HasColumnName("title_id");
+            modelBuilder.Entity<UserBookmark>().Property(p => p.CreatedAt).HasColumnName("created_at");
+            modelBuilder.Entity<UserBookmark>().Property(p => p.Annotations).HasColumnName("annotations");
+
+        }
+        private void MapUserPersonBookmark(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<UserBookmark>().ToTable("customer_person_bookmark");
+            modelBuilder.Entity<UserBookmark>().HasKey(p => new { p.UserId, p.CreatedAt });
+
+            //columns
+            modelBuilder.Entity<UserBookmark>().Property(p => p.UserId).HasColumnName("customer_id");
+            modelBuilder.Entity<UserBookmark>().Property(p => p.ItemId).HasColumnName("person_id");
+            modelBuilder.Entity<UserBookmark>().Property(p => p.CreatedAt).HasColumnName("created_at");
+            modelBuilder.Entity<UserBookmark>().Property(p => p.Annotations).HasColumnName("annotations");
+
+        }
+
+        private void MapUserRating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<UserRating>().ToTable("customer_rating");
+            modelBuilder.Entity<UserRating>().HasKey(p => new { p.UserId, p.TitleId });
+
+            //columns
+            modelBuilder.Entity<UserRating>().Property(p => p.UserId).HasColumnName("customer_id");
+            modelBuilder.Entity<UserRating>().Property(p => p.TitleId).HasColumnName("title_id");
+            modelBuilder.Entity<UserRating>().Property(p => p.Rating).HasColumnName("rating");
+            modelBuilder.Entity<UserRating>().Property(p => p.CreatedAt).HasColumnName("created_at");
+            modelBuilder.Entity<UserRating>().Property(p => p.UpdatedAt).HasColumnName("updated_at");
+
+        }
+
+        private void MapUserSearchHistory(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<UserSearchHistory>().ToTable("customer_search_history");
+            modelBuilder.Entity<UserSearchHistory>().HasKey(p => new { p.UserId, p.CreatedAt });
+
+            //columns
+            modelBuilder.Entity<UserSearchHistory>().Property(p => p.UserId).HasColumnName("customer_id");
+            modelBuilder.Entity<UserSearchHistory>().Property(p => p.SearchTerms).HasColumnName("search_terms");
+            modelBuilder.Entity<UserSearchHistory>().Property(p => p.CreatedAt).HasColumnName("created_at");
+
 
         }
 
@@ -107,7 +191,7 @@ namespace MovieDataLayer
         private static void MapProfession(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Profession>().ToTable("profession");
-            modelBuilder.Entity<Profession>().HasKey(x => new { x.Id });
+            modelBuilder.Entity<Profession>().HasKey(x => x.Id);
 
             //columns
             modelBuilder.Entity<Profession>().Property(x => x.Id).HasColumnName("profession_id");
@@ -156,7 +240,7 @@ namespace MovieDataLayer
         private static void MapGenre(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Genre>().ToTable("genre_list");
-            modelBuilder.Entity<Genre>().HasKey(x => new { x.Id });
+            modelBuilder.Entity<Genre>().HasKey(x => x.Id);
 
             //columns
             modelBuilder.Entity<Genre>().Property(x => x.Id).HasColumnName("genre_id");
@@ -175,7 +259,7 @@ namespace MovieDataLayer
         private static void MapLocalizedDetail(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<LocalizedDetail>().ToTable("localized_detail");
-            modelBuilder.Entity<LocalizedDetail>().HasKey(x => new { x.Id }); //this is not PK, we should consider adding it in DB
+            modelBuilder.Entity<LocalizedDetail>().HasKey(x => x.Id);
 
             //columns
             modelBuilder.Entity<LocalizedDetail>().Property(x => x.Id).HasColumnName("localized_id");
@@ -219,7 +303,7 @@ namespace MovieDataLayer
         private static void MapPlot(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Plot>().ToTable("plot");
-            modelBuilder.Entity<Plot>().HasKey(x => new { x.TitleId });
+            modelBuilder.Entity<Plot>().HasKey(x => x.TitleId);
             modelBuilder.Entity<Plot>().Property(x => x.TitleId).HasColumnName("title_id");
             modelBuilder.Entity<Plot>().Property(x => x.PlotOfTitle).HasColumnName("plot");
 
@@ -227,7 +311,7 @@ namespace MovieDataLayer
         private static void MapPoster(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Poster>().ToTable("poster");
-            modelBuilder.Entity<Poster>().HasKey(x => new { x.TitleId });
+            modelBuilder.Entity<Poster>().HasKey(x => x.TitleId);
 
             //columns
             modelBuilder.Entity<Poster>().Property(x => x.TitleId).HasColumnName("title_id");
@@ -237,7 +321,7 @@ namespace MovieDataLayer
         private static void MapRating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Rating>().ToTable("rating");
-            modelBuilder.Entity<Rating>().HasKey(x => new { x.TitleId });
+            modelBuilder.Entity<Rating>().HasKey(x => x.TitleId);
 
             //columns
             modelBuilder.Entity<Rating>().Property(x => x.TitleId).HasColumnName("title_id");

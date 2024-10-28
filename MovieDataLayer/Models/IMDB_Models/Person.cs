@@ -1,12 +1,4 @@
-﻿using MovieDataLayer.Extentions;
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace MovieDataLayer
+﻿namespace MovieDataLayer.Models.IMDB_Models
 {
     public class Person
     {
@@ -17,7 +9,7 @@ namespace MovieDataLayer
         public ICollection<MostRelevant> MostRelevantTitles { get; set; }
         public ICollection<PrimaryProfession> PrimaryProfessions { get; set; }
         public ICollection<Writer> Writers { get; set; }
-       
+
 
     }
 }

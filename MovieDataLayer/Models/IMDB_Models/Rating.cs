@@ -1,8 +1,6 @@
-﻿using MovieDataLayer.Extentions;
-
-namespace MovieDataLayer
+﻿namespace MovieDataLayer.Models.IMDB_Models
 {
-    public class Rating 
+    public class Rating
     {
         public string TitleId { get; set; }
         public int AverageRating { get; set; }

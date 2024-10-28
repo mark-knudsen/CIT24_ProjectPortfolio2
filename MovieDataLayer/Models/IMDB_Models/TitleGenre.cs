@@ -1,6 +1,4 @@
-﻿using MovieDataLayer.Extentions;
-
-namespace MovieDataLayer
+﻿namespace MovieDataLayer.Models.IMDB_Models
 {
     public class TitleGenre
     {
@@ -9,6 +7,6 @@ namespace MovieDataLayer
         public Title Title { get; set; } = null!; //required ref. navigation
 
 
-        
+
     }
 }

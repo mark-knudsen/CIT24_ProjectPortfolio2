@@ -1,11 +1,9 @@
-﻿using MovieDataLayer.Extentions;
-
-namespace MovieDataLayer
+﻿namespace MovieDataLayer.Models.IMDB_Models
 {
-    public class Poster 
+    public class Plot
     {
         public string TitleId { get; set; }
-        public string PosterUrl {  get; set; }
+        public string PlotOfTitle { get; set; }
         public Title Title { get; set; } = null!; //required ref. navigation
 
     }

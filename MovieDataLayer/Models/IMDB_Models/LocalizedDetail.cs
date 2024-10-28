@@ -1,7 +1,4 @@
-﻿using System.Reflection.Metadata;
-using MovieDataLayer.Extentions;
-
-namespace MovieDataLayer
+﻿namespace MovieDataLayer.Models.IMDB_Models
 {
     public class LocalizedDetail
     {

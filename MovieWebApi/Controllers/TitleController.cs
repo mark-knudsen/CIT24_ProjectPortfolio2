@@ -1,10 +1,10 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using MovieDataLayer.Interfaces;
-using MovieDataLayer;
 using Mapster;
-using MovieDataLayer.DataService;
 using MovieWebApi.Models;
+using MovieDataLayer.DataService.IMDB_Repository;
+using MovieDataLayer.Models.IMDB_Models;
 
 namespace MovieWebApi.Controllers
 {
@@ -20,11 +20,11 @@ namespace MovieWebApi.Controllers
         }
 
         [HttpGet("writers/{id}")]
-        public IActionResult GetWriters(string id)
+        public async Task<IActionResult> GetWriters(string id)
         {
 
 
-            var writers = _titleRepository.GetWritersByMovieId(id).Select(CreateWriterModel); //Using subclass (TitleRepository) method to get writers by movie id
+            var writers = (await _titleRepository.GetWritersByMovieId(id)).Select(CreateWriterModel); //Using subclass (TitleRepository) method to get writers by movie id
             if (writers == null || !writers.Any())
                 return NotFound(); //return 404 if writers is null or if list is empty.
 

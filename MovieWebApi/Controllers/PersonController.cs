@@ -1,8 +1,8 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using MovieDataLayer;
 using MovieDataLayer.DataService;
 using MovieDataLayer.Interfaces;
+using MovieDataLayer.Models.IMDB_Models;
 
 namespace MovieWebApi.Controllers
 {

@@ -45,7 +45,7 @@ namespace MovieDataLayer.DataService
             return _dbSet.ToList();
         }
 
-        public void Update(T entity)
+        public void Update(T entity) //maybe add id, and think about serialize
         {
             _dbSet.Update(entity);
             _context.SaveChanges();

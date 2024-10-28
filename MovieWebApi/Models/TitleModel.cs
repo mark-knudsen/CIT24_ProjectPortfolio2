@@ -1,4 +1,6 @@
-﻿using MovieDataLayer.Extentions;
+﻿
+
+using MovieDataLayer.Models.IMDB_Models;
 
 namespace MovieDataLayer
 {

@@ -2,6 +2,7 @@ using MovieDataLayer.Interfaces;
 using MovieDataLayer.DataService;
 using MovieDataLayer;
 using Microsoft.EntityFrameworkCore;
+using MovieDataLayer.DataService.IMDB_Repository;
 
 var builder = WebApplication.CreateBuilder(args);
 
