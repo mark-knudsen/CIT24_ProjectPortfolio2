@@ -12,15 +12,14 @@
         public bool IsAdult { get; set; }
         //public string PosterUrl { get; set; }
         //public string Plot { get; set; }
-        // public float AverageRating { get; set; }
+        //public float AverageRating { get; set; }
         //public int VoteCount { get; set; }
-        public ICollection<Genre> GenresList { get; set; }
+        //public ICollection<Genre> GenresList { get; set; } // 
         public Rating Ratings { get; set; }
         public ICollection<LocalizedTitle> LocalizedTitlesList { get; } = new List<LocalizedTitle>();
         public ICollection<PrincipalCast> PrincipalCastList { get; set; }
 
         public ICollection<Writer> WritersList { get; set; }
-
 
     }
 }

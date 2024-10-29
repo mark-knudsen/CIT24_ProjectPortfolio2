@@ -1,13 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Diagnostics;
 using MovieDataLayer.Models.IMDB_Models;
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace MovieDataLayer
 {
@@ -28,6 +20,7 @@ namespace MovieDataLayer
         public DbSet<Director> Directors { get; set; }
         public DbSet<EpisodeFromSeries> EpisodeFromSeries { get; set; }
         public DbSet<Plot> Plots { get; set; }
+        public DbSet<TitleGenre> TitleGenres { get; set; }
         public DbSet<Poster> Posters { get; set; }
         public DbSet<Rating> Ratings { get; set; }
         public DbSet<Writer> Writers { get; set; }
@@ -45,8 +38,6 @@ namespace MovieDataLayer
             optionsBuilder.LogTo(Console.WriteLine, Microsoft.Extensions.Logging.LogLevel.Information);
 
             optionsBuilder.UseNpgsql(SecretData.DB_Connection.ConnectionString); // local
-
-
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -86,11 +77,9 @@ namespace MovieDataLayer
             modelBuilder.Entity<User>().Property(p => p.Id).HasColumnName("customer_id");
             modelBuilder.Entity<User>().Property(p => p.Email).HasColumnName("email");
             modelBuilder.Entity<User>().Property(p => p.FirstName).HasColumnName("firstname");
-            modelBuilder.Entity<User>().Property(p => p.Password).HasColumnName("password");
+            //modelBuilder.Entity<User>().Property(p => p.Password).HasColumnName("password");
 
             //modelBuilder.Entity<>().Property(p => p.Id).HasColumnName("");
-
-
         }
 
         private void MapUserTitleBookmark(ModelBuilder modelBuilder)
@@ -142,10 +131,9 @@ namespace MovieDataLayer
             modelBuilder.Entity<UserSearchHistory>().Property(p => p.SearchTerms).HasColumnName("search_terms");
             modelBuilder.Entity<UserSearchHistory>().Property(p => p.CreatedAt).HasColumnName("created_at");
 
-
         }
 
-        private static void MapPerson(ModelBuilder modelBuilder)
+        private void MapPerson(ModelBuilder modelBuilder)
         {
 
             modelBuilder.Entity<Person>().ToTable("person");
@@ -159,10 +147,9 @@ namespace MovieDataLayer
             //modelBuilder.Entity<Person>().Navigation(p => p.MostRelevantTitles).AutoInclude();
             ////modelBuilder.Entity<Person>().HasMany(t => t.Titles).WithMany(c => c.Persons);
 
-
         }
 
-        private static void MapTitle(ModelBuilder modelBuilder)
+        private void MapTitle(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Title>().ToTable("title");
             modelBuilder.Entity<Title>().HasKey(t => t.Id);
@@ -184,11 +171,9 @@ namespace MovieDataLayer
             //    .HasMany(t => t.Persons)
             //    .WithMany(c => c.Titles);
             // If not working add Foreign Keys
-
-
         }
 
-        private static void MapProfession(ModelBuilder modelBuilder)
+        private void MapProfession(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Profession>().ToTable("profession");
             modelBuilder.Entity<Profession>().HasKey(x => x.Id);
@@ -199,7 +184,7 @@ namespace MovieDataLayer
 
         }
 
-        private static void MapPrimaryProfession(ModelBuilder modelBuilder)
+        private void MapPrimaryProfession(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<PrimaryProfession>().ToTable("primary_profession");
             modelBuilder.Entity<PrimaryProfession>().HasKey(x => new { x.Id, x.PersonId });
@@ -211,7 +196,7 @@ namespace MovieDataLayer
             //Relations
             //modelBuilder.Entity<Person>().HasMany(x => x.PrimaryProfessions).WithOne(c => c.Person);
         }
-        private static void MapPrincipalCast(ModelBuilder modelBuilder)
+        private void MapPrincipalCast(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<PrincipalCast>().ToTable("principal_cast");
             modelBuilder.Entity<PrincipalCast>().HasKey(x => new { x.PersonId, x.TitleId, x.Ordering });
@@ -225,7 +210,7 @@ namespace MovieDataLayer
             modelBuilder.Entity<PrincipalCast>().Property(x => x.Job).HasColumnName("job");
         }
 
-        private static void MapMostRelevant(ModelBuilder modelBuilder)
+        private void MapMostRelevant(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<MostRelevant>().ToTable("most_relevant");
             modelBuilder.Entity<MostRelevant>().HasKey(x => new { x.PersonId, x.TitleId });
@@ -235,9 +220,7 @@ namespace MovieDataLayer
             modelBuilder.Entity<MostRelevant>().Property(x => x.TitleId).HasColumnName("title_id");
 
         }
-
-
-        private static void MapGenre(ModelBuilder modelBuilder)
+        private void MapGenre(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Genre>().ToTable("genre_list");
             modelBuilder.Entity<Genre>().HasKey(x => x.Id);
@@ -247,7 +230,7 @@ namespace MovieDataLayer
             modelBuilder.Entity<Genre>().Property(x => x.Name).HasColumnName("genre");
         }
 
-        private static void MapLocalizedTitle(ModelBuilder modelBuilder)
+        private void MapLocalizedTitle(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<LocalizedTitle>().ToTable("localized_title");
             modelBuilder.Entity<LocalizedTitle>().HasKey(x => new { x.Id, x.TitleId });
@@ -256,7 +239,7 @@ namespace MovieDataLayer
 
         }
 
-        private static void MapLocalizedDetail(ModelBuilder modelBuilder)
+        private void MapLocalizedDetail(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<LocalizedDetail>().ToTable("localized_detail");
             modelBuilder.Entity<LocalizedDetail>().HasKey(x => x.Id);
@@ -274,11 +257,8 @@ namespace MovieDataLayer
         .WithOne(lt => lt.LocalizedDetail)
         .HasForeignKey<LocalizedDetail>(ld => new { ld.Id, ld.TitleId });//specify FK
 
-
-
-
         }
-        private static void MapDirector(ModelBuilder modelBuilder)
+        private void MapDirector(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Director>().ToTable("director");
             modelBuilder.Entity<Director>().HasKey(x => new { x.TitleId, x.PersonId });
@@ -287,7 +267,7 @@ namespace MovieDataLayer
             modelBuilder.Entity<Director>().Property(x => x.TitleId).HasColumnName("title_id");
             modelBuilder.Entity<Director>().Property(x => x.PersonId).HasColumnName("person_id");
         }
-        private static void MapEpisodeFromSeries(ModelBuilder modelBuilder)
+        private void MapEpisodeFromSeries(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<EpisodeFromSeries>().ToTable("episode_from_series");
             modelBuilder.Entity<EpisodeFromSeries>().HasKey(x => new { x.TitleId, x.SeriesTitleId });
@@ -300,7 +280,7 @@ namespace MovieDataLayer
 
         }
 
-        private static void MapPlot(ModelBuilder modelBuilder)
+        private void MapPlot(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Plot>().ToTable("plot");
             modelBuilder.Entity<Plot>().HasKey(x => x.TitleId);
@@ -308,7 +288,7 @@ namespace MovieDataLayer
             modelBuilder.Entity<Plot>().Property(x => x.PlotOfTitle).HasColumnName("plot");
 
         }
-        private static void MapPoster(ModelBuilder modelBuilder)
+        private void MapPoster(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Poster>().ToTable("poster");
             modelBuilder.Entity<Poster>().HasKey(x => x.TitleId);
@@ -318,7 +298,7 @@ namespace MovieDataLayer
             modelBuilder.Entity<Poster>().Property(x => x.PosterUrl).HasColumnName("poster");
 
         }
-        private static void MapRating(ModelBuilder modelBuilder)
+        private void MapRating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Rating>().ToTable("rating");
             modelBuilder.Entity<Rating>().HasKey(x => x.TitleId);
@@ -330,7 +310,7 @@ namespace MovieDataLayer
 
         }
 
-        private static void MapWriter(ModelBuilder modelBuilder)
+        private void MapWriter(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Writer>().ToTable("writer");
             modelBuilder.Entity<Writer>().HasKey(x => new { x.PersonId, x.TitleId });
@@ -341,7 +321,7 @@ namespace MovieDataLayer
 
         }
 
-        private static void MapTitleGenre(ModelBuilder modelBuilder)
+        private void MapTitleGenre(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<TitleGenre>().ToTable("title_genre");
             modelBuilder.Entity<TitleGenre>().HasKey(t => t.Id);
@@ -351,6 +331,5 @@ namespace MovieDataLayer
             modelBuilder.Entity<TitleGenre>().Property(t => t.TitleId).HasColumnName("title_id");
 
         }
-
     }
 }

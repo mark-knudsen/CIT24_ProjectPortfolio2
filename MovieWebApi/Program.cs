@@ -3,6 +3,7 @@ using MovieDataLayer.DataService;
 using MovieDataLayer;
 using Microsoft.EntityFrameworkCore;
 using MovieDataLayer.DataService.IMDB_Repository;
+using MovieDataLayer.DataService.UserFrameworkRepository;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -17,6 +18,7 @@ builder.Services.AddDbContext<IMDBContext>();
 
 builder.Services.AddScoped(typeof(IRepository<>), typeof(Repository<>)); //Currently not needed, maybe should be removed? //Dependency Injection for Repository base class.
 builder.Services.AddScoped<TitleRepository>(); //Dependency Injection for TitleRepository class, concrete.
+builder.Services.AddScoped<UserRepository>(); //Dependency Injection for UserRepository class, concrete.
 
 //builder.Services.AddScoped<MovieContext>();
 

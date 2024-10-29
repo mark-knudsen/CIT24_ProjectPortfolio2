@@ -19,15 +19,15 @@ namespace MovieDataLayer.DataService
             _context = context;
             _dbSet = _context.Set<T>();
         }
-        public void Add(T entity) //This and Update, consider making it virtual?
+        public async Task Add(T entity) //This and Update, consider making it virtual?
         {
             _dbSet.Add(entity);
             _context.SaveChanges();
         }
 
-        public void Delete(object id)
+        public async Task Delete(object id)
         {
-            var entity = Get(id);
+            var entity = await Get(id);
             if (entity != null)
             {
                 _dbSet.Remove(entity);
@@ -35,20 +35,20 @@ namespace MovieDataLayer.DataService
             }
         }
 
-        public T Get(object id)
+        public async Task<T> Get(object id)
         {
-            return _dbSet.Find(id);
+            return await _dbSet.FindAsync(id);
         }
 
-        public IList<T> GetAll()
+        public async Task<IList<T>> GetAll()
         {
             return _dbSet.Take(100).ToList();
         }
 
-        public void Update(T entity) //maybe add id, and think about serialize
+        public async Task Update(T entity) //maybe add id, and think about serialize
         {
             _dbSet.Update(entity);
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
         }
     }
 }

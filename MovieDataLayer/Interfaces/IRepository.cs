@@ -6,12 +6,12 @@ using System.Threading.Tasks;
 
 namespace MovieDataLayer.Interfaces
 {
-    public interface IRepository<T> //T is class. So T could be Person.
+    public interface IRepository<T> where T : class
     {
-        T Get(object id);
-        IList<T> GetAll();
-        void Add(T entity);
-        void Update(T entity);
-        void Delete(object id);
+        Task<T> Get(object id);
+        Task<IList<T>> GetAll();
+        Task Add(T entity);
+        Task Update(T entity);
+        Task Delete(object id);
     }
 }

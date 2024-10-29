@@ -9,5 +9,5 @@ public class UserRating
     public Title Title { get; set; } = null!;
     public double Rating { get; set; }
     public DateTime CreatedAt { get; set; }
-    public DateTime UpdatedAt { get; set; }
+    public DateTime? UpdatedAt { get; set; }  = null!; // if the value is null it still shows a default time, would want the value to actually be null
 }
