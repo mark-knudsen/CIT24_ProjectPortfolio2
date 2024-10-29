@@ -21,10 +21,11 @@ namespace MovieDataLayer.DataService.IMDB_Repository
 
         }
 
-        public Title? GetTitleDetails(string id)
+        public IList<Title> GetTitleDetails(string id)
         {
-            //return _dbSet.Where(t => t.Id.Equals(id)).Include(t => t.WritersList).ThenInclude(w => w.Person).Include(t => t.DirectorsList).ThenInclude(d => d.Person).Include(t => t.GenresList).ThenInclude(g => g.Genre).Include(t => t.PrincipalCastList).ThenInclude(p => p.Person).FirstOrDefault(); //Using include to get all the related entities. This is a bit of a heavy query, but it is needed to get all the details of a title.
-            return _dbSet.Where(t => t.Id.Equals(id)).Include(t => t.WritersList).ThenInclude(w => w.Person).Include(t => t.DirectorsList).ThenInclude(d => d.Person).FirstOrDefault();
+            //return _dbSet.Where(t => t.Id.Equals(id)).Include(t => t.WritersList).ThenInclude(w => w.Person).Include(t => t.DirectorsList).ThenInclude(d => d.Person).Include(t => t.GenresList).ThenInclude(g => g.Genre).Include(t => t.PrincipalCastList).ThenInclude(p => p.Person).Include(t => t.Rating).FirstOrDefault(); //Using include to get all the related entities. This is a bit of a heavy query, but it is needed to get all the details of a title.
+            //return _dbSet.Where(t => t.Id.Equals(id)).Include(t => t.WritersList).ThenInclude(w => w.Person).Include(t => t.DirectorsList).ThenInclude(d => d.Person).Include(t => t.GenresList).ThenInclude(g => g.Genre).FirstOrDefault();
+            return _dbSet.Where(t => t.Id.Equals(id)).Include(t => t.Rating).Take(100).ToList();
         }
 
 

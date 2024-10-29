@@ -47,10 +47,11 @@ namespace MovieWebApi.Controllers
         }
 
         [HttpGet("{id}/details")]
-        public IActionResult GetTitleDetails(string id) //Get Title DTO with details
+        public IActionResult GetTitleDetails(string id)
         {
-
-            var title = DTO_Extensions.Spawn_DTO<TitleDetailedModel, Title>(_titleRepository.GetTitleDetails(id)); //Using subclass (TitleRepository) method to get title details
+            //var title = _titleRepository.GetTitleDetails(id);
+            var title = _titleRepository.GetTitleDetails(id).Select(DTO_Extensions.Spawn_DTO<TitleDetailedModel, Title>);
+            //var title = DTO_Extensions.Spawn_DTO<TitleDetailedModel, Title>(_titleRepository.GetTitleDetails(id)); //Using subclass (TitleRepository) method to get title details
             if (title == null) return NotFound();
             return Ok(title);
         }

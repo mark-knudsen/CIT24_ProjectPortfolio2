@@ -179,6 +179,8 @@ namespace MovieDataLayer
             modelBuilder.Entity<Title>().Property(t => t.Runtime).HasColumnName("runtime");
             modelBuilder.Entity<Title>().Property(t => t.IsAdult).HasColumnName("isadult");
 
+            //modelBuilder.Entity<Title>().HasMany(t => t.Ratings).WithOne(r => r.Title);
+            modelBuilder.Entity<Title>().HasOne(t => t.Rating).WithOne(r => r.Title).HasForeignKey<Rating>(r => r.TitleId);
 
             // Configure Many-to-Many relationship
 
@@ -329,6 +331,8 @@ namespace MovieDataLayer
             modelBuilder.Entity<Rating>().Property(x => x.TitleId).HasColumnName("title_id");
             modelBuilder.Entity<Rating>().Property(x => x.AverageRating).HasColumnName("average_rating");
             modelBuilder.Entity<Rating>().Property(x => x.VoteCount).HasColumnName("vote_count");
+
+            //modelBuilder.Entity<Rating>().HasOne(r => r.Title).WithMany(t => t.Ratings).HasForeignKey(r => r.TitleId);
 
         }
 

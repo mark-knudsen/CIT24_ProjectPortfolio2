@@ -1,6 +1,7 @@
 ﻿
 
 using MovieDataLayer.Models.IMDB_Models;
+using System.Text.Json.Serialization;
 
 namespace MovieDataLayer
 {
@@ -18,12 +19,14 @@ namespace MovieDataLayer
         public string Plot { get; set; }
         public float AverageRating { get; set; }
         public int VoteCount { get; set; }
+
         public IList<string> GenresList { get; set; }
         //public IList<LocalizedTitle> LocalizedTitlesList { get; set; }
-        public IList<PrincipalCast> PrincipalCastList { get; set; }
+
+        public IList<string> PrincipalCastList { get; set; }
         public IList<string> WritersList { get; set; }
         public IList<string> DirectorsList { get; set; }
-        public IList<Person> Persons { get; set; }
+        // public IList<string> Persons { get; set; }
 
 
     }
