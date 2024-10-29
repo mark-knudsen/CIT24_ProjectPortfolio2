@@ -23,12 +23,14 @@ namespace MovieDataLayer
         public DbSet<LocalizedTitle> LocalizedTitles { get; set; }
         public DbSet<PrincipalCast> PrincipalCasts { get; set; }
         public DbSet<Genre> Genres { get; set; }
+        public DbSet<TitleGenre> TitleGenres { get; set; }
+
         public DbSet<LocalizedDetail> LocalizedDetails { get; set; }
         public DbSet<PrimaryProfession> PrimaryProfessions { get; set; }
         public DbSet<Director> Directors { get; set; }
         public DbSet<EpisodeFromSeries> EpisodeFromSeries { get; set; }
-        public DbSet<Plot> Plots { get; set; }
-        public DbSet<Poster> Posters { get; set; }
+        //public DbSet<Plot> Plots { get; set; }
+        // public DbSet<Poster> Posters { get; set; }
         public DbSet<Rating> Ratings { get; set; }
         public DbSet<Writer> Writers { get; set; }
 
@@ -63,8 +65,8 @@ namespace MovieDataLayer
             MapPrimaryProfession(modelBuilder);
             MapDirector(modelBuilder);
             MapEpisodeFromSeries(modelBuilder);
-            MapPlot(modelBuilder);
-            MapPoster(modelBuilder);
+            //MapPlot(modelBuilder);
+            //MapPoster(modelBuilder);
             MapRating(modelBuilder);
             MapWriter(modelBuilder);
             MapTitleGenre(modelBuilder);
@@ -344,11 +346,12 @@ namespace MovieDataLayer
         private static void MapTitleGenre(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<TitleGenre>().ToTable("title_genre");
-            modelBuilder.Entity<TitleGenre>().HasKey(t => t.Id);
-
+            //modelBuilder.Entity<TitleGenre>().HasKey(t => t.Id);
+            modelBuilder.Entity<TitleGenre>().HasKey(x => new { x.GenreId, x.TitleId });
             //columns
-            modelBuilder.Entity<TitleGenre>().Property(t => t.Id).HasColumnName("genre_id");
+            modelBuilder.Entity<TitleGenre>().Property(t => t.GenreId).HasColumnName("genre_id");
             modelBuilder.Entity<TitleGenre>().Property(t => t.TitleId).HasColumnName("title_id");
+
 
         }
 

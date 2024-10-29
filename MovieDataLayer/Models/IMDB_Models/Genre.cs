@@ -4,7 +4,7 @@
     {
         public int Id { get; set; }
         public string Name { get; set; }
-        public ICollection<Genre> Genres { get; set; }
+        public ICollection<TitleGenre> Genres { get; set; }
 
 
 

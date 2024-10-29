@@ -9,6 +9,7 @@
         public ICollection<MostRelevant> MostRelevantTitles { get; set; }
         public ICollection<PrimaryProfession> PrimaryProfessions { get; set; }
         public ICollection<Writer> Writers { get; set; }
+        public ICollection<Director> Directors { get; set; }
 
 
     }

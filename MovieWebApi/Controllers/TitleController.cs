@@ -6,6 +6,7 @@ using MovieWebApi.Models;
 using MovieDataLayer.DataService.IMDB_Repository;
 using MovieDataLayer.Models.IMDB_Models;
 using MovieWebApi.Extensions;
+using MovieDataLayer;
 
 namespace MovieWebApi.Controllers
 {
@@ -25,7 +26,7 @@ namespace MovieWebApi.Controllers
         {
 
 
-            var writers = (await _titleRepository.GetWritersByMovieId(id)).Select(DTO_Extensions.Spawn_DTO<TitleWriterModel,Person>); //Using subclass (TitleRepository) method to get writers by movie id
+            var writers = (await _titleRepository.GetWritersByMovieId(id)).Select(DTO_Extensions.Spawn_DTO<TitleWriterModel, Person>); //Using subclass (TitleRepository) method to get writers by movie id
             if (writers == null || !writers.Any())
                 return NotFound(); //return 404 if writers is null or if list is empty.
 
@@ -34,16 +35,26 @@ namespace MovieWebApi.Controllers
         }
 
         [HttpGet("{id}")]
-        public IActionResult GetTitle(string id)
+        public IActionResult GetTitle(string id) //Get Simple Title DTO
         {
 
-            var title = _titleRepository.Get(id); //Using the Get method from inherited Repository class
-
+            //var title = _titleRepository.Get(id).Select(DTO_Extensions.Spawn_DTO<TitleModel, Title>); //Using the Get method from inherited Repository class
+            var title = DTO_Extensions.Spawn_DTO<TitleSimpleModel, Title>(_titleRepository.Get(id)); //Using the Get method from inherited Repository class
             if (title == null) return NotFound();
 
 
             return Ok(title);
         }
+
+        [HttpGet("{id}/details")]
+        public IActionResult GetTitleDetails(string id) //Get Title DTO with details
+        {
+
+            var title = DTO_Extensions.Spawn_DTO<TitleDetailedModel, Title>(_titleRepository.GetTitleDetails(id)); //Using subclass (TitleRepository) method to get title details
+            if (title == null) return NotFound();
+            return Ok(title);
+        }
+
 
         // Helper methods
         private TitleWriterModel? CreateWriterModel(Person? title)
