@@ -1,4 +1,6 @@
-﻿namespace MovieDataLayer.Models.IMDB_Models
+﻿using System.Text.Json.Serialization;
+
+namespace MovieDataLayer.Models.IMDB_Models
 {
     public class Title
     {
@@ -10,16 +12,16 @@
         public int? EndYear { get; set; }
         public int? Runtime { get; set; }
         public bool IsAdult { get; set; }
-        //public string PosterUrl { get; set; }
-        //public string Plot { get; set; }
-        //public float AverageRating { get; set; }
-        //public int VoteCount { get; set; }
-        //public ICollection<Genre> GenresList { get; set; } // 
-        public Rating Ratings { get; set; }
-        public ICollection<LocalizedTitle> LocalizedTitlesList { get; } = new List<LocalizedTitle>();
+        public  Poster Poster { get; set; }
+        public Plot Plot { get; set; }
+        //[JsonIgnore]
+        public ICollection<TitleGenre> GenresList { get; set; } 
+        public Rating Rating { get; set; }
+       // public ICollection<LocalizedTitle> LocalizedTitlesList { get; } = new List<LocalizedTitle>();
         public ICollection<PrincipalCast> PrincipalCastList { get; set; }
 
         public ICollection<Writer> WritersList { get; set; }
+        public ICollection<Director> DirectorsList { get; set; }
 
     }
 }

@@ -46,5 +46,14 @@ namespace MovieWebApi.Controllers
 
             return Ok(title);
         }
+        
+        [HttpGet("title_detail/{id}")]
+        public async Task<IActionResult> GetTitleDetail(string id) // id tt7856872
+        {
+            var title = (await _titleRepository.GetAllTitles(id)).CreateTitleModel();
+            if (title == null) return NotFound();
+
+            return Ok(title);
+        }
     }
 }

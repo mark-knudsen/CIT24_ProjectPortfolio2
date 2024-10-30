@@ -324,10 +324,10 @@ namespace MovieDataLayer
         private void MapTitleGenre(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<TitleGenre>().ToTable("title_genre");
-            modelBuilder.Entity<TitleGenre>().HasKey(t => t.Id);
+            modelBuilder.Entity<TitleGenre>().HasKey(t => new { t.GenreId, t.TitleId });
 
             //columns
-            modelBuilder.Entity<TitleGenre>().Property(t => t.Id).HasColumnName("genre_id");
+            modelBuilder.Entity<TitleGenre>().Property(t => t.GenreId).HasColumnName("genre_id");
             modelBuilder.Entity<TitleGenre>().Property(t => t.TitleId).HasColumnName("title_id");
 
         }
