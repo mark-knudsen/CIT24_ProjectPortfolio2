@@ -17,7 +17,7 @@ public class GenreController : ControllerBase
     [HttpGet]
     public async Task<IActionResult> GetAll()
     {
-        var result = (await _dataService.GetAll()).Select(DTO_Extensions.Spawn_DTO<GenreModel, Genre>);
+        var result = (await _dataService.GetAll()).Select(DTO_Extensions.Spawn_DTO<string, Genre>);
         if (result != null)
         {
             return Ok(result);
@@ -25,13 +25,5 @@ public class GenreController : ControllerBase
         return NotFound();
     }
 
-    [HttpGet("{id}")]
-    public async Task<IActionResult> GetGenreById(int id)
-    {
-        var genre = DTO_Extensions.Spawn_DTO<GenreModel, Genre>(await _dataService.Get(id));
-        if (genre == null) return NotFound();
-
-        return Ok(genre);
-    }
 }
 

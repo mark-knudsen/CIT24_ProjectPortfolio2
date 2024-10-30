@@ -1,7 +1,7 @@
 ﻿using MovieDataLayer.Models.IMDB_Models;
 
 namespace MovieDataLayer;
-public class TitleModel
+public class TitleDetailedDTO
 {
     public string Id { get; set; }
     public string TitleType { get; set; }

@@ -176,7 +176,7 @@ namespace MovieDataLayer
         private void MapProfession(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Profession>().ToTable("profession");
-            modelBuilder.Entity<Profession>().HasKey(x => x.Id);
+            modelBuilder.Entity<Profession>().HasKey(x => new { x.Id, x.Name });
 
             //columns
             modelBuilder.Entity<Profession>().Property(x => x.Id).HasColumnName("profession_id");

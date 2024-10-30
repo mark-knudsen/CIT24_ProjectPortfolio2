@@ -18,28 +18,28 @@ public class UserController : Controller
     [HttpGet]
     public async Task<IActionResult> GetAll()
     {
-        var result = (await _userDataService.GetAll()).Select(DTO_Extensions.Spawn_DTO<UserModel, User>); // maybe never retrieve the password, just a thought you know!
+        var result = (await _userDataService.GetAll()).Select(DTO_Extensions.Spawn_DTO<UserDTO, User>); // maybe never retrieve the password, just a thought you know!
         return Ok(result);
     }
 
     [HttpGet("search_history/{id}")]
     public async Task<IActionResult> GetAllUserHistory(int id)
     {
-        var result = (await _userDataService.GetAllSearchHistoryByUserId(id)).Select(DTO_Extensions.Spawn_DTO<UserSearchHistoryModel, UserSearchHistory>);
+        var result = (await _userDataService.GetAllSearchHistoryByUserId(id)).Select(DTO_Extensions.Spawn_DTO<UserSearchHistoryDTO, UserSearchHistory>);
         return Ok(result);
     }
     
     [HttpGet("ratings/{id}")]
     public async Task<IActionResult> GetAllUserRatings(int id)
     {
-        var result = (await _userDataService.GetAllUserRatingByUserId(id)).Select(DTO_Extensions.Spawn_DTO<UserRatingModel, UserRating>);
+        var result = (await _userDataService.GetAllUserRatingByUserId(id)).Select(DTO_Extensions.Spawn_DTO<UserRatingDTO, UserRating>);
         return Ok(result);
     }
 
     [HttpGet("{id}")]
     public async Task<IActionResult> GetById(int id)
     {
-        var result = DTO_Extensions.Spawn_DTO<UserModel, User>(await _userDataService.Get(id));
+        var result = DTO_Extensions.Spawn_DTO<UserDTO, User>(await _userDataService.Get(id));
         return Ok(result);
     }
 

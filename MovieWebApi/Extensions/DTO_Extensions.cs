@@ -1,4 +1,6 @@
-﻿using Mapster;
+﻿using System.Linq;
+using System.Net.NetworkInformation;
+using Mapster;
 using MovieDataLayer;
 using MovieDataLayer.Models.IMDB_Models;
 
@@ -14,9 +16,9 @@ namespace MovieWebApi.Extensions
             return model;
         }
 
-        public static TitleModel CreateTitleModel(this Title title)
+        public static TitleDetailedDTO MapTitleToTitleDetailedDTO(this Title title)
         {
-            var model = title.Adapt<TitleModel>();
+            var model = title.Adapt<TitleDetailedDTO>();
             model.GenresList = title.GenresList.Select(x => x.Genre.Name).ToList();
             model.PosterUrl = title.Poster.PosterUrl;
             model.WritersList = title.WritersList.Select(x => x.Person.Name).ToList();
@@ -26,6 +28,15 @@ namespace MovieWebApi.Extensions
             model.DirectorsList = title.DirectorsList.Select(x => x.Person.Name).ToList();
             model.AverageRating = title.Rating.AverageRating;
             return model;
+        }
+
+        public static PersonDetailedDTO MapPersonToPersonDTO(this Person person)
+        {
+            var model = person.Adapt<PersonDetailedDTO>();
+            model.MostRelevantTitles = person.MostRelevantTitles.Select(x => x.Title.PrimaryTitle).ToList();
+            model.PrimaryProfessions = person.Professions.Select(x => x.Name).ToList();
+            return model;
+            
         }
     }
 }

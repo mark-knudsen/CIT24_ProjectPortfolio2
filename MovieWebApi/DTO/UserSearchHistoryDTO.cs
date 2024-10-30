@@ -1,6 +1,6 @@
 ﻿namespace MovieWebApi;
 
-public class UserSearchHistoryModel
+public class UserSearchHistoryDTO
 {
     public string SearchTerms { get; set; }
     public DateTime CreatedAt { get; set; }

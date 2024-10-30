@@ -20,7 +20,7 @@ namespace MovieWebApi.Controllers
         [HttpGet]
         public async Task<IActionResult> GetAllTitles() // We really just want the plot and poster at all times in the title, same with some of the collections
         {
-            var titles = (await _titleRepository.GetAll()).Select(DTO_Extensions.Spawn_DTO<TitleModel, Title>);
+            var titles = (await _titleRepository.GetAll()).Select(DTO_Extensions.Spawn_DTO<TitleDetailedDTO, Title>);
 
             if (titles == null) return NotFound();
 
@@ -30,27 +30,28 @@ namespace MovieWebApi.Controllers
         [HttpGet("writers/{id}")]
         public async Task<IActionResult> GetWriters(string id) // id tt13689568
         {
-            var writers = (await _titleRepository.GetWritersByMovieId(id)).Select(DTO_Extensions.Spawn_DTO<TitleWriterModel, Person>); //Using subclass (TitleRepository) method to get writers by movie id
+            var writers = (await _titleRepository.GetWritersByMovieId(id)).Select(DTO_Extensions.Spawn_DTO<TitleWriterDTO, Person>); //Using subclass (TitleRepository) method to get writers by movie id
             if (writers == null || !writers.Any())
                 return NotFound(); //return 404 if writers is null or if list is empty.
 
             return Ok(writers);
         }
 
-        [HttpGet("{id}")]
-        public async Task<IActionResult> GetTitle(string id) // id tt7856872
-        {
-            var title = DTO_Extensions.Spawn_DTO<TitleModel, Title>(await _titleRepository.Get(id));
+        // Get one title - Currently not in use
+        //[HttpGet("{id}")]
+        //public async Task<IActionResult> GetTitle(string id) // id tt7856872
+        //{
+        //    var title = DTO_Extensions.Spawn_DTO<TitleDetailedDTO, Title>(await _titleRepository.Get(id));
 
-            if (title == null) return NotFound();
+        //    if (title == null) return NotFound();
 
-            return Ok(title);
-        }
+        //    return Ok(title);
+        //}
         
-        [HttpGet("title_detail/{id}")]
-        public async Task<IActionResult> GetTitleDetail(string id) // id tt7856872
+        [HttpGet("{id}")]
+        public async Task<IActionResult> Get(string id) // id tt7856872
         {
-            var title = (await _titleRepository.GetAllTitles(id)).CreateTitleModel();
+            var title = (await _titleRepository.GetTitle(id)).MapTitleToTitleDetailedDTO();
             if (title == null) return NotFound();
 
             return Ok(title);

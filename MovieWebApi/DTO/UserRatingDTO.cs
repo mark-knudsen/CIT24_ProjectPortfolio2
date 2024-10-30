@@ -1,6 +1,6 @@
 ﻿namespace MovieWebApi;
 
-public class UserRatingModel
+public class UserRatingDTO
 {
     public string TitleId { get; set; }
     public double Rating { get; set; }

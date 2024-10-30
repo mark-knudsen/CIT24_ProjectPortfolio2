@@ -1,5 +1,5 @@
 ﻿namespace MovieWebApi;
-    public class TitleWriterModel
+    public class TitleWriterDTO
     {
         public string Id { get; set; }
         public string Name { get; set; }
