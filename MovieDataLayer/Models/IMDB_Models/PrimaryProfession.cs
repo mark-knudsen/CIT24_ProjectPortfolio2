@@ -2,7 +2,7 @@
 {
     public class PrimaryProfession
     {
-        public int Id { get; set; }
+        public int ProfessionId { get; set; }
         public string PersonId { get; set; }
         public Person Person { get; set; } = null!; //required ref. navigation
         //public ICollection<Profession> Profession { get; set; }

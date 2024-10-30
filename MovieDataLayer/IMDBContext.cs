@@ -176,7 +176,7 @@ namespace MovieDataLayer
         private void MapProfession(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Profession>().ToTable("profession");
-            modelBuilder.Entity<Profession>().HasKey(x => new { x.Id, x.Name });
+            modelBuilder.Entity<Profession>().HasKey(x => new { x.Id });
 
             //columns
             modelBuilder.Entity<Profession>().Property(x => x.Id).HasColumnName("profession_id");
@@ -187,14 +187,25 @@ namespace MovieDataLayer
         private void MapPrimaryProfession(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<PrimaryProfession>().ToTable("primary_profession");
-            modelBuilder.Entity<PrimaryProfession>().HasKey(x => new { x.Id, x.PersonId });
+            modelBuilder.Entity<PrimaryProfession>().HasKey(x => new { x.ProfessionId, x.PersonId });
 
             //columns
-            modelBuilder.Entity<PrimaryProfession>().Property(x => x.Id).HasColumnName("profession_id");
+            modelBuilder.Entity<PrimaryProfession>().Property(x => x.ProfessionId).HasColumnName("profession_id");
             modelBuilder.Entity<PrimaryProfession>().Property(x => x.PersonId).HasColumnName("person_id");
 
             //Relations
             //modelBuilder.Entity<Person>().HasMany(x => x.PrimaryProfessions).WithOne(c => c.Person);
+
+            modelBuilder.Entity<PrimaryProfession>()
+                .HasOne(pp => pp.Person)
+                .WithMany(p => p.PrimaryProfessions)
+                .HasForeignKey(pp => pp.PersonId);
+
+
+            modelBuilder.Entity<PrimaryProfession>()
+                .HasOne(pp => pp.Profession)
+                .WithMany(prof => prof.PrimaryProfession)
+                .HasForeignKey(pp => pp.ProfessionId);
         }
         private void MapPrincipalCast(ModelBuilder modelBuilder)
         {

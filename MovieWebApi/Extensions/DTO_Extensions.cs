@@ -34,9 +34,10 @@ namespace MovieWebApi.Extensions
         {
             var model = person.Adapt<PersonDetailedDTO>();
             model.MostRelevantTitles = person.MostRelevantTitles.Select(x => x.Title.PrimaryTitle).ToList();
-            model.PrimaryProfessions = person.Professions.Select(x => x.Name).ToList();
+            model.PrimaryProfessions = person.PrimaryProfessions.Select(x => x.Profession.Name).ToList();
+
             return model;
-            
+
         }
     }
 }
