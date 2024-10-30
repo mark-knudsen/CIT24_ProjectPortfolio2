@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using MovieDataLayer.Models.IMDB_Models;
 
 namespace MovieDataLayer.DataService.UserFrameworkRepository
 {

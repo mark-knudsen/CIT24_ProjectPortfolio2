@@ -13,8 +13,8 @@ public class TitleDetailedDTO
     public bool IsAdult { get; set; }
     public string PosterUrl { get; set; }
     public string Plot { get; set; }
-    public float AverageRating { get; set; }
-    public int VoteCount { get; set; }
+    public float? AverageRating { get; set; }
+    public int? VoteCount { get; set; }
     public IList<string> GenresList { get; set; }
     public IList<string> LocalizedTitlesList { get; set; }
     public IList<string> PrincipalCastList { get; set; }

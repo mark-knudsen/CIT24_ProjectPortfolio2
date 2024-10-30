@@ -59,6 +59,7 @@ public class UserController : Controller
         if (result == null) return NotFound();
         return Ok(result);
     }
+
     [HttpGet("{id}/bookmarks/person")]
     public async Task<IActionResult> GetAllPersonBookmarks(int id)
     {

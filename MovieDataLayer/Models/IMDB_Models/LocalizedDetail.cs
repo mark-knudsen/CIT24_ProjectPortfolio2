@@ -10,8 +10,6 @@
         public string Type { get; set; }
         public string Attribute { get; set; }
         public Title Title { get; set; } = null!; //required ref. navigation
-
-
         public string TitleId { get; set; } //FK
         public LocalizedTitle LocalizedTitle { get; set; } = null!;
     }

@@ -8,6 +8,5 @@
         public int EpisodeNumber { get; set; }
         public Title Title { get; set; } = null!; //required ref. navigation
 
-
     }
 }

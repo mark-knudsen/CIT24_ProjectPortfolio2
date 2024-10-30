@@ -42,7 +42,6 @@ namespace MovieWebApi.Controllers
             if (person == null) return NotFound();
 
             return Ok(person);
-
         }
     }
 }

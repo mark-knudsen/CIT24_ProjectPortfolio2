@@ -12,7 +12,6 @@ namespace MovieDataLayer.DataService.IMDB_Repository
     {
         public PersonRepository(IMDBContext context) : base(context) { }
 
-
         public async Task<Person> GetPerson(string id)
         {
             var p = await _dbSet.Where(p => p.Id.Equals(id))

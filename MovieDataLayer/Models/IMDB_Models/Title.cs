@@ -12,15 +12,17 @@ namespace MovieDataLayer.Models.IMDB_Models
         public int? EndYear { get; set; }
         public int? Runtime { get; set; }
         public bool IsAdult { get; set; }
-        public  Poster Poster { get; set; }
+        public Poster Poster { get; set; }
         public Plot Plot { get; set; }
         //[JsonIgnore]
-        public ICollection<TitleGenre> GenresList { get; set; } 
+        public ICollection<TitleGenre> GenresList { get; set; }
         public Rating Rating { get; set; }
-       // public ICollection<LocalizedTitle> LocalizedTitlesList { get; } = new List<LocalizedTitle>();
+        // public ICollection<LocalizedTitle> LocalizedTitlesList { get; } = new List<LocalizedTitle>();
+        //[JsonIgnore]
         public ICollection<PrincipalCast> PrincipalCastList { get; set; }
-
+       // [JsonIgnore]
         public ICollection<Writer> WritersList { get; set; }
+        //[JsonIgnore]
         public ICollection<Director> DirectorsList { get; set; }
 
     }

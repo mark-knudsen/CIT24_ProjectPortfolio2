@@ -56,5 +56,14 @@ namespace MovieWebApi.Controllers
 
             return Ok(title);
         }
+        
+        [HttpGet("genre/{id}")]
+        public async Task<IActionResult> GetByGenre(int id) // id tt7856872
+        {
+            var titles = (await _titleRepository.GetTitleByGenre(id)).MapTitleToTitleDetailedDTO();
+            if (titles == null) return NotFound();
+
+            return Ok(titles);
+        }
     }
 }

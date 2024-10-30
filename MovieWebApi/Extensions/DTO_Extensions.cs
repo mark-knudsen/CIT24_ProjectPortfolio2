@@ -19,15 +19,35 @@ namespace MovieWebApi.Extensions
         public static TitleDetailedDTO MapTitleToTitleDetailedDTO(this Title title)
         {
             var model = title.Adapt<TitleDetailedDTO>();
-            model.GenresList = title.GenresList.Select(x => x.Genre.Name).ToList();
-            model.PosterUrl = title.Poster.PosterUrl;
-            model.WritersList = title.WritersList.Select(x => x.Person.Name).ToList();
-            model.Plot = title.Plot.PlotOfTitle;
-            model.VoteCount = title.Rating.VoteCount;
-            model.PrincipalCastList = title.PrincipalCastList.Select(x => x.Person.Name).ToList();
-            model.DirectorsList = title.DirectorsList.Select(x => x.Person.Name).ToList();
-            model.AverageRating = title.Rating.AverageRating;
+            model.GenresList = title.GenresList?.Select(x => x.Genre.Name).ToList();
+            model.PosterUrl = title.Poster?.PosterUrl;
+            model.WritersList = title.WritersList?.Select(x => x.Person.Name).ToList();
+            model.Plot = title.Plot?.PlotOfTitle;
+            model.VoteCount = title.Rating?.VoteCount;
+            model.PrincipalCastList = title.PrincipalCastList?.Select(x => x.Person.Name).ToList();
+            model.DirectorsList = title.DirectorsList?.Select(x => x.Person.Name).ToList();
+            model.AverageRating = title.Rating?.AverageRating;
             return model;
+        }
+        public static IList<TitleDetailedDTO> MapTitleToTitleDetailedDTO(this IList<Title> _title)   // IMPORTANT, sometimes some values are null, but that will throw an axception when trying to set it here, add nullable in DTO and in here
+        {
+            var models = new List<TitleDetailedDTO>(); // not that elegant looking
+            foreach (var title in _title)
+            {
+                var model = title.Adapt<TitleDetailedDTO>();
+                model.GenresList = title.GenresList?.Select(x => x.Genre.Name).ToList();
+                model.PosterUrl = title.Poster?.PosterUrl;
+                model.WritersList = title.WritersList?.Select(x => x.Person.Name).ToList();
+                model.Plot = title.Plot?.PlotOfTitle;
+                model.VoteCount = title.Rating?.VoteCount;
+                model.PrincipalCastList = title.PrincipalCastList?.Select(x => x.Person.Name).ToList();
+                model.DirectorsList = title.DirectorsList?.Select(x => x.Person.Name).ToList();
+                model.AverageRating = title.Rating?.AverageRating;
+
+                models.Add(model);
+            }
+
+            return models;
         }
 
         public static PersonDetailedDTO MapPersonToPersonDTO(this Person person)
@@ -37,7 +57,6 @@ namespace MovieWebApi.Extensions
             model.PrimaryProfessions = person.PrimaryProfessions.Select(x => x.Profession.Name).ToList();
 
             return model;
-
         }
 
         //public static UserDTO MapUserToUserDTO(this User user)

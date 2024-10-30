@@ -7,6 +7,5 @@
         public Title Title { get; set; } = null!; //required ref. navigation
         public Person Person { get; set; } = null!; //required ref. navigation
 
-
     }
 }
