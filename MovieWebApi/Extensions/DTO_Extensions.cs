@@ -16,7 +16,7 @@ namespace MovieWebApi.Extensions
             return model;
         }
 
-        public static TitleDetailedDTO MapTitleToTitleDetailedDTO(this Title title)
+        public static TitleDetailedDTO MapTitleToTitleDetailedDTO(this Title title) // IMPORTANT, sometimes some values are null, but that will throw an axception when trying to set it here, add nullable in DTO and in here
         {
             var model = title.Adapt<TitleDetailedDTO>();
             model.GenresList = title.GenresList?.Select(x => x.Genre.Name).ToList();
@@ -29,23 +29,10 @@ namespace MovieWebApi.Extensions
             model.AverageRating = title.Rating?.AverageRating;
             return model;
         }
-        public static IList<TitleDetailedDTO> MapTitleToTitleDetailedDTO(this IList<Title> _title)   // IMPORTANT, sometimes some values are null, but that will throw an axception when trying to set it here, add nullable in DTO and in here
+        public static IList<TitleDetailedDTO> MapTitleToTitleDetailedDTO(this IList<Title> _title)   
         {
-            var models = new List<TitleDetailedDTO>(); // not that elegant looking
-            foreach (var title in _title)
-            {
-                var model = title.Adapt<TitleDetailedDTO>();
-                model.GenresList = title.GenresList?.Select(x => x.Genre.Name).ToList();
-                model.PosterUrl = title.Poster?.PosterUrl;
-                model.WritersList = title.WritersList?.Select(x => x.Person.Name).ToList();
-                model.Plot = title.Plot?.PlotOfTitle;
-                model.VoteCount = title.Rating?.VoteCount;
-                model.PrincipalCastList = title.PrincipalCastList?.Select(x => x.Person.Name).ToList();
-                model.DirectorsList = title.DirectorsList?.Select(x => x.Person.Name).ToList();
-                model.AverageRating = title.Rating?.AverageRating;
-
-                models.Add(model);
-            }
+            var models = new List<TitleDetailedDTO>();
+            foreach (var title in _title) models.Add(title.MapTitleToTitleDetailedDTO());  // not that elegant looking
 
             return models;
         }
