@@ -27,7 +27,8 @@ namespace MovieDataLayer
 
         //UserFramework tables:
         public DbSet<User> Users { get; set; }
-        public DbSet<UserBookmark> UserBookmarks { get; set; }
+        public DbSet<UserPersonBookmark> UserPersonBookmarks { get; set; }
+        public DbSet<UserTitleBookmark> UserTitleBookmarks { get; set; }
         public DbSet<UserRating> UserRatings { get; set; }
         public DbSet<UserSearchHistory> UserSearchHistory { get; set; }
 
@@ -77,33 +78,33 @@ namespace MovieDataLayer
             modelBuilder.Entity<User>().Property(p => p.Id).HasColumnName("customer_id");
             modelBuilder.Entity<User>().Property(p => p.Email).HasColumnName("email");
             modelBuilder.Entity<User>().Property(p => p.FirstName).HasColumnName("firstname");
-            //modelBuilder.Entity<User>().Property(p => p.Password).HasColumnName("password");
+            modelBuilder.Entity<User>().Property(p => p.Password).HasColumnName("password");
 
             //modelBuilder.Entity<>().Property(p => p.Id).HasColumnName("");
         }
 
         private void MapUserTitleBookmark(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<UserBookmark>().ToTable("customer_title_bookmark");
-            modelBuilder.Entity<UserBookmark>().HasKey(p => new { p.UserId, p.CreatedAt });
+            modelBuilder.Entity<UserTitleBookmark>().ToTable("customer_title_bookmark");
+            modelBuilder.Entity<UserTitleBookmark>().HasKey(p => new { p.UserId, p.CreatedAt });
 
             //columns
-            modelBuilder.Entity<UserBookmark>().Property(p => p.UserId).HasColumnName("customer_id");
-            modelBuilder.Entity<UserBookmark>().Property(p => p.ItemId).HasColumnName("title_id");
-            modelBuilder.Entity<UserBookmark>().Property(p => p.CreatedAt).HasColumnName("created_at");
-            modelBuilder.Entity<UserBookmark>().Property(p => p.Annotations).HasColumnName("annotations");
+            modelBuilder.Entity<UserTitleBookmark>().Property(p => p.UserId).HasColumnName("customer_id");
+            modelBuilder.Entity<UserTitleBookmark>().Property(p => p.TitleId).HasColumnName("title_id");
+            modelBuilder.Entity<UserTitleBookmark>().Property(p => p.CreatedAt).HasColumnName("created_at");
+            modelBuilder.Entity<UserTitleBookmark>().Property(p => p.Annotations).HasColumnName("annotation");
 
         }
         private void MapUserPersonBookmark(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<UserBookmark>().ToTable("customer_person_bookmark");
-            modelBuilder.Entity<UserBookmark>().HasKey(p => new { p.UserId, p.CreatedAt });
+            modelBuilder.Entity<UserPersonBookmark>().ToTable("customer_person_bookmark");
+            modelBuilder.Entity<UserPersonBookmark>().HasKey(p => new { p.UserId, p.CreatedAt });
 
             //columns
-            modelBuilder.Entity<UserBookmark>().Property(p => p.UserId).HasColumnName("customer_id");
-            modelBuilder.Entity<UserBookmark>().Property(p => p.ItemId).HasColumnName("person_id");
-            modelBuilder.Entity<UserBookmark>().Property(p => p.CreatedAt).HasColumnName("created_at");
-            modelBuilder.Entity<UserBookmark>().Property(p => p.Annotations).HasColumnName("annotations");
+            modelBuilder.Entity<UserPersonBookmark>().Property(p => p.UserId).HasColumnName("customer_id");
+            modelBuilder.Entity<UserPersonBookmark>().Property(p => p.PersonId).HasColumnName("person_id");
+            modelBuilder.Entity<UserPersonBookmark>().Property(p => p.CreatedAt).HasColumnName("created_at");
+            modelBuilder.Entity<UserPersonBookmark>().Property(p => p.Annotations).HasColumnName("annotation");
 
         }
 

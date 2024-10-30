@@ -39,5 +39,11 @@ namespace MovieWebApi.Extensions
             return model;
 
         }
+
+        //public static UserDTO MapUserToUserDTO(this User user)
+        //{
+        //    var model = user.Adapt<UserDTO>();
+        //    return model;
+        //}
     }
 }

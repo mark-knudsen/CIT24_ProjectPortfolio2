@@ -19,6 +19,7 @@ namespace MovieDataLayer.DataService
             _context = context;
             _dbSet = _context.Set<T>();
         }
+        // TODO: Add try catch to avoid runtime error.
         public async Task Add(T entity) //This and Update, consider making it virtual?
         {
             _dbSet.Add(entity);
