@@ -20,20 +20,44 @@ namespace MovieDataLayer.DataService
             _dbSet = _context.Set<T>();
         }
         // TODO: Add try catch to avoid runtime error.
-        public async Task Add(T entity) //This and Update, consider making it virtual?
+        public async Task<bool> Add(T entity) //This and Update, consider making it virtual?
         {
-            _dbSet.Add(entity);
-            _context.SaveChanges();
+            try
+            {
+                _dbSet.Add(entity);
+                await _context.SaveChangesAsync();
+                return true;
+            }
+            catch (Exception e)
+            {
+                return false;
+            }
+
         }
 
-        public async Task Delete(object id)
+        public async Task<bool> Delete(object id)
         {
-            var entity = await Get(id);
-            if (entity != null)
+            try
             {
-                _dbSet.Remove(entity);
-                _context.SaveChanges();
+                var entity = await Get(id);
+                if (entity != null)
+                {
+                    _dbSet.Remove(entity);
+                    _context.SaveChanges();
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
+
             }
+            catch (Exception)
+            {
+
+                return false;
+            }
+
         }
 
         public async Task<T> Get(object id)
@@ -46,10 +70,19 @@ namespace MovieDataLayer.DataService
             return _dbSet.Take(100).ToList();
         }
 
-        public async Task Update(T entity) //maybe add id, and think about serialize
+        public async Task<bool> Update(T entity) //maybe add id, and think about serialize
         {
-            _dbSet.Update(entity);
-            await _context.SaveChangesAsync();
+            try
+            {
+                _dbSet.Update(entity);
+                await _context.SaveChangesAsync();
+                return true;
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+
         }
     }
 }
