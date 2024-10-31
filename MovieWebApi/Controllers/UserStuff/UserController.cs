@@ -54,23 +54,7 @@ public class UserController : ControllerBase
         return Ok(result);
     }
 
-    [HttpGet("{id}/bookmarks/title")]
-    public async Task<IActionResult> GetAllTitleBookmarks(int id)
-    {
-        var result = (await _userDataService.GetAllTitleBookmarks(id)).Select(DTO_Extensions.Spawn_DTO<UserBookmarkDTO, UserTitleBookmark>);
 
-        if (result == null) return NotFound();
-        return Ok(result);
-    }
-
-    [HttpGet("{id}/bookmarks/person")]
-    public async Task<IActionResult> GetAllPersonBookmarks(int id)
-    {
-        var result = (await _userDataService.GetAllPersonBookmarks(id)).Select(DTO_Extensions.Spawn_DTO<UserBookmarkDTO, UserPersonBookmark>);
-
-        if (result == null) return NotFound();
-        return Ok(result);
-    }
 
     [HttpPost]
     public async Task<IActionResult> RegisterUser(UserRegistrationDTO userRegistrationDTO)
