@@ -10,8 +10,8 @@ namespace MovieDataLayer.Interfaces
     {
         Task<T> Get(object id);
         Task<IList<T>> GetAll();
-        Task Add(T entity);
-        Task Update(T entity);
-        Task Delete(object id);
+        Task<bool> Add(T entity);
+        Task<bool> Update(T entity);
+        Task<bool> Delete(object id);
     }
 }

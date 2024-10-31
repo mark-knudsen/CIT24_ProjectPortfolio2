@@ -5,6 +5,6 @@
         public string? TitleId { get; set; }
         public string? PersonId { get; set; }
         public DateTime CreatedAt { get; set; }
-        public string Annotations { get; set; }
+        public string Annotation { get; set; }
     }
 }

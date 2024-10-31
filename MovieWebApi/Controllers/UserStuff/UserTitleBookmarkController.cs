@@ -30,7 +30,8 @@ namespace MovieWebApi.Controllers.UserStuff
             d.UserId = userId;
             d.Annotation = userTitleBookmark.Annotation;
             d.TitleId = userTitleBookmark.TitleId;
-            var success = (await _userTitleBookmarkRepository.Add(d));
+
+            var success = await _userTitleBookmarkRepository.Add(d);
             if (!success) return BadRequest();
             return NoContent();
         }
@@ -77,15 +78,5 @@ namespace MovieWebApi.Controllers.UserStuff
             if (success) return NoContent();
             return BadRequest();
         }
-
-        //[HttpGet("{id}/bookmarks/person")]
-        //public async Task<IActionResult> GetAllPersonBookmarks(int id)
-        //{
-        //    var result = (await _userTitleBookmarkRepository.GetAllPersonBookmarks(id)).Select(DTO_Extensions.Spawn_DTO<UserBookmarkDTO, UserPersonBookmark>);
-
-        //    if (result == null) return NotFound();
-        //    return Ok(result);
-        //}
-
     }
 }
