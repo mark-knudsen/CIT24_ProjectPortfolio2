@@ -1,9 +1,4 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace MovieDataLayer.DataService.UserFrameworkRepository
 {
@@ -37,9 +32,8 @@ namespace MovieDataLayer.DataService.UserFrameworkRepository
                     return false;
                 }
             }
-            catch (Exception)
+            catch
             {
-
                 return false;
             }
         }
@@ -58,11 +52,23 @@ namespace MovieDataLayer.DataService.UserFrameworkRepository
                 {
                     return false;
                 }
-
             }
-            catch (Exception)
+            catch 
             {
+                return false;
+            }
+        }
 
+        public async Task<bool> UpdatePersonBookmark(UserPersonBookmark userPersonBookmark)
+        {
+            try
+            {
+                _dbSet.Update(userPersonBookmark);
+                await _context.SaveChangesAsync();
+                return true;
+            }
+            catch 
+            {
                 return false;
             }
         }

@@ -25,10 +25,9 @@ namespace MovieWebApi.Controllers.UserStuff
         [HttpPost]
         public async Task<IActionResult> PostUserTitleBookmark([FromHeader] int userId, CreateUserTitleBookmark userTitleBookmark)
         {
-            //userTitleBookmark.UserId = userId;
             var d = new UserTitleBookmark();
             d.UserId = userId;
-            d.Annotation = userTitleBookmark.Annotation;
+            d.Annotation = userTitleBookmark.Annotation; // improve when use authentication
             d.TitleId = userTitleBookmark.TitleId;
 
             var success = await _userTitleBookmarkRepository.Add(d);
@@ -68,9 +67,7 @@ namespace MovieWebApi.Controllers.UserStuff
             UserTitleBookmark titleBookmark = await _userTitleBookmarkRepository.GetTitleBookmark(userId, titleId);
             if (titleBookmark != null)
             {
-
                 titleBookmark.Annotation = updateUserTitleBookmark.annotation != "" ? updateUserTitleBookmark.annotation : titleBookmark.Annotation;
-
             }
             else return NotFound();
 

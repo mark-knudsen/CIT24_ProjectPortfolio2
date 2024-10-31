@@ -1,11 +1,4 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Data.Common;
-using System.Linq;
-using System.Security.Cryptography.X509Certificates;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace MovieDataLayer.DataService.UserFrameworkRepository
 {
@@ -38,15 +31,11 @@ namespace MovieDataLayer.DataService.UserFrameworkRepository
                 {
                     return false;
                 }
-
             }
-            catch (Exception)
+            catch
             {
-
                 return false;
             }
-
-
         }
 
         public async Task<bool> DeleteAllTitleBookmarks(int userId)
@@ -64,11 +53,9 @@ namespace MovieDataLayer.DataService.UserFrameworkRepository
                 {
                     return false;
                 }
-
             }
-            catch (Exception)
+            catch 
             {
-
                 return false;
             }
         }
@@ -80,14 +67,11 @@ namespace MovieDataLayer.DataService.UserFrameworkRepository
                 _dbSet.Update(userTitleBookmark);
                 await _context.SaveChangesAsync();
                 return true;
-
             }
-            catch (Exception)
+            catch 
             {
-
                 return false;
             }
-
         }
     }
 }
