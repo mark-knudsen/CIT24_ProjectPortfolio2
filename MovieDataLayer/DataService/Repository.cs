@@ -32,7 +32,6 @@ namespace MovieDataLayer.DataService
             {
                 return false;
             }
-
         }
 
         public async Task<bool> Delete(object id)

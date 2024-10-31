@@ -1,32 +1,30 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
-using System.Data.Common;
 using System.Linq;
-using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace MovieDataLayer.DataService.UserFrameworkRepository
 {
-    public class UserTitleBookmarkRepository : Repository<UserTitleBookmark>
+    public class UserPersonBookmarkRepository : Repository<UserPersonBookmark>
     {
-        public UserTitleBookmarkRepository(IMDBContext context) : base(context) { }
-        public async Task<IList<UserTitleBookmark>> GetAllTitleBookmarks(int id)
+        public UserPersonBookmarkRepository(IMDBContext context) : base(context) { }
+
+        public async Task<IList<UserPersonBookmark>> GetAllPersonBookmarks(int id)
         {
             return await _dbSet.AsNoTracking().Where(x => x.UserId == id).ToListAsync();
         }
-
-        public async Task<UserTitleBookmark> GetTitleBookmark(int userId, string titleId)
+        public async Task<UserPersonBookmark> GetPersonBookmark(int userId, string personId)
         {
-            return await _dbSet.Where(x => x.UserId == userId && x.TitleId.Equals(titleId)).FirstOrDefaultAsync();
+            return await _dbSet.Where(x => x.UserId == userId && x.PersonId.Equals(personId)).FirstOrDefaultAsync();
         }
 
-        public async Task<bool> DeleteTitleBookmark(int userId, string titleId)
+        public async Task<bool> DeletePersonBookmark(int userId, string titleId)
         {
             try
             {
-                var entity = await GetTitleBookmark(userId, titleId);
+                var entity = await GetPersonBookmark(userId, titleId);
 
                 if (entity != null)
                 {
@@ -38,18 +36,14 @@ namespace MovieDataLayer.DataService.UserFrameworkRepository
                 {
                     return false;
                 }
-
             }
             catch (Exception)
             {
 
                 return false;
             }
-
-
         }
-
-        public async Task<bool> DeleteAllTitleBookmarks(int userId)
+        public async Task<bool> DeleteAllPersonBookmarks(int userId)
         {
             try
             {
@@ -71,23 +65,6 @@ namespace MovieDataLayer.DataService.UserFrameworkRepository
 
                 return false;
             }
-        }
-
-        public async Task<bool> UpdateTitleBookmark(UserTitleBookmark userTitleBookmark)
-        {
-            try
-            {
-                _dbSet.Update(userTitleBookmark);
-                await _context.SaveChangesAsync();
-                return true;
-
-            }
-            catch (Exception)
-            {
-
-                return false;
-            }
-
         }
     }
 }

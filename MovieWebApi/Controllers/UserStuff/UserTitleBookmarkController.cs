@@ -1,10 +1,8 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using MovieDataLayer;
 using MovieDataLayer.DataService.UserFrameworkRepository;
 using MovieWebApi.DTO;
 using MovieWebApi.Extensions;
-using static MovieWebApi.Controllers.UserStuff.UserController;
 
 namespace MovieWebApi.Controllers.UserStuff
 {
@@ -13,7 +11,8 @@ namespace MovieWebApi.Controllers.UserStuff
     [Route("api/bookmarks/title")]
     public class UserTitleBookmarkController : ControllerBase
     {
-
+        
+        public record CreateUserTitleBookmark(int UserId, string TitleId, string Annotation);
         public record UpdateUserTitleBookmark(string annotation);
 
         readonly UserTitleBookmarkRepository _userTitleBookmarkRepository;
@@ -23,12 +22,25 @@ namespace MovieWebApi.Controllers.UserStuff
             _userTitleBookmarkRepository = userTitleBookmarkRepository;
         }
 
+        [HttpPost]
+        public async Task<IActionResult> PostUserTitleBookmark([FromHeader] int userId, CreateUserTitleBookmark userTitleBookmark)
+        {
+            //userTitleBookmark.UserId = userId;
+            var d = new UserTitleBookmark();
+            d.UserId = userId;
+            d.Annotation = userTitleBookmark.Annotation;
+            d.TitleId = userTitleBookmark.TitleId;
+            var success = (await _userTitleBookmarkRepository.Add(d));
+            if (!success) return BadRequest();
+            return NoContent();
+        }
+
         [HttpGet]
         public async Task<IActionResult> GetAllTitleBookmarks([FromHeader] int id)
         {
             var result = (await _userTitleBookmarkRepository.GetAllTitleBookmarks(id)).Select(DTO_Extensions.Spawn_DTO<UserBookmarkDTO, UserTitleBookmark>);
 
-            if (result == null) return NotFound();
+            if (!result.Any() || result == null) return NotFound();
             return Ok(result);
         }
 
@@ -50,7 +62,7 @@ namespace MovieWebApi.Controllers.UserStuff
 
 
         [HttpPut("{titleId}")]
-        public async Task<IActionResult> UpdateTitleBookmark([FromHeader] int userId, string titleId, UpdateUserTitleBookmark updateUserTitleBookmark)
+        public async Task<IActionResult> PutTitleBookmark([FromHeader] int userId, string titleId, UpdateUserTitleBookmark updateUserTitleBookmark)
         {
             UserTitleBookmark titleBookmark = await _userTitleBookmarkRepository.GetTitleBookmark(userId, titleId);
             if (titleBookmark != null)

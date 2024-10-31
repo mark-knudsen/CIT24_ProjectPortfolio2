@@ -23,6 +23,7 @@ builder.Services.AddScoped<UserRepository>(); //Dependency Injection for UserRep
 builder.Services.AddScoped<PersonRepository>();
 
 builder.Services.AddScoped<UserTitleBookmarkRepository>();
+builder.Services.AddScoped<UserPersonBookmarkRepository>();
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
