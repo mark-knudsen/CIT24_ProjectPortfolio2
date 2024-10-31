@@ -8,8 +8,7 @@ namespace MovieWebApi.Controllers;
 [Route("api/genres")]
 public class GenreController : ControllerBase
 {
-    private record GenreModel(string Name); // Look more into record...
-
+    public record GenreModal(string Name);
     private readonly IRepository<Genre> _dataService;
     public GenreController(IRepository<Genre> dataService)
     {
@@ -19,7 +18,7 @@ public class GenreController : ControllerBase
     [HttpGet]
     public async Task<IActionResult> GetAll()
     {
-        var result = (await _dataService.GetAll()).Select(DTO_Extensions.Spawn_DTO<GenreModel, Genre>);
+        var result = (await _dataService.GetAll()).Select(DTO_Extensions.Spawn_DTO<GenreModal, Genre>);
         if (result != null)
         {
             return Ok(result);

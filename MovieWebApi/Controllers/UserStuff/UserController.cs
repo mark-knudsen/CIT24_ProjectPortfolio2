@@ -4,15 +4,12 @@ using MovieDataLayer.DataService.UserFrameworkRepository;
 using MovieDataLayer.Models.IMDB_Models;
 using MovieWebApi.DTO;
 using MovieWebApi.Extensions;
-using System.Data.Common;
 
 namespace MovieWebApi.Controllers.UserStuff;
 [ApiController]
 [Route("api/users")]
-public class UserController : ControllerBase
+public class UserController : Controller
 {
-    public record UpdateUserModel(string email, string firstName, string password);
-
     readonly UserRepository _userDataService;
 
     public UserController(UserRepository userDataService)
@@ -59,39 +56,11 @@ public class UserController : ControllerBase
     [HttpPost]
     public async Task<IActionResult> RegisterUser(UserRegistrationDTO userRegistrationDTO)
     {
-
         var result = DTO_Extensions.Spawn_DTO<User, UserRegistrationDTO>(userRegistrationDTO);
-        bool success = await _userDataService.Add(result);
+        await _userDataService.Add(result);
 
-
-        if (!success) return BadRequest();
-        return Created("", result); // Add URL later...
-
-    }
-
-    [HttpDelete]
-    public async Task<IActionResult> DeleteUser(int id)
-    {
-        bool success = await _userDataService.Delete(id);
-        if (!success) return NotFound();
-        return NoContent();
-    }
-
-    [HttpPut]
-    public async Task<IActionResult> UpdateUser(int id, UpdateUserModel updateUserModel)
-    {
-        User user = await _userDataService.Get(id);
-        if (user != null)
-        {
-            user.Email = updateUserModel.email != "" ? updateUserModel.email : user.Email;
-            user.FirstName = updateUserModel.firstName != "" ? updateUserModel.firstName : user.FirstName;
-            user.Password = updateUserModel.password != "" ? updateUserModel.password : user.Password;
-        }
-        else return NotFound();
-
-        bool success = await _userDataService.Update(user);
-        if (success) return NoContent();
-        return BadRequest();
+        if (result == null) return NotFound();
+        return Ok(result);
 
     }
 

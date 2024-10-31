@@ -20,44 +20,20 @@ namespace MovieDataLayer.DataService
             _dbSet = _context.Set<T>();
         }
         // TODO: Add try catch to avoid runtime error.
-        public async Task<bool> Add(T entity) //This and Update, consider making it virtual?
+        public async Task Add(T entity) //This and Update, consider making it virtual?
         {
-            try
-            {
-                _dbSet.Add(entity);
-                await _context.SaveChangesAsync();
-                return true;
-            }
-            catch (Exception e)
-            {
-                return false;
-            }
-
+            _dbSet.Add(entity);
+            _context.SaveChanges();
         }
 
-        public async Task<bool> Delete(object id)
+        public async Task Delete(object id)
         {
-            try
+            var entity = await Get(id);
+            if (entity != null)
             {
-                var entity = await Get(id);
-                if (entity != null)
-                {
-                    _dbSet.Remove(entity);
-                    _context.SaveChanges();
-                    return true;
-                }
-                else
-                {
-                    return false;
-                }
-
+                _dbSet.Remove(entity);
+                _context.SaveChanges();
             }
-            catch (Exception)
-            {
-
-                return false;
-            }
-
         }
 
         public async Task<T> Get(object id)
@@ -70,19 +46,10 @@ namespace MovieDataLayer.DataService
             return _dbSet.Take(100).ToList();
         }
 
-        public async Task<bool> Update(T entity) //maybe add id, and think about serialize
+        public async Task Update(T entity) //maybe add id, and think about serialize
         {
-            try
-            {
-                _dbSet.Update(entity);
-                await _context.SaveChangesAsync();
-                return true;
-            }
-            catch (Exception)
-            {
-                return false;
-            }
-
+            _dbSet.Update(entity);
+            await _context.SaveChangesAsync();
         }
     }
 }
