@@ -86,24 +86,25 @@ namespace MovieDataLayer
         private void MapUserTitleBookmark(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<UserTitleBookmark>().ToTable("customer_title_bookmark");
-            modelBuilder.Entity<UserTitleBookmark>().HasKey(p => new { p.UserId, p.CreatedAt });
+            modelBuilder.Entity<UserTitleBookmark>().HasKey(p => new { p.UserId, p.TitleId });
 
             //columns
             modelBuilder.Entity<UserTitleBookmark>().Property(p => p.UserId).HasColumnName("customer_id");
             modelBuilder.Entity<UserTitleBookmark>().Property(p => p.TitleId).HasColumnName("title_id");
-            modelBuilder.Entity<UserTitleBookmark>().Property(p => p.CreatedAt).HasColumnName("created_at");
-            modelBuilder.Entity<UserTitleBookmark>().Property(p => p.Annotations).HasColumnName("annotation");
+            modelBuilder.Entity<UserTitleBookmark>().Property(p => p.CreatedAt).HasColumnName("created_at").HasColumnType("timestamp without time zone");
+            modelBuilder.Entity<UserTitleBookmark>().Property(p => p.Annotation).HasColumnName("annotation");
+
 
         }
         private void MapUserPersonBookmark(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<UserPersonBookmark>().ToTable("customer_person_bookmark");
-            modelBuilder.Entity<UserPersonBookmark>().HasKey(p => new { p.UserId, p.CreatedAt });
+            modelBuilder.Entity<UserPersonBookmark>().HasKey(p => new { p.UserId, p.PersonId });
 
             //columns
             modelBuilder.Entity<UserPersonBookmark>().Property(p => p.UserId).HasColumnName("customer_id");
             modelBuilder.Entity<UserPersonBookmark>().Property(p => p.PersonId).HasColumnName("person_id");
-            modelBuilder.Entity<UserPersonBookmark>().Property(p => p.CreatedAt).HasColumnName("created_at");
+            modelBuilder.Entity<UserPersonBookmark>().Property(p => p.CreatedAt).HasColumnName("created_at").HasColumnType("timestamp without time zone");
             modelBuilder.Entity<UserPersonBookmark>().Property(p => p.Annotations).HasColumnName("annotation");
 
         }
@@ -117,8 +118,8 @@ namespace MovieDataLayer
             modelBuilder.Entity<UserRating>().Property(p => p.UserId).HasColumnName("customer_id");
             modelBuilder.Entity<UserRating>().Property(p => p.TitleId).HasColumnName("title_id");
             modelBuilder.Entity<UserRating>().Property(p => p.Rating).HasColumnName("rating");
-            modelBuilder.Entity<UserRating>().Property(p => p.CreatedAt).HasColumnName("created_at");
-            modelBuilder.Entity<UserRating>().Property(p => p.UpdatedAt).HasColumnName("updated_at");
+            modelBuilder.Entity<UserRating>().Property(p => p.CreatedAt).HasColumnName("created_at").HasColumnType("timestamp without time zone");
+            modelBuilder.Entity<UserRating>().Property(p => p.UpdatedAt).HasColumnName("updated_at").HasColumnType("timestamp without time zone");
 
         }
 
@@ -130,7 +131,7 @@ namespace MovieDataLayer
             //columns
             modelBuilder.Entity<UserSearchHistory>().Property(p => p.UserId).HasColumnName("customer_id");
             modelBuilder.Entity<UserSearchHistory>().Property(p => p.SearchTerms).HasColumnName("search_terms");
-            modelBuilder.Entity<UserSearchHistory>().Property(p => p.CreatedAt).HasColumnName("created_at");
+            modelBuilder.Entity<UserSearchHistory>().Property(p => p.CreatedAt).HasColumnName("created_at").HasColumnType("timestamp without time zone");
 
         }
 

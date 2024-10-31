@@ -13,24 +13,24 @@ public class UserController : ControllerBase
 {
     public record UpdateUserModel(string email, string firstName, string password);
 
-    readonly UserRepository _userDataService;
+    readonly UserRepository _userRepository;
 
-    public UserController(UserRepository userDataService)
+    public UserController(UserRepository userRepository)
     {
-        _userDataService = userDataService;
+        _userRepository = userRepository;
     }
 
     [HttpGet]
     public async Task<IActionResult> GetAll()
     {
-        var result = (await _userDataService.GetAll()).Select(DTO_Extensions.Spawn_DTO<UserDTO, User>); // maybe never retrieve the password, just a thought you know!
+        var result = (await _userRepository.GetAll()).Select(DTO_Extensions.Spawn_DTO<UserDTO, User>); // maybe never retrieve the password, just a thought you know!
         return Ok(result);
     }
 
     [HttpGet("search_history/{id}")]
     public async Task<IActionResult> GetAllUserHistory(int id)
     {
-        var result = (await _userDataService.GetAllSearchHistoryByUserId(id)).Select(DTO_Extensions.Spawn_DTO<UserSearchHistoryDTO, UserSearchHistory>);
+        var result = (await _userRepository.GetAllSearchHistoryByUserId(id)).Select(DTO_Extensions.Spawn_DTO<UserSearchHistoryDTO, UserSearchHistory>);
 
         if (result == null) return NotFound();
         return Ok(result);
@@ -39,7 +39,7 @@ public class UserController : ControllerBase
     [HttpGet("ratings/{id}")]
     public async Task<IActionResult> GetAllUserRatings(int id)
     {
-        var result = (await _userDataService.GetAllUserRatingByUserId(id)).Select(DTO_Extensions.Spawn_DTO<UserRatingDTO, UserRating>);
+        var result = (await _userRepository.GetAllUserRatingByUserId(id)).Select(DTO_Extensions.Spawn_DTO<UserRatingDTO, UserRating>);
 
         if (result == null) return NotFound();
         return Ok(result);
@@ -48,7 +48,7 @@ public class UserController : ControllerBase
     [HttpGet("{id}")]
     public async Task<IActionResult> GetById(int id)
     {
-        var result = DTO_Extensions.Spawn_DTO<UserDTO, User>(await _userDataService.Get(id));
+        var result = DTO_Extensions.Spawn_DTO<UserDTO, User>(await _userRepository.Get(id));
 
         if (result == null) return NotFound();
         return Ok(result);
@@ -61,7 +61,7 @@ public class UserController : ControllerBase
     {
 
         var result = DTO_Extensions.Spawn_DTO<User, UserRegistrationDTO>(userRegistrationDTO);
-        bool success = await _userDataService.Add(result);
+        bool success = await _userRepository.Add(result);
 
 
         if (!success) return BadRequest();
@@ -72,7 +72,7 @@ public class UserController : ControllerBase
     [HttpDelete]
     public async Task<IActionResult> DeleteUser(int id)
     {
-        bool success = await _userDataService.Delete(id);
+        bool success = await _userRepository.Delete(id);
         if (!success) return NotFound();
         return NoContent();
     }
@@ -80,7 +80,7 @@ public class UserController : ControllerBase
     [HttpPut]
     public async Task<IActionResult> UpdateUser(int id, UpdateUserModel updateUserModel)
     {
-        User user = await _userDataService.Get(id);
+        User user = await _userRepository.Get(id);
         if (user != null)
         {
             user.Email = updateUserModel.email != "" ? updateUserModel.email : user.Email;
@@ -89,7 +89,7 @@ public class UserController : ControllerBase
         }
         else return NotFound();
 
-        bool success = await _userDataService.Update(user);
+        bool success = await _userRepository.Update(user);
         if (success) return NoContent();
         return BadRequest();
 
@@ -98,7 +98,7 @@ public class UserController : ControllerBase
     //[HttpGet("user")]
     //public async Task<IActionResult> GetById(string email) // should probably be authorized ALOT to be allowed to call this
     //{
-    //    var result = await _userDataService.GetByEmail(email);
+    //    var result = await _userRepository.GetByEmail(email);
     //    return Ok(result);
     //}
 }

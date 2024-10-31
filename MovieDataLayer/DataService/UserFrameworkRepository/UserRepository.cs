@@ -20,10 +20,7 @@ namespace MovieDataLayer.DataService.UserFrameworkRepository
         {
             return await _context.Set<UserPersonBookmark>().AsNoTracking().Where(x => x.UserId == id).ToListAsync();
         }
-        public async Task<IList<UserTitleBookmark>> GetAllTitleBookmarks(int id)
-        {
-            return await _context.Set<UserTitleBookmark>().AsNoTracking().Where(x => x.UserId == id).ToListAsync();
-        }
+
 
         //public async Task<User> GetUser(int id)
         //{
