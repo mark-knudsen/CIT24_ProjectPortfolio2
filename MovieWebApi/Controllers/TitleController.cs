@@ -73,5 +73,12 @@ namespace MovieWebApi.Controllers
             var result = await _titleRepository.TitleSearch(userId, searchTerm);
             return Ok(result);
         }
+
+        [HttpGet("similar-titles")] // Discuss if it is ok to use this URL!
+        public async Task<IActionResult> SimilarTitles(string titleId) // should probably be authorized ALOT to be allowed to call this
+        {
+            var result = await _titleRepository.SimilarTitles(titleId);
+            return Ok(result);
+        }
     }
 }

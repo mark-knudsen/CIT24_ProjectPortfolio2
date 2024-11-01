@@ -1,4 +1,4 @@
-﻿namespace MovieDataLayer
+﻿namespace MovieDataLayer.Models.IMDB_Models.IMDB_DTO
 {
     public class TitleSearchResultDTO
     {

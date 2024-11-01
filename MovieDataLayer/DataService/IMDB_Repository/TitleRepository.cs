@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using MovieDataLayer.Models.IMDB_Models;
+using MovieDataLayer.Models.IMDB_Models.IMDB_DTO;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -45,6 +46,13 @@ namespace MovieDataLayer.DataService.IMDB_Repository
         {
             string query = $"SELECT * FROM string_search('{userId}', '{searchTerm}');";
             return await _context.CallQuery<TitleSearchResultDTO>(query);
+        }
+        public async Task<IList<SimilarTitleSearchDTO>> SimilarTitles(string titleID) // also have to remember to make them async
+        {
+            // Should fix so the distinc is made in the function in the DB, then use the shorter version below!
+            //string query = $"SELECT * FROM find_similar_movies('{titleID}') LIMIT 8;";
+            string query = $"SELECT DISTINCT ON(primary_title) similar_title_id, primary_title, isadult, title_type, genres FROM find_similar_movies('{titleID}') ORDER BY primary_title DESC LIMIT 8;";
+            return await _context.CallQuery<SimilarTitleSearchDTO>(query);
         }
 
         //public IList<Title> GetAllTitleButWithLimit(int id)
