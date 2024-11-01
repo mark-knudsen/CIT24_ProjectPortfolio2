@@ -32,6 +32,8 @@ namespace MovieDataLayer
         public DbSet<UserRating> UserRatings { get; set; }
         public DbSet<UserSearchHistory> UserSearchHistory { get; set; }
 
+        public DbSet<TitleSearchResultDTO> TitleSearchResultDTO { get; set; }
+
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -67,7 +69,7 @@ namespace MovieDataLayer
             MapUserPersonBookmark(modelBuilder);
             MapUserRating(modelBuilder);
             MapUserSearchHistory(modelBuilder);
-
+            MapUserTitleSearch(modelBuilder);
         }
 
         private void MapUser(ModelBuilder modelBuilder)
@@ -132,6 +134,13 @@ namespace MovieDataLayer
             modelBuilder.Entity<UserSearchHistory>().Property(p => p.SearchTerms).HasColumnName("search_terms");
             modelBuilder.Entity<UserSearchHistory>().Property(p => p.CreatedAt).HasColumnName("created_at").HasColumnType("timestamp without time zone");
 
+        }
+        private void MapUserTitleSearch(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<TitleSearchResultDTO>().HasNoKey();
+            //columns
+            modelBuilder.Entity<TitleSearchResultDTO>().Property(p => p.TitleId).HasColumnName("title_id");
+            modelBuilder.Entity<TitleSearchResultDTO>().Property(p => p.PrimaryTitle).HasColumnName("primary_title");
         }
 
         private void MapPerson(ModelBuilder modelBuilder)

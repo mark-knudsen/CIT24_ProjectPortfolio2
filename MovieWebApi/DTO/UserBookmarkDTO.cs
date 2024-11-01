@@ -1,4 +1,4 @@
-﻿namespace MovieWebApi.DTO
+﻿namespace MovieWebApi
 {
     public class UserBookmarkDTO
     {

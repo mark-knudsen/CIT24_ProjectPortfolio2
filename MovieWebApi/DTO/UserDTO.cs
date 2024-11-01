@@ -1,6 +1,4 @@
-﻿using MovieDataLayer;
-
-namespace MovieWebApi;
+﻿namespace MovieWebApi;
 public class UserDTO
 {
     public int Id { get; set; }

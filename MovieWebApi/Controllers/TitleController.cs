@@ -3,6 +3,7 @@ using MovieDataLayer.DataService.IMDB_Repository;
 using MovieDataLayer.Models.IMDB_Models;
 using MovieWebApi.Extensions;
 using MovieDataLayer;
+using MovieDataLayer.DataService.UserFrameworkRepository;
 
 namespace MovieWebApi.Controllers
 {
@@ -47,7 +48,7 @@ namespace MovieWebApi.Controllers
 
         //    return Ok(title);
         //}
-        
+
         [HttpGet("{id}")]
         public async Task<IActionResult> Get(string id) // id tt7856872
         {
@@ -56,7 +57,7 @@ namespace MovieWebApi.Controllers
 
             return Ok(title);
         }
-        
+
         [HttpGet("genre/{id}")]
         public async Task<IActionResult> GetByGenre(int id) // id tt7856872
         {
@@ -64,6 +65,13 @@ namespace MovieWebApi.Controllers
             if (titles == null) return NotFound();
 
             return Ok(titles);
+        }
+
+        [HttpGet("search")]
+        public async Task<IActionResult> Search([FromHeader] int userId, string searchTerm) // should probably be authorized ALOT to be allowed to call this
+        {
+            var result = await _titleRepository.TitleSearch(userId, searchTerm);
+            return Ok(result);
         }
     }
 }

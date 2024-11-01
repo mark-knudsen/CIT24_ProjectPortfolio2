@@ -1,6 +1,4 @@
-﻿using MovieDataLayer.Models.IMDB_Models;
-
-namespace MovieDataLayer;
+﻿namespace MovieWebApi;
 public class TitleDetailedDTO
 {
     public string Id { get; set; }
