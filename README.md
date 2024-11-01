@@ -4,7 +4,7 @@ KEEP IT UPDATED.
 
 
 #NeedToHave
-Use CallSQL.cs to implement structured_string_search from DB
+Use CallSQL.cs to implement structured_string_search from DB - Are done!
 Implement linkgenerator and pagination for Title
 Impelment tests for Datalayer and WebAPI
 Authentication
