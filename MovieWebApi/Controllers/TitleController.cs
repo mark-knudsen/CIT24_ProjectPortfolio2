@@ -65,6 +65,8 @@ namespace MovieWebApi.Controllers
         {
             var result = await _titleRepository.SimilarTitles(titleId);
             return Ok(result);
+
+        }
         private TitleDetailedDTO? CreateTitleModel(TitleDetailedDTO? titleDTO)
         {
             if (titleDTO == null)
