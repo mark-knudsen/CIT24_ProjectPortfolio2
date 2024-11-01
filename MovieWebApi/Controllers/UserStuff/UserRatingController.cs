@@ -14,7 +14,7 @@ namespace MovieWebApi.Controllers.UserStuff
     {
         public record CreateUserRating(string TitleId, float Rating);
 
-       // public record UpdateUserModel(string email, string firstName, string password);
+        // public record UpdateUserModel(string email, string firstName, string password);
         readonly UserRatingRepository _userRatingRepository;
 
         public UserRatingController(UserRatingRepository userRatingRepository)
@@ -24,7 +24,7 @@ namespace MovieWebApi.Controllers.UserStuff
 
         [HttpGet("{titleId}")]
 
-        public async Task<IActionResult> Get([FromHeader]int userId, string titleId) 
+        public async Task<IActionResult> Get([FromHeader] int userId, string titleId)
         {
 
             var rating = DTO_Extensions.Spawn_DTO<UserRatingDTO, UserRating>(await _userRatingRepository.GetUserRating(userId, titleId));
@@ -36,7 +36,7 @@ namespace MovieWebApi.Controllers.UserStuff
 
 
         [HttpGet]
-        public async Task<IActionResult> GetAll([FromHeader]int userId)
+        public async Task<IActionResult> GetAll([FromHeader] int userId)
         {
             var result = (await _userRatingRepository.GetAllUserRatingByUserId(userId)).Select(DTO_Extensions.Spawn_DTO<UserRatingDTO, UserRating>);
 
@@ -44,33 +44,37 @@ namespace MovieWebApi.Controllers.UserStuff
             return Ok(result);
         }
 
-        [HttpDelete]
-        public async Task<IActionResult> Delete([FromHeader] int userId, string titleId) 
+        [HttpDelete("{titleId}")]
+        public async Task<IActionResult> Delete([FromHeader] int userId, string titleId)
         {
             bool success = await _userRatingRepository.DeleteUserRating(userId, titleId);
             if (!success) return NotFound();
             return NoContent();
         }
 
-        //[HttpDelete]
-        //public async Task<IActionResult> DeleteAll(int userId) {
-        //    bool success = await _userRatingRepository.DeleteAllUserRatings(userId);
-        //    if (!success) return NotFound();
-        //    return NoContent();
-        //}
+        [HttpDelete]
+        public async Task<IActionResult> DeleteAll(int userId)
+        {
+            bool success = await _userRatingRepository.DeleteAllUserRatings(userId);
+            if (!success) return NotFound();
+            return NoContent();
+        }
+
         [HttpPost]
-        public async Task<IActionResult> Post([FromHeader] int userId, CreateUserRating userRating)
+        public async Task<IActionResult> Post([FromHeader] int userId, CreateUserRating createUserRating)
         {
             var _userRating = new UserRating();
-           
-            _userRating.Adapt<CreateUserRating>();
             _userRating.UserId = userId;
+            _userRating.TitleId = createUserRating.TitleId;
+            _userRating.Rating = createUserRating.Rating;
+            _userRating.CreatedAt = DateTime.Now;
+            _userRating.UpdatedAt = DateTime.Now;
 
             var success = await _userRatingRepository.Add(_userRating);
 
             if (!success) return BadRequest();
             return NoContent();
-            
+
         }
     }
 }

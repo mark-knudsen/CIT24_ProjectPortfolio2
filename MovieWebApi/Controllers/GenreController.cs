@@ -8,7 +8,8 @@ namespace MovieWebApi.Controllers;
 [Route("api/genres")]
 public class GenreController : ControllerBase
 {
-    public record GenreModel(string Name);
+    public record GenreModel(string Name); // Reocrds in a good way to make
+
     private readonly IRepository<Genre> _dataService;
     public GenreController(IRepository<Genre> dataService)
     {
