@@ -79,6 +79,16 @@ public class UserController : ControllerBase
 
     }
 
+
+    [HttpDelete]
+    public async Task<IActionResult> DeleteUser(int id) 
+    {
+        bool success = await _userRepository.Delete(id);
+        if (success) return NoContent();
+        return NotFound();
+    }
+
+
     //[HttpGet("user")]
     //public async Task<IActionResult> GetById(string email) // should probably be authorized ALOT to be allowed to call this
     //{
