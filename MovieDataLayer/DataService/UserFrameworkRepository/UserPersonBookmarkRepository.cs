@@ -58,19 +58,6 @@ namespace MovieDataLayer.DataService.UserFrameworkRepository
                 return false;
             }
         }
-
-        public async Task<bool> UpdatePersonBookmark(UserPersonBookmark userPersonBookmark)
-        {
-            try
-            {
-                _dbSet.Update(userPersonBookmark);
-                await _context.SaveChangesAsync();
-                return true;
-            }
-            catch 
-            {
-                return false;
-            }
-        }
+        
     }
 }

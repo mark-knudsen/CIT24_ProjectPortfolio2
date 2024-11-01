@@ -34,15 +34,6 @@ public class UserController : ControllerBase
         return Ok(result);
     }
 
-    [HttpGet("ratings/{id}")]
-    public async Task<IActionResult> GetAllUserRatings(int id)
-    {
-        var result = (await _userRepository.GetAllUserRatingByUserId(id)).Select(DTO_Extensions.Spawn_DTO<UserRatingDTO, UserRating>);
-
-        if (result == null) return NotFound();
-        return Ok(result);
-    }
-
     [HttpGet("{id}")]
     public async Task<IActionResult> GetById(int id)
     {

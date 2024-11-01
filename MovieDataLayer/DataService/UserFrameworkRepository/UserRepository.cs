@@ -11,10 +11,6 @@ namespace MovieDataLayer.DataService.UserFrameworkRepository
         {
             return await _context.Set<UserSearchHistory>().AsNoTracking().Where(x => x.UserId.Equals(id)).ToListAsync();
         }
-        public async Task<IList<UserRating>> GetAllUserRatingByUserId(int id)
-        {
-            return await _context.Set<UserRating>().AsNoTracking().Where(x => x.UserId.Equals(id)).ToListAsync();
-        }
 
         public async Task<IList<UserPersonBookmark>> GetAllPersonBookmarks(int id)
         {

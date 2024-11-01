@@ -71,7 +71,7 @@ namespace MovieWebApi.Controllers.UserStuff
             }
             else return NotFound();
 
-            bool success = await _userTitleBookmarkRepository.UpdateTitleBookmark(titleBookmark);
+            bool success = await _userTitleBookmarkRepository.Update(titleBookmark);
             if (success) return NoContent();
             return BadRequest();
         }

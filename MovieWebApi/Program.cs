@@ -21,6 +21,7 @@ builder.Services.AddScoped(typeof(IRepository<>), typeof(Repository<>)); //Curre
 builder.Services.AddScoped<TitleRepository>(); //Dependency Injection for TitleRepository class, concrete.
 builder.Services.AddScoped<UserRepository>(); //Dependency Injection for UserRepository class, concrete.
 builder.Services.AddScoped<PersonRepository>();
+builder.Services.AddScoped<UserRatingRepository>();
 
 builder.Services.AddScoped<UserTitleBookmarkRepository>();
 builder.Services.AddScoped<UserPersonBookmarkRepository>();

@@ -19,6 +19,17 @@ namespace MovieDataLayer.DataService
             _context = context;
             _dbSet = _context.Set<T>();
         }
+
+        public async Task<T> Get(object id)
+        {
+            return await _dbSet.FindAsync(id);
+        }
+
+        public async Task<IList<T>> GetAll()
+        {
+            return _dbSet.Take(100).ToList();
+        }
+
         // TODO: Add try catch to avoid runtime error.
         public async Task<bool> Add(T entity) //This and Update, consider making it virtual?
         {
@@ -53,16 +64,6 @@ namespace MovieDataLayer.DataService
 
                return false;
             }
-        }
-
-        public async Task<T> Get(object id)
-        {
-            return await _dbSet.FindAsync(id);
-        }
-
-        public async Task<IList<T>> GetAll()
-        {
-            return _dbSet.Take(100).ToList();
         }
 
         public async Task<bool> Update(T entity) //maybe add id, and think about serialize
