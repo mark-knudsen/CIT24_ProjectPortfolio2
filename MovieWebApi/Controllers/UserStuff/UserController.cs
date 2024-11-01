@@ -76,7 +76,6 @@ public class UserController : ControllerBase
         bool success = await _userRepository.Update(user);
         if (success) return NoContent();
         return BadRequest();
-
     }
 
 

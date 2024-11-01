@@ -12,7 +12,7 @@ namespace MovieWebApi.Controllers.UserStuff
     public class UserTitleBookmarkController : ControllerBase
     {
         
-        public record CreateUserTitleBookmark(int UserId, string TitleId, string Annotation);
+        public record CreateUserTitleBookmark(string TitleId, string Annotation);
         public record UpdateUserTitleBookmark(string annotation);
 
         readonly UserTitleBookmarkRepository _userTitleBookmarkRepository;

@@ -11,8 +11,8 @@ namespace MovieWebApi.Controllers.UserStuff
     [Route("api/bookmarks/person")]
     public class UserPersonBookmarkController : ControllerBase
     { 
-        public record CreateUserPersonBookmark(int UserId, string PersonId, string Annotation);
-        public record UpdateUserPersonBookmark(int UserId, string PersonId, string Annotation);
+        public record CreateUserPersonBookmark(string PersonId, string Annotation);
+        public record UpdateUserPersonBookmark(string Annotation);
         readonly UserPersonBookmarkRepository _userPersonBookmarkRepository;
         public UserPersonBookmarkController(UserPersonBookmarkRepository userPersonBookmarkRepository)
         {
@@ -67,7 +67,7 @@ namespace MovieWebApi.Controllers.UserStuff
             }
             else return NotFound();
 
-            bool success = await _userPersonBookmarkRepository.UpdatePersonBookmark(personBookmark);
+            bool success = await _userPersonBookmarkRepository.Update(personBookmark);
             if (success) return NoContent();
             return BadRequest();
         }
