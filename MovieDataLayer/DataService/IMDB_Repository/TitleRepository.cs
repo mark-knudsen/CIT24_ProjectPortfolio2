@@ -27,8 +27,8 @@ namespace MovieDataLayer.DataService.IMDB_Repository
                 .Include(t => t.DirectorsList).ThenInclude(d => d.Person)
                 .Include(t => t.GenresList).ThenInclude(g => g.Genre)
                 .Include(t => t.PrincipalCastList).ThenInclude(p => p.Person).FirstOrDefaultAsync();
-        }  
-        
+        }
+
         public async Task<IList<Title>> GetTitleByGenre(int id)
         {
             return await _dbSet
@@ -41,6 +41,7 @@ namespace MovieDataLayer.DataService.IMDB_Repository
                 .Include(t => t.GenresList).ThenInclude(g => g.Genre)
                 .Include(t => t.PrincipalCastList).ThenInclude(p => p.Person).Where(x => x.GenresList.Any(x => x.GenreId == id)).Take(20).ToListAsync();
         }
+
 
         //public IList<Title> GetAllTitleButWithLimit(int id)
         //{
