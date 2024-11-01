@@ -71,7 +71,7 @@ public class UserController : ControllerBase
 
 
     [HttpDelete]
-    public async Task<IActionResult> DeleteUser(int id) 
+    public async Task<IActionResult> DeleteUser(int id)
     {
         bool success = await _userRepository.Delete(id);
         if (success) return NoContent();
@@ -79,10 +79,10 @@ public class UserController : ControllerBase
     }
 
 
-    //[HttpGet("user")]
-    //public async Task<IActionResult> GetById(string email) // should probably be authorized ALOT to be allowed to call this
+    //[HttpGet("titles/search")]
+    //public async Task<IActionResult> Search([FromHeader] int userId, string searchTerm) // should probably be authorized ALOT to be allowed to call this
     //{
-    //    var result = await _userRepository.GetByEmail(email);
+    //    var result = await _userRepository.UserSearch(userId, searchTerm);
     //    return Ok(result);
     //}
 }

@@ -1,5 +1,4 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using MovieDataLayer.Models.IMDB_Models;
 
 namespace MovieDataLayer.DataService.UserFrameworkRepository
 {
@@ -28,10 +27,6 @@ namespace MovieDataLayer.DataService.UserFrameworkRepository
 
         //**** Proof of concept, CallSql.cs: ****//
 
-        //public async Task<EmailSearchResult> GetByEmail(string email) // also have to remember to make them async
-        //{
-        //    string query = $"select * from get_customer('{email}')";
-        //    return (await _context.CallQuery<EmailSearchResult>(query)).Single();
-        //}
+
     }
 }
