@@ -18,7 +18,7 @@ In WebAPI>Controllers for all Create/update methods return relevant object (has 
 Research if all parts of CRUD operations in Datalayer is required to use await and toAsync for the operation to be wholly async. 
 If yes: All CRUD operations in Datalayer should be made into the async version of the operation.
 SpawnDTO needs to overloaded to take single entities and lists of entities
-
+Function find_similar_movies() from database can return doublicates titles, need to be fixed later!
 
 
 #Database:
