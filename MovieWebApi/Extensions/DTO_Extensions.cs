@@ -27,6 +27,7 @@ namespace MovieWebApi.Extensions
             model.PrincipalCastList = title.PrincipalCastList?.Select(x => x.Person.Name).ToList();
             model.DirectorsList = title.DirectorsList?.Select(x => x.Person.Name).ToList();
             model.AverageRating = title.Rating?.AverageRating;
+
             return model;
         }
         public static IList<TitleDetailedDTO> MapTitleToTitleDetailedDTO(this IList<Title> _title)   

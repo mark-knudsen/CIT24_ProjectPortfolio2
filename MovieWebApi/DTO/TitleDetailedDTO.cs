@@ -1,6 +1,7 @@
 ﻿namespace MovieWebApi;
 public class TitleDetailedDTO
 {
+    public string? Url { get; set; }
     public string Id { get; set; }
     public string TitleType { get; set; }
     public string PrimaryTitle { get; set; }

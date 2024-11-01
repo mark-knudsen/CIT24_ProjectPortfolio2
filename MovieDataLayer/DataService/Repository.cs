@@ -25,6 +25,11 @@ namespace MovieDataLayer.DataService
             return await _dbSet.FindAsync(id);
         }
 
+        public async Task<IList<T>> GetAll(int page = 1, int pageSize = 10) //should not use default values when fully implemented?
+        {
+            return _dbSet.Skip(page * pageSize).Take(pageSize).ToList();
+        }
+
         public async Task<IList<T>> GetAll()
         {
             return _dbSet.Take(100).ToList();
@@ -56,13 +61,13 @@ namespace MovieDataLayer.DataService
                     _context.SaveChanges();
                     return true;
                 }
-                else 
+                else
                     return false;
             }
             catch (Exception)
             {
 
-               return false;
+                return false;
             }
         }
 
@@ -78,6 +83,11 @@ namespace MovieDataLayer.DataService
             {
                 return false;
             }
+        }
+
+        public async Task<int> NumberOfTitles()
+        {
+            return _dbSet.Count();
         }
     }
 }

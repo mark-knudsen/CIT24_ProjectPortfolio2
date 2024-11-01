@@ -8,6 +8,7 @@ namespace MovieDataLayer.Interfaces
 {
     public interface IRepository<T> where T : class
     {
+        Task<int> NumberOfTitles();
         Task<T> Get(object id);
         Task<IList<T>> GetAll();
         Task<bool> Add(T entity);
