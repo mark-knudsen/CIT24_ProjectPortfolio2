@@ -7,7 +7,7 @@ KEEP IT UPDATED.
 Use CallSQL.cs to implement structured_string_search from DB - Are done!
 Use CallSQL.cs to implement find_similar_movies from DB - Are done!
 Implement linkgenerator and pagination for Title
-Impelment tests for Datalayer and WebAPI
+Impelment tests for Datalayer and WebAPI -Jeff + Mark take this!
 Authentication
 
 
