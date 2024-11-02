@@ -30,7 +30,7 @@ namespace MovieDataLayer.DataService
             const int maxPageSize = 10; //Max size of page retrieved from DB
 
             pageSize = pageSize > maxPageSize ? maxPageSize : pageSize; //Sets pageSize to maxPageSize if greater than maxPageSize
-            return _dbSet.Skip(page * pageSize).Take(pageSize).ToList();
+            return await _dbSet.AsNoTracking().Skip(page * pageSize).Take(pageSize).ToListAsync();
         }
 
         public async Task<IList<T>> GetAll()
