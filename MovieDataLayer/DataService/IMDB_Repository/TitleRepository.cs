@@ -61,7 +61,7 @@ namespace MovieDataLayer.DataService.IMDB_Repository
 
         public async Task<int> CountByGenre(int genreId)
         {
-            return await _dbSet.Where(title => title.GenresList.Any(g => g.GenreId == genreId)).CountAsync(); //should it be async?
+            return await _dbSet.AsNoTracking().Where(title => title.GenresList.Any(g => g.GenreId == genreId)).CountAsync(); //should it be async?
         }
 
 
