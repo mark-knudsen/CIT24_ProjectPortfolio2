@@ -25,8 +25,11 @@ namespace MovieDataLayer.DataService
             return await _dbSet.FindAsync(id);
         }
 
-        public async Task<IList<T>> GetAll(int page = 1, int pageSize = 10) //should not use default values when fully implemented?
+        public async Task<IList<T>> GetAll(int page = 0, int pageSize = 10) //should not use default values when fully implemented?
         {
+            const int maxPageSize = 10; //Max size of page retrieved from DB
+
+            pageSize = pageSize > maxPageSize ? maxPageSize : pageSize; //Sets pageSize to maxPageSize if greater than maxPageSize
             return _dbSet.Skip(page * pageSize).Take(pageSize).ToList();
         }
 

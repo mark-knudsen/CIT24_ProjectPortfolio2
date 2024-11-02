@@ -18,16 +18,19 @@ namespace MovieWebApi.Extensions
             return _linkgenerator.GetUriByName(HttpContext, pathName, entity);
         }
 
-        protected string? GetLink(string pathName, int page, int pageSize)
+        protected string? GetLink(string pathName, int pageNumber, int pageSize)
         {
-            return GetUrl(pathName, new { page, pageSize });
+            return GetUrl(pathName, new { pageNumber, pageSize });
         }
 
         protected object CreatePaging<T>(string pathName, int pageNumber, int pageSize, int total, IEnumerable<T>? entities)
         {
+
+
             const int maxPageSize = 10;
 
             pageSize = pageSize > maxPageSize ? maxPageSize : pageSize; //Sets pageSize to maxPageSize if greater than maxPageSize
+            //Above 2 possibly not needed, as we can set the maxPageSize in the GetAll method in the repository
 
             var numberOfPages = (int)Math.Ceiling(total / (double)pageSize); //Calculates the number of pages and adds an extra page if there is a remainder
 

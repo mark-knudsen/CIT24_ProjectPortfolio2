@@ -23,13 +23,24 @@ namespace MovieWebApi.Controllers
         }
 
         [HttpGet(Name = nameof(GetAllTitles))]
-        public async Task<IActionResult> GetAllTitles(int page = 1, int pageSize = 10) // We really just want the plot and poster at all times in the title, same with some of the collections
+        public async Task<IActionResult> GetAllTitles(int page = 0, int pageSize = 10) // We really just want the plot and poster at all times in the title, same with some of the collections
         {
+            //var fecthedTitles = (await _titleRepository.GetAll(page, pageSize));
+            //if (fecthedTitles == null || !fecthedTitles.Any()) return NotFound();
+
+            //var titleToDTO = fecthedTitles.Select(title => title.MapTitleToTitleDetailedDTO()).ToList();
+            //var numberOfEntities = await _titleRepository.NumberOfTitles();
+            //var titleList = CreateTitleModel(titleToDTO);
+
+            //object result = CreatePaging(nameof(GetAllTitles), page, pageSize, numberOfEntities, titleList);
+
+            //return Ok(result);
+
             var titles = (await _titleRepository.GetAll(page, pageSize)).Select(DTO_Extensions.Spawn_DTO<TitleDetailedDTO, Title>);
             if (titles == null || !titles.Any()) return NotFound();
 
             var numberOfEntities = await _titleRepository.NumberOfTitles();
-            titles = CreateTitleModel(titles.ToList());
+            titles = CreateTitleModel(titles.ToList()); //Why does this need to be converted to a list? It is already a list? Maybe use the above code? Possible issue with using Select on await task
 
             object result = CreatePaging(nameof(GetAllTitles), page, pageSize, numberOfEntities, titles);
 

@@ -4,11 +4,11 @@ public class TitleDetailedDTO
     public string? Url { get; set; }
     public string Id { get; set; }
     public string TitleType { get; set; }
-    public string PrimaryTitle { get; set; }
-    public string OriginalTitle { get; set; }
-    public int StartYear { get; set; }
-    public int EndYear { get; set; }
-    public int Runtime { get; set; }
+    public string? PrimaryTitle { get; set; }
+    public string? OriginalTitle { get; set; }
+    public int? StartYear { get; set; }
+    public int? EndYear { get; set; }
+    public int? Runtime { get; set; }
     public bool IsAdult { get; set; }
     public string PosterUrl { get; set; }
     public string Plot { get; set; }
