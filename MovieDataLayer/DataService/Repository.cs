@@ -88,7 +88,7 @@ namespace MovieDataLayer.DataService
             }
         }
 
-        public async Task<int> NumberOfTitles()
+        public async Task<int> NumberOfElementsInTable()
         {
             return _dbSet.Count();
         }

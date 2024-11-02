@@ -5,6 +5,7 @@ using MovieWebApi.Extensions;
 using MovieDataLayer;
 using MovieDataLayer.DataService.UserFrameworkRepository;
 using Mapster;
+using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace MovieWebApi.Controllers
 {
@@ -39,7 +40,7 @@ namespace MovieWebApi.Controllers
             var titles = (await _titleRepository.GetAll(page, pageSize)).Select(DTO_Extensions.Spawn_DTO<TitleDetailedDTO, Title>);
             if (titles == null || !titles.Any()) return NotFound();
 
-            var numberOfEntities = await _titleRepository.NumberOfTitles();
+            var numberOfEntities = await _titleRepository.NumberOfElementsInTable();
             titles = CreateTitleModel(titles.ToList()); //Why does this need to be converted to a list? It is already a list? Maybe use the above code? Possible issue with using Select on await task
 
             object result = CreatePaging(nameof(GetAllTitles), page, pageSize, numberOfEntities, titles);
@@ -56,12 +57,14 @@ namespace MovieWebApi.Controllers
         }
 
         [HttpGet("genre/{id}")]
-        public async Task<IActionResult> GetByGenre(int id) // id tt7856872
+        public async Task<IActionResult> GetByGenre(int id, int page = 0, int pageSize = 10) // id tt7856872
         {
-            var titles = (await _titleRepository.GetTitleByGenre(id)).MapTitleToTitleDetailedDTO();
+            var titles = (await _titleRepository.GetTitleByGenre(id, page, pageSize)).MapTitleToTitleDetailedDTO();
             if (titles == null) return NotFound();
 
-            return Ok(titles);
+            var numberOfEntities = await _titleRepository.NumberOfElementsInTable();
+            object result = CreatePaging(nameof(GetByGenre), page, pageSize, numberOfEntities, titles);
+            return Ok(result);
         }
 
         [HttpGet("search")]
