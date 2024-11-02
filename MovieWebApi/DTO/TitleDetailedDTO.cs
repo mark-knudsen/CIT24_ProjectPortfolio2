@@ -1,5 +1,7 @@
-﻿namespace MovieWebApi;
-public class TitleDetailedDTO
+﻿using MovieDataLayer.Models.IMDB_Models.IMDB_DTO;
+
+namespace MovieWebApi;
+public class TitleDetailedDTO: BaseDTO
 {
     public string? Url { get; set; }
     public string Id { get; set; }

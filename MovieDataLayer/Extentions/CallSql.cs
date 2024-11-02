@@ -4,7 +4,7 @@
 namespace MovieDataLayer;
 public static class CallSql
 {
-    public static async Task<IList<T>> CallQuery<T>(this IMDBContext context, string query) where T : class
+    public static async Task<IEnumerable<T>> CallQuery<T>(this IMDBContext context, string query) where T : class
     {
         return await context.Set<T>().FromSqlRaw(query).ToListAsync();
 

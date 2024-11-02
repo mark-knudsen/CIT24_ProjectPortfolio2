@@ -41,7 +41,7 @@ namespace MovieWebApi.Controllers
             if (titles == null || !titles.Any()) return NotFound();
 
             var numberOfEntities = await _titleRepository.NumberOfElementsInTable();
-            titles = CreateTitleModel(titles.ToList()); //Why does this need to be converted to a list? It is already a list? Maybe use the above code? Possible issue with using Select on await task
+            titles = CreateNavigation<TitleDetailedDTO, TitleController>(titles); //Why does this need to be converted to a list? It is already a list? Maybe use the above code? Possible issue with using Select on await task
 
             object result = CreatePaging(nameof(GetAllTitles), page, pageSize, numberOfEntities, titles);
 
@@ -68,10 +68,15 @@ namespace MovieWebApi.Controllers
         }
 
         [HttpGet("search")]
-        public async Task<IActionResult> Search([FromHeader] int userId, string searchTerm) // should probably be authorized ALOT to be allowed to call this
+        public async Task<IActionResult> Search([FromHeader] int userId, string searchTerm, int page = 0, int pageSize = 10) // should probably be authorized ALOT to be allowed to call this
         {
-            var result = await _titleRepository.TitleSearch(userId, searchTerm);
-            return Ok(result);
+            var queryResult = (await _titleRepository.TitleSearch(userId, searchTerm, page, pageSize)).MapTitleSearchResultModelToTitleSearchResultDTO();
+            var numberOfentities = await _titleRepository.NumberOfElementsInTable();
+
+            queryResult = CreateNavigation<TitleSearchResultDTO, TitleController>(queryResult);
+            var s = CreatePaging(nameof(Search), page, pageSize, numberOfentities, queryResult);
+
+            return Ok();
         }
 
         [HttpGet("similar-titles")] // Discuss if it is ok to use this URL!

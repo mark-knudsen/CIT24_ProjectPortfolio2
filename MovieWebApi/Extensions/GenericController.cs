@@ -1,5 +1,8 @@
-﻿using System.Runtime.InteropServices;
+﻿using System.Collections.Immutable;
+using System.Runtime.InteropServices;
 using Microsoft.AspNetCore.Mvc;
+using MovieDataLayer.Models.IMDB_Models.IMDB_DTO;
+using MovieWebApi.Controllers;
 
 namespace MovieWebApi.Extensions
 {
@@ -53,6 +56,23 @@ namespace MovieWebApi.Extensions
 
         }
 
+        public IEnumerable<T>? CreateNavigation<T, C>(IEnumerable<T> DTO) where T : BaseDTO where C: TitleController 
+        {
+            if (DTO == null)
+            {
+                return null;
+            }
+            //took a different route, might not be needed.
+
+            //var url = DTO.Select(x => x.Url);
+            //var id = DTO.Select(x => x.Id);
+
+            foreach ( var entity in DTO) {
+                entity.Url = GetUrl(nameof(TitleController.Get), new {entity.Id});
+            }
+
+            return DTO;
+        }
 
     }
 }
