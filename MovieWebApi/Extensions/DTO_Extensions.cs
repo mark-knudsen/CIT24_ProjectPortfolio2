@@ -4,7 +4,9 @@ using System.Runtime.CompilerServices;
 using Mapster;
 using MovieDataLayer;
 using MovieDataLayer.Models.IMDB_Models;
-using MovieDataLayer.Models.IMDB_Models.IMDB_DTO;
+using MovieWebApi.DTO.SearchDTO;
+    using MovieDataLayer.Models.IMDB_Models.IMDB_DTO;
+
 
 namespace MovieWebApi.Extensions
 {
@@ -20,6 +22,7 @@ namespace MovieWebApi.Extensions
 
         public static TitleDetailedDTO MapTitleToTitleDetailedDTO(this Title title) // IMPORTANT, sometimes some values are null, but that will throw an axception when trying to set it here, add nullable in DTO and in here
         {
+
             var model = title.Adapt<TitleDetailedDTO>();
             model.GenresList = title.GenresList?.Select(x => x.Genre.Name).ToList();
             model.PosterUrl = title.Poster?.PosterUrl;
@@ -29,6 +32,7 @@ namespace MovieWebApi.Extensions
             model.PrincipalCastList = title.PrincipalCastList?.Select(x => x.Person.Name).ToList();
             model.DirectorsList = title.DirectorsList?.Select(x => x.Person.Name).ToList();
             model.AverageRating = title.Rating?.AverageRating;
+            
 
             return model;
         }

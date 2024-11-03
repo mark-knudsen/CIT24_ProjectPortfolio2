@@ -2,9 +2,10 @@
 
 namespace MovieWebApi.DTO.SearchDTO
 {
-    public class TitleSearchResultDTO : TitleSearchResultModel
+    public class TitleSearchResultDTO : BaseDTO
     {
-        public string TitleId { get; set; }
+
+        public string Id { get; set; }
         public string PrimaryTitle { get; set; }
     }
 }

@@ -6,6 +6,7 @@ using MovieDataLayer;
 using MovieDataLayer.DataService.UserFrameworkRepository;
 using Mapster;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using MovieWebApi.DTO.SearchDTO;
 
 namespace MovieWebApi.Controllers
 {
@@ -68,15 +69,15 @@ namespace MovieWebApi.Controllers
         }
 
         [HttpGet("search")]
-        public async Task<IActionResult> Search([FromHeader] int userId, string searchTerm, int page = 0, int pageSize = 10) // should probably be authorized ALOT to be allowed to call this
+        public async Task<IActionResult> Search([FromHeader] int userId, string searchTerm, int page = 0, int pageSize = 1) // should probably be authorized ALOT to be allowed to call this
         {
             var queryResult = (await _titleRepository.TitleSearch(userId, searchTerm, page, pageSize)).MapTitleSearchResultModelToTitleSearchResultDTO();
             var numberOfentities = await _titleRepository.NumberOfElementsInTable();
 
             queryResult = CreateNavigation<TitleSearchResultDTO, TitleController>(queryResult);
-            var s = CreatePaging(nameof(Search), page, pageSize, numberOfentities, queryResult);
+            object s = CreatePaging(nameof(Search), page, pageSize, numberOfentities, queryResult);
 
-            return Ok();
+            return Ok(s);
         }
 
         [HttpGet("similar-titles")] // Discuss if it is ok to use this URL!

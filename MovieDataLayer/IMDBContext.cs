@@ -146,6 +146,12 @@ namespace MovieDataLayer
             //columns
             modelBuilder.Entity<TitleSearchResultModel>().Property(p => p.TitleId).HasColumnName("title_id");
             modelBuilder.Entity<TitleSearchResultModel>().Property(p => p.PrimaryTitle).HasColumnName("primary_title");
+
+            modelBuilder.Entity<TitleSearchResultModel>()
+            .Ignore(t => t.Id);
+
+            modelBuilder.Entity<TitleSearchResultModel>()
+            .Ignore(t => t.Url);
         }
         private void MapTitleSearch(ModelBuilder modelBuilder)
         {
