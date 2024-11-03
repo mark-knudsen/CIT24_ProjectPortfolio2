@@ -3,6 +3,8 @@ using System.Net.NetworkInformation;
 using Mapster;
 using MovieDataLayer;
 using MovieDataLayer.Models.IMDB_Models;
+using MovieDataLayer.Models.IMDB_Models.IMDB_DTO;
+using MovieWebApi.SearchDTO;
 
 namespace MovieWebApi.Extensions
 {
@@ -55,10 +57,18 @@ namespace MovieWebApi.Extensions
             return model;
         }
 
-        //public static UserDTO MapUserToUserDTO(this User user)
-        //{
-        //    var model = user.Adapt<UserDTO>();
-        //    return model;
-        //}
+        public static TitleSearchResultDTO MapOneTitleSearchResultModelToTitleSearchResultDTO(this TitleSearchResultModel titleSearchResultModel)
+        {
+            var model = titleSearchResultModel.Adapt<TitleSearchResultDTO>();
+            return model;
+        }
+        public static IEnumerable<TitleSearchResultDTO> MapTitleSearchResultModelToTitleSearchResultDTO(this IEnumerable<TitleSearchResultModel> titleSearchResultModel)
+        {
+            var models = new List<TitleSearchResultDTO>();
+            foreach (var searchResult in titleSearchResultModel) models.Add(searchResult.MapOneTitleSearchResultModelToTitleSearchResultDTO());  // Really not that elegant looking
+
+            return models;
+
+        }
     }
 }
