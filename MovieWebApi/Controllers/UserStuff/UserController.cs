@@ -7,7 +7,7 @@ using MovieWebApi.Extensions;
 
 namespace MovieWebApi.Controllers.UserStuff;
 [ApiController]
-[Route("api/users")]
+[Route("api/user")]
 public class UserController : ControllerBase
 {
     public record UpdateUserModel(string email, string firstName, string password);
@@ -18,7 +18,7 @@ public class UserController : ControllerBase
         _userRepository = userRepository;
     }
 
-    [HttpGet("something")]
+    [HttpGet("user-profile")]
     public async Task<IActionResult> GetById([FromHeader]int id)
     {
         var result = DTO_Extensions.Spawn_DTO<UserDTO, User>(await _userRepository.Get(id));
@@ -78,13 +78,5 @@ public class UserController : ControllerBase
         if (success) return NoContent();
         return NotFound();
     }
-
-
-    //[HttpGet("titles/search")]
-    //public async Task<IActionResult> Search([FromHeader] int userId, string searchTerm) // should probably be authorized ALOT to be allowed to call this
-    //{
-    //    var result = await _userRepository.UserSearch(userId, searchTerm);
-    //    return Ok(result);
-    //}
 }
 

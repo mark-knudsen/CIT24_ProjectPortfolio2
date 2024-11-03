@@ -7,6 +7,8 @@ namespace MovieUnitTests
 {
     public class WebAPI_Test
     {
+
+        readonly string baseUrl = "https://localhost:7154/api/user";
         Random rng = new Random();
 
         [Fact]
@@ -14,7 +16,7 @@ namespace MovieUnitTests
         {
             HttpClient httpClient = new HttpClient();
 
-            using HttpResponseMessage response = await httpClient.GetAsync("https://localhost:7154/api/users");
+            using HttpResponseMessage response = await httpClient.GetAsync(baseUrl);
 
             HttpStatusCode statusCode = response.EnsureSuccessStatusCode().StatusCode;
 
@@ -28,15 +30,13 @@ namespace MovieUnitTests
         {
             HttpClient httpClient = new HttpClient();
 
-            httpClient.DefaultRequestHeaders.Add("id", "1");
+            httpClient.DefaultRequestHeaders.Add("id", "9999");
 
-            using HttpResponseMessage response = await httpClient.GetAsync("https://localhost:7154/api/users/");
+            using HttpResponseMessage response = await httpClient.GetAsync(baseUrl +"/user-profile");
 
             HttpStatusCode statusCode = response.StatusCode;
 
             Assert.Equal(statusCode, HttpStatusCode.NotFound);
-
-            // var jsonResponse = await response.Content.ReadAsStringAsync();
         }
 
         [Fact]
@@ -54,7 +54,7 @@ namespace MovieUnitTests
         Encoding.UTF8,
         "application/json");
 
-            using HttpResponseMessage response = await httpClient.PostAsync("https://localhost:7154/api/users", jsonContent);
+            using HttpResponseMessage response = await httpClient.PostAsync(baseUrl, jsonContent);
 
             HttpStatusCode statusCode = response.StatusCode;
 
@@ -65,158 +65,75 @@ namespace MovieUnitTests
 
 
         [Fact]
-        public async Task CallWebService_API_UserController_Func_Put2_ShouldReturnOK()
-        {
-            HttpClient httpClient = new HttpClient();
-            httpClient.DefaultRequestHeaders.Add("id", "1");
-
-            // check initial value
-            using HttpResponseMessage getAllUsers = await httpClient.GetAsync("https://localhost:7154/api/users");
-
-            var usersJson = await getAllUsers.Content.ReadAsStringAsync();
-            var users = JsonSerializer.Deserialize<List<User>>(usersJson, new JsonSerializerOptions
-            {
-                PropertyNameCaseInsensitive = true
-            });
-
-            var user = users.Where(x => x.Email == "test@ruc.dk").FirstOrDefault();
-
-            Assert.Equal("Harry", user.FirstName);
-
-
-                        using StringContent jsonContent = new(
-        JsonSerializer.Serialize(new
-        {
-            email = "test@ruc.dk",
-            firstName = "Harry potter",
-            password = "Harry1234"
-        }),
-        Encoding.UTF8,
-        "application/json");
-
-            using HttpResponseMessage responseMessage = await httpClient.PutAsync("https://localhost:7154/api/users", jsonContent);
-
-            using HttpResponseMessage getAllUsers2 = await httpClient.GetAsync("https://localhost:7154/api/users");
-
-            var usersJson2 = await getAllUsers2.Content.ReadAsStringAsync();
-            var users2 = JsonSerializer.Deserialize<List<User>>(usersJson2, new JsonSerializerOptions
-            {
-                PropertyNameCaseInsensitive = true
-            });
-
-            var user2 = users.Where(x => x.Email == "test@ruc.dk").FirstOrDefault();
-
-            Assert.Equal("Harry potter", user2.FirstName);
-        }
-
-        [Fact]
         public async Task CallWebService_API_UserController_Func_Put_ShouldReturnOK()
         {
             HttpClient httpClient = new HttpClient();
-            httpClient.DefaultRequestHeaders.Add("id", "1");
-            using HttpResponseMessage getAllUsers = await httpClient.GetAsync("https://localhost:7154/api/users");
 
-            var usersJson = await getAllUsers.Content.ReadAsStringAsync();
-            var users = JsonSerializer.Deserialize<List<User>>(usersJson, new JsonSerializerOptions
+            // check initial value
+            using StringContent jsonContent_Harry = new(
+                JsonSerializer.Serialize(new
+                {
+                    email = "testharryp@ruc.dk",
+                    firstName = "Harry",
+                    password = "Harry1234"
+                }),
+                Encoding.UTF8,
+                "application/json");
+
+            using HttpResponseMessage setHarry = await httpClient.PostAsync(baseUrl, jsonContent_Harry);
+
+            using HttpResponseMessage getAllUsers = await httpClient.GetAsync(baseUrl);
+
+            var usersJsonList = await getAllUsers.Content.ReadAsStringAsync();
+            var usersList = JsonSerializer.Deserialize<List<User>>(usersJsonList, new JsonSerializerOptions
             {
                 PropertyNameCaseInsensitive = true
             });
 
-            if (users == null || users.Count == 0)
-            {
-                throw new Exception("No users found");
-            }
+            var userUpdate = usersList.Where(x => x.Email == "testharryp@ruc.dk").FirstOrDefault();
 
-            int randomId = rng.Next(1, users.Count); // get random index from User table
-            int userID = users[randomId].Id; // get User ID
-            string newName = "New Name";
+            using StringContent jsonContent = new(
+                JsonSerializer.Serialize(new
+                {
+                    email = "testharryp@ruc.dk",
+                    firstName = "Harry potter",
+                    password = "Harry1234"
+                }),
+                Encoding.UTF8,
+                "application/json");
 
-            User originalUser = users[randomId]; // updated value
-            //User updateUser = new User
-            //{
-            //    Id = originalUser.Id,
-            //    Email = originalUser.Email,
-            //    FirstName = "New Name", // Updated first name
-            //    Password = originalUser.Password // Use original password or change if needed
-            //};
+            
+            httpClient.DefaultRequestHeaders.Add("id", userUpdate.Id.ToString());
 
-                 using StringContent jsonContent = new(
-        JsonSerializer.Serialize(new
-        {
-            email = "test@ruc.dk",
-            firstName = "Harry potter",
-            password = "Harry1234"
-        }),
-        Encoding.UTF8,
-        "application/json");
+            using HttpResponseMessage responseMessage = await httpClient.PutAsync(baseUrl, jsonContent);
 
-            //using StringContent updateUserContent = new StringContent(
-            //    JsonSerializer.Serialize(updateUser), Encoding.UTF8, "application/json"
-            //);
+            using HttpResponseMessage getAllUsers_numberTwo = await httpClient.GetAsync(baseUrl);
 
-
-            // Create the PUT request without including the Id in the URL
-            var request = new HttpRequestMessage(HttpMethod.Put, "https://localhost:7154/api/users")
-            {
-                Content = jsonContent
-            };
-
-            // Add the Id to the headers
-            //request.Headers.Add("User-Id", "20");
-
-            // Send the request
-            using HttpResponseMessage response = await httpClient.SendAsync(request);
-
-
-            var updatedUserJson = await getAllUsers.Content.ReadAsStringAsync();
-            var updatedUserResponse = JsonSerializer.Deserialize<User>(updatedUserJson, new JsonSerializerOptions
+            var updatedUsersJsonList = await getAllUsers_numberTwo.Content.ReadAsStringAsync();
+            var updatedUserList = JsonSerializer.Deserialize<List<User>>(updatedUsersJsonList, new JsonSerializerOptions
             {
                 PropertyNameCaseInsensitive = true
             });
 
-            HttpStatusCode statusCode = response.StatusCode;
+            var userToDelete = updatedUserList.Where(x => x.Email == "testharryp@ruc.dk").FirstOrDefault();
 
-            Assert.Equal(statusCode, HttpStatusCode.OK);
-            //Assert.NotEqual(updatedUserResponse.FirstName, newName);
-
+            Assert.Equal("Harry potter", userToDelete.FirstName);
 
             // clean up
-            //using StringContent updateUserContentBack = new StringContent(
-            //    JsonSerializer.Serialize(originalUser), Encoding.UTF8, "application/json"
-            // );
-
-
-
-
-            //            using StringContent jsonContent = new(
-            //JsonSerializer.Serialize(originalUser),
-            //Encoding.UTF8,
-            //"application/json");
-
-
-            //            // Create the PUT request without including the Id in the URL
-            //            var request2 = await httpClient.PutAsync("https://localhost:7154/api/users", jsonContent);
-
-
-            // Add the Id to the headers
-            //request.Headers.Add("User-Id", updateUser.Id.ToString());
-
-            // Send the request
-            //using HttpResponseMessage response2 = await httpClient.SendAsync(request2);
-
+            httpClient.DefaultRequestHeaders.Remove("id");
+            httpClient.DefaultRequestHeaders.Add("id", userToDelete.Id.ToString());
+            using HttpResponseMessage responseMessage3 = await httpClient.DeleteAsync(baseUrl);
         }
 
         [Fact]
         public async Task CallWebService_API_UserController_Func_Delete_ShouldReturnNotFound()
         {
             HttpClient httpClient = new HttpClient();
-            int userID = 404;
-            using HttpResponseMessage response = await httpClient.DeleteAsync($"https://localhost:7154/api/users/{userID}");
+            string userID = "404";
+            httpClient.DefaultRequestHeaders.Add("id", userID);
+            using HttpResponseMessage response = await httpClient.DeleteAsync(baseUrl);
 
             HttpStatusCode statusCode = response.StatusCode;
-
-            // Output the status code for debugging purposes
-            Console.WriteLine($"Response status code: {statusCode}");
 
             Assert.Equal(HttpStatusCode.NotFound, statusCode);
         }

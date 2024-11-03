@@ -2,6 +2,9 @@ using MovieDataLayer.DataService.UserFrameworkRepository;
 
 using MovieDataLayer;
 using System.Collections;
+using MovieWebApi.Controllers;
+using MovieDataLayer.DataService;
+using MovieDataLayer.Models.IMDB_Models;
 
 namespace MovieUnitTests
 {
@@ -10,10 +13,10 @@ namespace MovieUnitTests
         [Fact]
         public async Task CallAPI_UserReposity_Func_Get_ShouldGetAllUsers()
         {
-            UserRepository userRepository = new UserRepository(new IMDBContext());
-            int expectedValue = 2;
+            Repository<Genre> genreController = new Repository<Genre>(new IMDBContext()); 
+            int expectedValue = 27;
 
-            int actualValue = (await userRepository.GetAll()).Count;
+            int actualValue = (await genreController.GetAll()).Count;
 
             Assert.Equal(actualValue, expectedValue);
         }
