@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using MovieDataLayer.DataService.IMDB_Repository;
 using MovieDataLayer.DataService.UserFrameworkRepository;
 using MovieDataLayer.Models.IMDB_Models;
+using MovieWebApi.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -29,6 +30,9 @@ builder.Services.AddScoped<UserPersonBookmarkRepository>();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+builder.Services.AddHttpContextAccessor(); // Required for accessing HttpContext in services
+builder.Services.AddScoped<GenericController>();
 
 var app = builder.Build();
 

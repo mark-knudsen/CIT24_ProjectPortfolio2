@@ -7,27 +7,31 @@ using MovieWebApi.Controllers;
 
 namespace MovieWebApi.Extensions
 {
-    [ApiController] //why?
+
+
     public class GenericController : ControllerBase
     {
         private readonly LinkGenerator _linkgenerator;
+        //private readonly IHttpContextAccessor _httpContextAccessor;
 
         public GenericController(LinkGenerator linkgenerator)
         {
             _linkgenerator = linkgenerator;
+
         }
 
-        protected string? GetUrl(string pathName, object entity)
+        public string? GetUrl(string pathName, object entity)
         {
+
             return _linkgenerator.GetUriByName(HttpContext, pathName, entity);
         }
 
-        protected string? GetLink(string pathName, int pageNumber, int pageSize)
+        public string? GetLink(string pathName, int pageNumber, int pageSize)
         {
             return GetUrl(pathName, new { pageNumber, pageSize });
         }
 
-        protected object CreatePaging<T>(string pathName, int pageNumber, int pageSize, int total, IEnumerable<T>? entities)
+        public object CreatePaging<T>(string pathName, int pageNumber, int pageSize, int total, IEnumerable<T>? entities)
         {
 
 
@@ -57,10 +61,10 @@ namespace MovieWebApi.Extensions
 
         }
 
-        public IEnumerable<T>? CreateNavigation<T, C>( IEnumerable<T> DTO) where T : BaseDTO where C: TitleController 
+        public IEnumerable<T>? CreateNavigation<T>(IEnumerable<T> DTO, string routeName) where T : BaseDTO
         {
-            
-            
+            var Jacob = DTO.ToList();
+
             if (DTO == null)
             {
                 return null;
@@ -70,12 +74,13 @@ namespace MovieWebApi.Extensions
             //var url = DTO.Select(x => x.Url);
             //var id = DTO.Select(x => x.Id);
 
-            foreach ( var entity in DTO) {
-            
-                entity.Url = GetUrl(nameof(TitleController.Get), new {entity.Id});
+            foreach (var entity in Jacob)
+            {
+
+                entity.Url = GetUrl(routeName, new { entity.Id });
             }
 
-            return DTO;
+            return Jacob;
         }
 
     }

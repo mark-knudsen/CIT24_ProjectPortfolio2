@@ -46,19 +46,19 @@ namespace MovieDataLayer.DataService.IMDB_Repository
                 .Include(t => t.GenresList).ThenInclude(g => g.Genre)
                 .Include(t => t.PrincipalCastList).ThenInclude(p => p.Person).Where(x => x.GenresList.Any(x => x.GenreId == id)).Skip(page * pageSize).Take(pageSize).ToListAsync();
         }
+
         public async Task<IEnumerable<TitleSearchResultModel>> TitleSearch(int userId, string searchTerm, int page = 0, int pageSize = 10) // also have to remember to make them async
         {
-            string query = $"SELECT * FROM string_search('{userId}', '{searchTerm}');";
-            return await _context.CallQuery<TitleSearchResultModel>(query);
+            string query = $"SELECT * FROM string_search('{userId}', '{searchTerm}')";
+            return await _context.CallQuery<TitleSearchResultModel>(query, page, pageSize);
         }
-        public async Task<IEnumerable<SimilarTitleSearchModel>> SimilarTitles(string titleID) // also have to remember to make them async
+        public async Task<IEnumerable<SimilarTitleSearchModel>> SimilarTitles(string titleID, int page = 0, int pageSize = 10) // also have to remember to make them async
         {
             // Should fix so the distinc is made in the function in the DB, then use the shorter version below!
             //string query = $"SELECT * FROM find_similar_movies('{titleID}') LIMIT 8;";
             string query = $"SELECT DISTINCT ON(primary_title) similar_title_id, primary_title, isadult, title_type, genres FROM find_similar_movies('{titleID}') ORDER BY primary_title DESC LIMIT 8;";
-            return await _context.CallQuery<SimilarTitleSearchModel>(query);
+            return await _context.CallQuery<SimilarTitleSearchModel>(query, page, pageSize);
         }
-
         public async Task<int> CountByGenre(int genreId)
         {
             return await _dbSet.AsNoTracking().Where(title => title.GenresList.Any(g => g.GenreId == genreId)).CountAsync(); //should it be async?

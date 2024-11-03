@@ -8,20 +8,21 @@ using Mapster;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using MovieWebApi.DTO.SearchDTO;
 
+
 namespace MovieWebApi.Controllers
 {
     [ApiController]
     [Route("api/titles")]
-    public class TitleController : GenericController
+    public class TitleController : ControllerBase
     {
         private readonly TitleRepository _titleRepository;
+        private readonly GenericController _genericController;
 
-        private readonly LinkGenerator _linkGenerator;
 
-        public TitleController(TitleRepository titleRepository, LinkGenerator linkGenerator) : base(linkGenerator)
+        public TitleController(TitleRepository titleRepository, GenericController genericController)
         {
             _titleRepository = titleRepository;
-            _linkGenerator = linkGenerator;
+            _genericController = genericController;
         }
 
         [HttpGet(Name = nameof(GetAllTitles))]
@@ -42,9 +43,9 @@ namespace MovieWebApi.Controllers
             if (titles == null || !titles.Any()) return NotFound();
 
             var numberOfEntities = await _titleRepository.NumberOfElementsInTable();
-            titles = CreateNavigation<TitleDetailedDTO, TitleController>(titles); //Why does this need to be converted to a list? It is already a list? Maybe use the above code? Possible issue with using Select on await task
+            var titles2 = _genericController.CreateNavigation(titles, nameof(GetAllTitles)); //Why does this need to be converted to a list? It is already a list? Maybe use the above code? Possible issue with using Select on await task
 
-            object result = CreatePaging(nameof(GetAllTitles), page, pageSize, numberOfEntities, titles);
+            object result = _genericController.CreatePaging(nameof(GetAllTitles), page, pageSize, numberOfEntities, titles2);
 
             return Ok(result);
         }
@@ -64,7 +65,7 @@ namespace MovieWebApi.Controllers
             if (titles == null) return NotFound();
 
             var numberOfEntities = await _titleRepository.NumberOfElementsInTable();
-            object result = CreatePaging(nameof(GetByGenre), page, pageSize, numberOfEntities, titles);
+            object result = _genericController.CreatePaging(nameof(GetByGenre), page, pageSize, numberOfEntities, titles);
             return Ok(result);
         }
 
@@ -74,8 +75,8 @@ namespace MovieWebApi.Controllers
             var queryResult = (await _titleRepository.TitleSearch(userId, searchTerm, page, pageSize)).MapTitleSearchResultModelToTitleSearchResultDTO();
             var numberOfentities = await _titleRepository.NumberOfElementsInTable();
 
-            queryResult = CreateNavigation<TitleSearchResultDTO, TitleController>(queryResult);
-            object s = CreatePaging(nameof(Search), page, pageSize, numberOfentities, queryResult);
+            queryResult = _genericController.CreateNavigation(queryResult, nameof(Search));
+            object s = _genericController.CreatePaging(nameof(Search), page, pageSize, numberOfentities, queryResult);
 
             return Ok(s);
         }
@@ -94,7 +95,7 @@ namespace MovieWebApi.Controllers
                 return null;
             }
 
-            titleDTO.Url = GetUrl(nameof(Get), new { titleDTO.Id });
+            titleDTO.Url = _genericController.GetUrl(nameof(Get), new { titleDTO.Id });
 
             return titleDTO;
         }
@@ -108,7 +109,7 @@ namespace MovieWebApi.Controllers
 
             foreach (var title in titleDTO)
             {
-                title.Url = GetUrl(nameof(Get), new { title.Id });
+                title.Url = _genericController.GetUrl(nameof(Get), new { title.Id });
             }
             return titleDTO;
         }
