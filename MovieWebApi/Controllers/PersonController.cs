@@ -17,6 +17,15 @@ namespace MovieWebApi.Controllers
             _personRepository = personRepository;
         }
 
+        [HttpGet("{id}")]
+        public async Task<IActionResult> Get(string id)
+        {
+            var person = (await _personRepository.GetPerson(id)).MapPersonToPersonDTO();
+            if (person == null) return NotFound();
+
+            return Ok(person);
+        }
+
         [HttpGet]
         public async Task<IActionResult> GetAll()
         {
@@ -24,24 +33,5 @@ namespace MovieWebApi.Controllers
             return Ok(result);
         }
 
-        //Gets one person through ID, currently not in use
-        //[HttpGet("{id}")]
-        //public async Task<IActionResult> GetPerson(string id)
-        //{
-        //    var person = DTO_Extensions.Spawn_DTO<PersonDTO, Person>(await _dataService.Get(id));
-
-        //    if (person == null) return NotFound();
-
-        //    return Ok(person);
-        //}
-
-        [HttpGet("{id}")]
-        public async Task<IActionResult> Get(string id)
-        {
-            var person  = (await _personRepository.GetPerson(id)).MapPersonToPersonDTO();
-            if (person == null) return NotFound();
-
-            return Ok(person);
-        }
     }
 }

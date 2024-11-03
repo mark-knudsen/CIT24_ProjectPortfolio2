@@ -4,6 +4,7 @@ using MovieDataLayer;
 using MovieDataLayer.DataService.IMDB_Repository;
 using MovieDataLayer.DataService.UserFrameworkRepository;
 using MovieWebApi.Extensions;
+using static MovieWebApi.Controllers.UserStuff.UserPersonBookmarkController;
 
 namespace MovieWebApi.Controllers.UserStuff
 {
@@ -75,6 +76,21 @@ namespace MovieWebApi.Controllers.UserStuff
             if (!success) return BadRequest();
             return NoContent();
 
+        }
+
+        [HttpPut()]
+        public async Task<IActionResult> Put([FromHeader] int userId, string titleId, double rating)
+        {
+            UserRating userRating = await _userRatingRepository.GetUserRating(userId, titleId);
+            if (userRating != null)
+            {
+                userRating.Rating = rating != null ? rating : userRating.Rating;
+            }
+            else return NotFound();
+
+            bool success = await _userRatingRepository.Update(userRating);
+            if (success) return NoContent();
+            return BadRequest();
         }
     }
 }

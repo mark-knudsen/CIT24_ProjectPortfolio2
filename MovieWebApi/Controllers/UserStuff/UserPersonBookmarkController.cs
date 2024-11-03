@@ -19,7 +19,7 @@ namespace MovieWebApi.Controllers.UserStuff
             _userPersonBookmarkRepository = userPersonBookmarkRepository;
         }
         [HttpPost]
-        public async Task<IActionResult> PostUserPersonBookmark([FromHeader] int userId, CreateUserPersonBookmark userPersonBookmark)
+        public async Task<IActionResult> Post([FromHeader] int userId, CreateUserPersonBookmark userPersonBookmark)
         {
             var _userPersonBookmark = new UserPersonBookmark();
             _userPersonBookmark.UserId = userId;
@@ -32,35 +32,35 @@ namespace MovieWebApi.Controllers.UserStuff
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetAllPersonBookmarks([FromHeader] int id)
+        public async Task<IActionResult> GetAll([FromHeader] int id)
         {
-            var result = (await _userPersonBookmarkRepository.GetAllPersonBookmarks(id)).Select(DTO_Extensions.Spawn_DTO<UserBookmarkDTO, UserPersonBookmark>);
+            var result = (await _userPersonBookmarkRepository.GetAll(id)).Select(DTO_Extensions.Spawn_DTO<UserBookmarkDTO, UserPersonBookmark>);
 
             if (!result.Any() || result == null) return NotFound();
             return Ok(result);
         }
 
         [HttpDelete("{personId}")]
-        public async Task<IActionResult> DeletePersonBookmark([FromHeader] int userId, string personId)
+        public async Task<IActionResult> Delete([FromHeader] int userId, string personId)
         {
-            bool success = await _userPersonBookmarkRepository.DeletePersonBookmark(userId, personId);
+            bool success = await _userPersonBookmarkRepository.Delete(userId, personId);
             if (!success) return NotFound();
             return NoContent();
         }
 
         [HttpDelete]
-        public async Task<IActionResult> DeleteAllPersonBookmarks([FromHeader] int userId)
+        public async Task<IActionResult> DeleteAll([FromHeader] int userId)
         {
-            bool success = await _userPersonBookmarkRepository.DeleteAllPersonBookmarks(userId);
+            bool success = await _userPersonBookmarkRepository.DeleteAll(userId);
             if (!success) return NotFound();
             return NoContent();
         }
 
         
         [HttpPut("{personId}")]
-        public async Task<IActionResult> PutPersonBookmark([FromHeader] int userId, string personId, UpdateUserPersonBookmark updateUserPersonBookmark)
+        public async Task<IActionResult> Put([FromHeader] int userId, string personId, UpdateUserPersonBookmark updateUserPersonBookmark)
         {
-            UserPersonBookmark personBookmark = await _userPersonBookmarkRepository.GetPersonBookmark(userId, personId);
+            UserPersonBookmark personBookmark = await _userPersonBookmarkRepository.Get(userId, personId);
             if (personBookmark != null)
             {
                 personBookmark.Annotation = updateUserPersonBookmark.Annotation != "" ? updateUserPersonBookmark.Annotation : personBookmark.Annotation;

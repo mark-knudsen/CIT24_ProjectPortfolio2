@@ -22,6 +22,14 @@ namespace MovieWebApi.Controllers
             _linkGenerator = linkGenerator;
         }
 
+        [HttpGet("{id}", Name = nameof(Get))]
+        public async Task<IActionResult> Get(string id) // id tt9126600
+        {
+            var title = CreatePageNavigation((await _titleRepository.GetTitle(id)).MapTitleToTitleDetailedDTO());
+            if (title == null) return NotFound();
+            return Ok(title);
+        }
+
         [HttpGet(Name = nameof(GetAllTitles))]
         public async Task<IActionResult> GetAllTitles(int page = 1, int pageSize = 10) // We really just want the plot and poster at all times in the title, same with some of the collections
         {
@@ -29,20 +37,13 @@ namespace MovieWebApi.Controllers
             if (titles == null || !titles.Any()) return NotFound();
 
             var numberOfEntities = await _titleRepository.NumberOfTitles();
-            titles = CreateTitleModel(titles.ToList());
+            titles = CreatePageNavigation(titles.ToList());
 
             object result = CreatePaging(nameof(GetAllTitles), page, pageSize, numberOfEntities, titles);
 
             return Ok(result);
         }
 
-        [HttpGet("{id}", Name = nameof(Get))]
-        public async Task<IActionResult> Get(string id) // id tt9126600
-        {
-            var title = CreateTitleModel((await _titleRepository.GetTitle(id)).MapTitleToTitleDetailedDTO());
-            if (title == null) return NotFound();
-            return Ok(title);
-        }
 
         [HttpGet("genre/{id}")]
         public async Task<IActionResult> GetByGenre(int id) // id tt7856872
@@ -65,30 +66,34 @@ namespace MovieWebApi.Controllers
         {
             var result = await _titleRepository.SimilarTitles(titleId);
             return Ok(result);
-        private TitleDetailedDTO? CreateTitleModel(TitleDetailedDTO? titleDTO)
-        {
-            if (titleDTO == null)
-            {
-                return null;
-            }
-
-            titleDTO.Url = GetUrl(nameof(Get), new { titleDTO.Id });
-
-            return titleDTO;
         }
 
-        private IList<TitleDetailedDTO>? CreateTitleModel(IList<TitleDetailedDTO>? titleDTO)
-        {
-            if (titleDTO == null || !titleDTO.Any())
+        //Page Navigation
+            private TitleDetailedDTO? CreatePageNavigation(TitleDetailedDTO? titleDTO)
             {
-                return null;
+                if (titleDTO == null)
+                {
+                    return null;
+                }
+
+                titleDTO.Url = GetUrl(nameof(Get), new { titleDTO.Id });
+
+                return titleDTO;
             }
 
-            foreach (var title in titleDTO)
+            private IList<TitleDetailedDTO>? CreatePageNavigation(IList<TitleDetailedDTO>? titleDTO)
             {
-                title.Url = GetUrl(nameof(Get), new { title.Id });
+                if (titleDTO == null || !titleDTO.Any())
+                {
+                    return null;
+                }
+
+                foreach (var title in titleDTO)
+                {
+                    title.Url = GetUrl(nameof(Get), new { title.Id });
+                }
+                return titleDTO;
             }
-            return titleDTO;
-        }
     }
 }
+

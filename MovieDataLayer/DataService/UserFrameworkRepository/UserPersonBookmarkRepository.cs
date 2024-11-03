@@ -6,20 +6,20 @@ namespace MovieDataLayer.DataService.UserFrameworkRepository
     {
         public UserPersonBookmarkRepository(IMDBContext context) : base(context) { }
 
-        public async Task<IList<UserPersonBookmark>> GetAllPersonBookmarks(int id)
+        public async Task<IList<UserPersonBookmark>> GetAll(int id)
         {
             return await _dbSet.AsNoTracking().Where(x => x.UserId == id).ToListAsync();
         }
-        public async Task<UserPersonBookmark> GetPersonBookmark(int userId, string personId)
+        public async Task<UserPersonBookmark> Get(int userId, string personId)
         {
             return await _dbSet.Where(x => x.UserId == userId && x.PersonId.Equals(personId)).FirstOrDefaultAsync();
         }
 
-        public async Task<bool> DeletePersonBookmark(int userId, string titleId)
+        public async Task<bool> Delete(int userId, string titleId)
         {
             try
             {
-                var entity = await GetPersonBookmark(userId, titleId);
+                var entity = await Get(userId, titleId);
 
                 if (entity != null)
                 {
@@ -37,7 +37,7 @@ namespace MovieDataLayer.DataService.UserFrameworkRepository
                 return false;
             }
         }
-        public async Task<bool> DeleteAllPersonBookmarks(int userId)
+        public async Task<bool> DeleteAll(int userId)
         {
             try
             {

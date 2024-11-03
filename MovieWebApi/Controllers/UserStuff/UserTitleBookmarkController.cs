@@ -23,7 +23,7 @@ namespace MovieWebApi.Controllers.UserStuff
         }
 
         [HttpPost]
-        public async Task<IActionResult> PostUserTitleBookmark([FromHeader] int userId, CreateUserTitleBookmark userTitleBookmark)
+        public async Task<IActionResult> Post([FromHeader] int userId, CreateUserTitleBookmark userTitleBookmark)
         {
             var d = new UserTitleBookmark();
             d.UserId = userId;
@@ -36,7 +36,7 @@ namespace MovieWebApi.Controllers.UserStuff
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetAllTitleBookmarks([FromHeader] int id)
+        public async Task<IActionResult> GetAll([FromHeader] int id)
         {
             var result = (await _userTitleBookmarkRepository.GetAllTitleBookmarks(id)).Select(DTO_Extensions.Spawn_DTO<UserBookmarkDTO, UserTitleBookmark>);
 
@@ -45,7 +45,7 @@ namespace MovieWebApi.Controllers.UserStuff
         }
 
         [HttpDelete("{titleId}")]
-        public async Task<IActionResult> DeleteTitleBookmark([FromHeader] int userId, string titleId)
+        public async Task<IActionResult> Delete([FromHeader] int userId, string titleId)
         {
             bool success = await _userTitleBookmarkRepository.DeleteTitleBookmark(userId, titleId);
             if (!success) return NotFound();
@@ -53,7 +53,7 @@ namespace MovieWebApi.Controllers.UserStuff
         }
 
         [HttpDelete]
-        public async Task<IActionResult> DeleteAllTitleBookmarks([FromHeader] int userId)
+        public async Task<IActionResult> DeleteAll([FromHeader] int userId)
         {
             bool success = await _userTitleBookmarkRepository.DeleteAllTitleBookmarks(userId);
             if (!success) return NotFound();
@@ -62,7 +62,7 @@ namespace MovieWebApi.Controllers.UserStuff
 
 
         [HttpPut("{titleId}")]
-        public async Task<IActionResult> PutTitleBookmark([FromHeader] int userId, string titleId, UpdateUserTitleBookmark updateUserTitleBookmark)
+        public async Task<IActionResult> Put([FromHeader] int userId, string titleId, UpdateUserTitleBookmark updateUserTitleBookmark)
         {
             UserTitleBookmark titleBookmark = await _userTitleBookmarkRepository.GetTitleBookmark(userId, titleId);
             if (titleBookmark != null)

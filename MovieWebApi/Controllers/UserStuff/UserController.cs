@@ -18,6 +18,15 @@ public class UserController : ControllerBase
         _userRepository = userRepository;
     }
 
+    [HttpGet("{id}")]
+    public async Task<IActionResult> GetById(int id)
+    {
+        var result = DTO_Extensions.Spawn_DTO<UserDTO, User>(await _userRepository.Get(id));
+
+        if (result == null) return NotFound();
+        return Ok(result);
+    }
+
     [HttpGet]
     public async Task<IActionResult> GetAll()
     {
@@ -34,14 +43,6 @@ public class UserController : ControllerBase
         return Ok(result);
     }
 
-    [HttpGet("{id}")]
-    public async Task<IActionResult> GetById(int id)
-    {
-        var result = DTO_Extensions.Spawn_DTO<UserDTO, User>(await _userRepository.Get(id));
-
-        if (result == null) return NotFound();
-        return Ok(result);
-    }
 
     [HttpPost]
     public async Task<IActionResult> RegisterUser(UserRegistrationDTO userRegistrationDTO)
@@ -54,7 +55,7 @@ public class UserController : ControllerBase
     }
 
     [HttpPut]
-    public async Task<IActionResult> UpdateUser(int id, UpdateUserModel updateUserModel)
+    public async Task<IActionResult> Put(int id, UpdateUserModel updateUserModel)
     {
         User user = await _userRepository.Get(id);
         if (user != null)
@@ -71,7 +72,7 @@ public class UserController : ControllerBase
 
 
     [HttpDelete]
-    public async Task<IActionResult> DeleteUser(int id)
+    public async Task<IActionResult> Delete(int id)
     {
         bool success = await _userRepository.Delete(id);
         if (success) return NoContent();
