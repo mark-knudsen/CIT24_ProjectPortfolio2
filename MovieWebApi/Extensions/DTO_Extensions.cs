@@ -32,7 +32,7 @@ namespace MovieWebApi.Extensions
 
             return model;
         }
-        public static IList<TitleDetailedDTO> MapTitleToTitleDetailedDTO(this IList<Title> _title)   
+        public static IEnumerable<TitleDetailedDTO> MapTitleToTitleDetailedDTO(this IEnumerable<Title> _title)   
         {
             var models = new List<TitleDetailedDTO>();
             foreach (var title in _title) models.Add(title.MapTitleToTitleDetailedDTO());  // not that elegant looking

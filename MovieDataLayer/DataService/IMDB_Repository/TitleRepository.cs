@@ -30,7 +30,7 @@ namespace MovieDataLayer.DataService.IMDB_Repository
                 .Include(t => t.PrincipalCastList).ThenInclude(p => p.Person).FirstOrDefaultAsync();
         }
 
-        public async Task<IList<Title>> GetTitleByGenre(int id)
+        public async Task<IList<Title>> GetTitleByGenre(int id, int page = 0, int pageSize = 10)
         {
             return await _dbSet
                 .Include(t => t.Poster)
@@ -40,7 +40,7 @@ namespace MovieDataLayer.DataService.IMDB_Repository
                 .Include(t => t.WritersList).ThenInclude(w => w.Person)
                 .Include(t => t.DirectorsList).ThenInclude(d => d.Person)
                 .Include(t => t.GenresList).ThenInclude(g => g.Genre)
-                .Include(t => t.PrincipalCastList).ThenInclude(p => p.Person).Where(x => x.GenresList.Any(x => x.GenreId == id)).Take(20).ToListAsync();
+                .Include(t => t.PrincipalCastList).ThenInclude(p => p.Person).Where(x => x.GenresList.Any(x => x.GenreId == id)).Skip(page * pageSize).Take(pageSize).ToListAsync();
         }
         public async Task<IEnumerable<TitleSearchResultModel>> TitleSearch(int userId, string searchTerm, int page = 0, int pageSize = 10) // also have to remember to make them async
         {
@@ -54,7 +54,10 @@ namespace MovieDataLayer.DataService.IMDB_Repository
             string query = $"SELECT DISTINCT ON(primary_title) similar_title_id, primary_title, isadult, title_type, genres FROM find_similar_movies('{titleID}') ORDER BY primary_title DESC LIMIT 8;";
             return await _context.CallQuery<SimilarTitleSearchModel>(query, page, pageSize);
         }
-
+        public async Task<int> CountByGenre(int genreId)
+        {
+            return await _dbSet.AsNoTracking().Where(title => title.GenresList.Any(g => g.GenreId == genreId)).CountAsync(); //should it be async?
+        }
         //public IList<Title> GetAllTitleButWithLimit(int id)
         //{
         //    return _dbSet.Take(id).ToList();

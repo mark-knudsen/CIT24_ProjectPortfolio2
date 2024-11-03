@@ -7,7 +7,7 @@ using MovieWebApi.Extensions;
 
 namespace MovieWebApi.Controllers.UserStuff;
 [ApiController]
-[Route("api/users")]
+[Route("api/user")]
 public class UserController : ControllerBase
 {
     public record UpdateUserModel(string email, string firstName, string password);
@@ -18,8 +18,9 @@ public class UserController : ControllerBase
         _userRepository = userRepository;
     }
 
-    [HttpGet("{id}")]
-    public async Task<IActionResult> GetById(int id)
+
+    [HttpGet("search_history")]
+    public async Task<IActionResult> GetById([FromHeader]int id)
     {
         var result = DTO_Extensions.Spawn_DTO<UserDTO, User>(await _userRepository.Get(id));
 
@@ -55,7 +56,7 @@ public class UserController : ControllerBase
     }
 
     [HttpPut]
-    public async Task<IActionResult> Put(int id, UpdateUserModel updateUserModel)
+    public async Task<IActionResult> Put([FromHeader] int id, UpdateUserModel updateUserModel)
     {
         User user = await _userRepository.Get(id);
         if (user != null)
@@ -72,7 +73,7 @@ public class UserController : ControllerBase
 
 
     [HttpDelete]
-    public async Task<IActionResult> Delete(int id)
+    public async Task<IActionResult> Delete([FromHeader] int id)
     {
         bool success = await _userRepository.Delete(id);
         if (success) return NoContent();

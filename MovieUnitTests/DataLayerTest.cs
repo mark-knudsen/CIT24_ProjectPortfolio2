@@ -2,20 +2,22 @@ using MovieDataLayer.DataService.UserFrameworkRepository;
 
 using MovieDataLayer;
 using System.Collections;
+using MovieDataLayer.DataService;
+using MovieDataLayer.Models.IMDB_Models;
 
 namespace MovieUnitTests
 {
     public class DataLayerTest
     {
         [Fact]
-        public async Task CallAPI_UserReposity_Func_Get_ShouldGetAllUsers()
+        public async Task CallAPI_GenreReposity_Func_Get_ShouldGetAllGenres()
         {
-            UserRepository userRepository = new UserRepository(new IMDBContext());
-            int expectedValue = 2;
+            Repository<Genre> genreController = new Repository<Genre>(new IMDBContext());
+            int expectedValue = 27;
 
-            int actualValue = (await userRepository.GetAll()).Count;
+            int actualValue = (await genreController.GetAll()).Count;
 
-            Assert.Equal(actualValue, expectedValue);
+            Assert.Equal(expectedValue, actualValue);
         }
 
         [Fact]
@@ -26,9 +28,9 @@ namespace MovieUnitTests
 
             var actualValue = await userRepository.Get(1);
 
-            Assert.Equal(actualValue.Id, expectedValue.Id);
-            Assert.Equal(actualValue.Email, expectedValue.Email);
-            Assert.Equal(actualValue.FirstName, expectedValue.FirstName);
+            Assert.Equal(expectedValue.Id, actualValue.Id);
+            Assert.Equal(expectedValue.Email, actualValue.Email);
+            Assert.Equal(expectedValue.FirstName, actualValue.FirstName);
         }
 
         [Fact]
@@ -54,9 +56,9 @@ namespace MovieUnitTests
             await userRepository.Update(new User() { Id = 2, Email = "test@ruc22.dk", FirstName = "Harry potter", Password = "bigsecrets" });
             var actualValue = await userRepository.Get(2);
 
-            Assert.Equal(actualValue.Id, expectedValue.Id);
-            Assert.Equal(actualValue.Email, expectedValue.Email);
-            Assert.Equal(actualValue.FirstName, expectedValue.FirstName);
+            Assert.Equal(expectedValue.Id, actualValue.Id);
+            Assert.Equal(expectedValue.Email, actualValue.Email);
+            Assert.Equal(expectedValue.FirstName, actualValue.FirstName);
 
             // clean up
             await userRepository.Update(new User() { Id = 2, Email = "test@ruc22.dk", FirstName = "Harry", Password = "bigsecrets" });
