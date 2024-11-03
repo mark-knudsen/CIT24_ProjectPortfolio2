@@ -20,8 +20,8 @@ public class UserController : ControllerBase
 
 
 
-    [HttpGet("search_history")]
-    public async Task<IActionResult> GetById([FromHeader]int id)
+    [HttpGet("user-profile")] //Is this url ok?
+    public async Task<IActionResult> GetById([FromHeader] int id)
     {
         var result = DTO_Extensions.Spawn_DTO<UserDTO, User>(await _userRepository.Get(id));
 
@@ -37,7 +37,7 @@ public class UserController : ControllerBase
     }
 
     [HttpGet("search_history")]
-    public async Task<IActionResult> GetAllUserHistory([FromHeader]int id)
+    public async Task<IActionResult> GetAllUserHistory([FromHeader] int id)
     {
         var result = (await _userRepository.GetAllSearchHistoryByUserId(id)).Select(DTO_Extensions.Spawn_DTO<UserSearchHistoryDTO, UserSearchHistory>);
 
