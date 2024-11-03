@@ -18,7 +18,9 @@ public class UserController : ControllerBase
         _userRepository = userRepository;
     }
 
-    [HttpGet("user-profile")]
+
+
+    [HttpGet("search_history")]
     public async Task<IActionResult> GetById([FromHeader]int id)
     {
         var result = DTO_Extensions.Spawn_DTO<UserDTO, User>(await _userRepository.Get(id));
@@ -55,7 +57,8 @@ public class UserController : ControllerBase
     }
 
     [HttpPut]
-    public async Task<IActionResult> Put([FromHeader]int id, UpdateUserModel updateUserModel)
+
+    public async Task<IActionResult> Put([FromHeader] int id, UpdateUserModel updateUserModel)
     {
         User user = await _userRepository.Get(id);
         if (user != null)
@@ -72,7 +75,7 @@ public class UserController : ControllerBase
 
 
     [HttpDelete]
-    public async Task<IActionResult> Delete([FromHeader]int id)
+    public async Task<IActionResult> Delete([FromHeader] int id)
     {
         bool success = await _userRepository.Delete(id);
         if (success) return NoContent();

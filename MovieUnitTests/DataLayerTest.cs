@@ -69,6 +69,7 @@ namespace MovieUnitTests
             await userRepository.Update(new User() { Id = 2, Email = "test@ruc22.dk", FirstName = "Harry potter", Password = "bigsecrets" });
             var actualValue = await userRepository.Get(2);
 
+
             // Assert
             Assert.Equal(expectedValue.Id, actualValue.Id);
             Assert.Equal(expectedValue.Email, actualValue.Email);
