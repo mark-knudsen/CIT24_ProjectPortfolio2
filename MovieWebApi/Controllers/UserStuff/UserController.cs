@@ -19,6 +19,7 @@ public class UserController : ControllerBase
     }
 
 
+
     [HttpGet("search_history")]
     public async Task<IActionResult> GetById([FromHeader]int id)
     {
@@ -35,8 +36,8 @@ public class UserController : ControllerBase
         return Ok(result);
     }
 
-    [HttpGet("search_history/{id}")]
-    public async Task<IActionResult> GetAllUserHistory(int id)
+    [HttpGet("search_history")]
+    public async Task<IActionResult> GetAllUserHistory([FromHeader]int id)
     {
         var result = (await _userRepository.GetAllSearchHistoryByUserId(id)).Select(DTO_Extensions.Spawn_DTO<UserSearchHistoryDTO, UserSearchHistory>);
 
@@ -56,6 +57,7 @@ public class UserController : ControllerBase
     }
 
     [HttpPut]
+
     public async Task<IActionResult> Put([FromHeader] int id, UpdateUserModel updateUserModel)
     {
         User user = await _userRepository.Get(id);
@@ -79,13 +81,5 @@ public class UserController : ControllerBase
         if (success) return NoContent();
         return NotFound();
     }
-
-
-    //[HttpGet("titles/search")]
-    //public async Task<IActionResult> Search([FromHeader] int userId, string searchTerm) // should probably be authorized ALOT to be allowed to call this
-    //{
-    //    var result = await _userRepository.UserSearch(userId, searchTerm);
-    //    return Ok(result);
-    //}
 }
 
