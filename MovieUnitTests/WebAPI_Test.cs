@@ -32,7 +32,7 @@ namespace MovieUnitTests
 
             httpClient.DefaultRequestHeaders.Add("id", "9999");
 
-            using HttpResponseMessage response = await httpClient.GetAsync(baseUrl +"/user-profile");
+            using HttpResponseMessage response = await httpClient.GetAsync(baseUrl + "/user-profile");
 
             HttpStatusCode statusCode = response.StatusCode;
 
@@ -102,7 +102,7 @@ namespace MovieUnitTests
                 Encoding.UTF8,
                 "application/json");
 
-            
+
             httpClient.DefaultRequestHeaders.Add("id", userUpdate.Id.ToString());
 
             using HttpResponseMessage responseMessage = await httpClient.PutAsync(baseUrl, jsonContent);

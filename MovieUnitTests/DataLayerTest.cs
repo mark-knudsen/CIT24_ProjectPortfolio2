@@ -11,9 +11,9 @@ namespace MovieUnitTests
     public class DataLayerTest
     {
         [Fact]
-        public async Task CallAPI_UserReposity_Func_Get_ShouldGetAllUsers()
+        public async Task CallAPI_GenreReposity_Func_Get_ShouldGetAllGenres()
         {
-            Repository<Genre> genreController = new Repository<Genre>(new IMDBContext()); 
+            Repository<Genre> genreController = new Repository<Genre>(new IMDBContext());
             int expectedValue = 27;
 
             int actualValue = (await genreController.GetAll()).Count;
@@ -64,7 +64,7 @@ namespace MovieUnitTests
             // clean up
             await userRepository.Update(new User() { Id = 2, Email = "test@ruc22.dk", FirstName = "Harry", Password = "bigsecrets" });
         }
-            
+
         [Fact]
         public async Task CallAPI_UserReposity_Func_Delete_ShouldDeleteUser()
         {
@@ -76,7 +76,7 @@ namespace MovieUnitTests
 
             Assert.True(success);
         }
-        
+
         //[Fact]
         //public async Task CallAPI_UserReposity_Func_Delete_ShouldDeleteUser() // call sql :(
         //{
