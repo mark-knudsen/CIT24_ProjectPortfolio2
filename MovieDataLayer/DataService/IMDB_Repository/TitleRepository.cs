@@ -30,6 +30,20 @@ namespace MovieDataLayer.DataService.IMDB_Repository
                 .Include(t => t.PrincipalCastList).ThenInclude(p => p.Person).FirstOrDefaultAsync();
         }
 
+        public async Task<IList<Title>> GetAllTitles(int page = 0, int pageSize = 10)
+        {
+            return await _dbSet.AsNoTracking()
+                .Include(t => t.Poster)
+                .Include(t => t.Plot)
+                .Include(t => t.Rating)
+                //.Include(t => t.LocalizedTitlesList)
+                .Include(t => t.WritersList).ThenInclude(w => w.Person)
+                .Include(t => t.DirectorsList).ThenInclude(d => d.Person)
+                .Include(t => t.GenresList).ThenInclude(g => g.Genre)
+                .Include(t => t.PrincipalCastList).ThenInclude(p => p.Person).Skip(page * pageSize).Take(pageSize).ToListAsync();
+        }
+        //AsNoTracking().Skip(page* pageSize).Take(pageSize).ToListAsync()
+
         public async Task<IList<Title>> GetTitleByGenre(int id, int page = 0, int pageSize = 10)
         {
             return await _dbSet

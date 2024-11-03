@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Routing;
 using MovieDataLayer;
 using MovieDataLayer.DataService.UserFrameworkRepository;
 using MovieDataLayer.Models.IMDB_Models;
@@ -8,14 +9,15 @@ using MovieWebApi.Extensions;
 namespace MovieWebApi.Controllers.UserStuff;
 [ApiController]
 [Route("api/user")]
-public class UserController : ControllerBase
+public class UserController : GenericController
 {
     public record UpdateUserModel(string email, string firstName, string password);
-    readonly UserRepository _userRepository;
-
-    public UserController(UserRepository userRepository)
+    readonly UserRepository _userRepository; //Private, explicit?
+    private readonly LinkGenerator _linkGenerator;
+    public UserController(UserRepository userRepository, LinkGenerator linkGenerator) : base(linkGenerator)
     {
         _userRepository = userRepository;
+        _linkGenerator = linkGenerator;
     }
 
 
@@ -23,23 +25,24 @@ public class UserController : ControllerBase
     [HttpGet("user-profile")] //Is this url ok?
     public async Task<IActionResult> GetById([FromHeader] int id)
     {
-        var result = DTO_Extensions.Spawn_DTO<UserDTO, User>(await _userRepository.Get(id));
 
+        var result = (await _userRepository.Get(id)).Spawn_DTO<UserDTO, User>(HttpContext, _linkGenerator, nameof(GetById));
         if (result == null) return NotFound();
         return Ok(result);
     }
 
     [HttpGet]
-    public async Task<IActionResult> GetAll()
+    public async Task<IActionResult> GetAll(int page = 0, int pageSize = 10)
     {
-        var result = (await _userRepository.GetAll()).Select(DTO_Extensions.Spawn_DTO<UserDTO, User>); // maybe never retrieve the password, just a thought you know!
+        var result = (await _userRepository.GetAll(page = 0, pageSize = 10)).Select(user => user.Spawn_DTO<UserDTO, User>(HttpContext, _linkGenerator, nameof(GetAll))); // maybe never retrieve the password, just a thought you know!
         return Ok(result);
     }
 
     [HttpGet("search_history")]
     public async Task<IActionResult> GetAllUserHistory([FromHeader] int id)
     {
-        var result = (await _userRepository.GetAllSearchHistoryByUserId(id)).Select(DTO_Extensions.Spawn_DTO<UserSearchHistoryDTO, UserSearchHistory>);
+        var result = (await _userRepository.GetAllSearchHistoryByUserId(id)).Select(user => user.Spawn_DTO<UserSearchHistoryDTO, UserSearchHistory>(HttpContext, _linkGenerator, nameof(GetAll)));
+
 
         if (result == null) return NotFound();
         return Ok(result);
@@ -49,7 +52,7 @@ public class UserController : ControllerBase
     [HttpPost]
     public async Task<IActionResult> RegisterUser(UserRegistrationDTO userRegistrationDTO)
     {
-        var result = DTO_Extensions.Spawn_DTO<User, UserRegistrationDTO>(userRegistrationDTO);
+        var result = DTO_Extensions.Spawn_DTO_Old<User, UserRegistrationDTO>(userRegistrationDTO);
         bool success = await _userRepository.Add(result);
 
         if (!success) return BadRequest();
@@ -82,4 +85,5 @@ public class UserController : ControllerBase
         return NotFound();
     }
 }
+
 

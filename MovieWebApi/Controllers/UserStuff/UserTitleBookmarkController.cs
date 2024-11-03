@@ -11,7 +11,7 @@ namespace MovieWebApi.Controllers.UserStuff
     [Route("api/bookmarks/title")]
     public class UserTitleBookmarkController : ControllerBase
     {
-        
+
         public record CreateUserTitleBookmark(string TitleId, string Annotation);
         public record UpdateUserTitleBookmark(string annotation);
 
@@ -38,7 +38,7 @@ namespace MovieWebApi.Controllers.UserStuff
         [HttpGet]
         public async Task<IActionResult> GetAll([FromHeader] int id)
         {
-            var result = (await _userTitleBookmarkRepository.GetAllTitleBookmarks(id)).Select(DTO_Extensions.Spawn_DTO<UserBookmarkDTO, UserTitleBookmark>);
+            var result = (await _userTitleBookmarkRepository.GetAllTitleBookmarks(id)).Select(DTO_Extensions.Spawn_DTO_Old<UserBookmarkDTO, UserTitleBookmark>);
 
             if (!result.Any() || result == null) return NotFound();
             return Ok(result);

@@ -28,7 +28,7 @@ namespace MovieWebApi.Controllers.UserStuff
         public async Task<IActionResult> Get([FromHeader] int userId, string titleId)
         {
 
-            var rating = DTO_Extensions.Spawn_DTO<UserRatingDTO, UserRating>(await _userRatingRepository.GetUserRating(userId, titleId));
+            var rating = DTO_Extensions.Spawn_DTO_Old<UserRatingDTO, UserRating>(await _userRatingRepository.GetUserRating(userId, titleId));
             if (rating == null) return NotFound();
 
 
@@ -39,7 +39,7 @@ namespace MovieWebApi.Controllers.UserStuff
         [HttpGet]
         public async Task<IActionResult> GetAll([FromHeader] int userId)
         {
-            var result = (await _userRatingRepository.GetAllUserRatingByUserId(userId)).Select(DTO_Extensions.Spawn_DTO<UserRatingDTO, UserRating>);
+            var result = (await _userRatingRepository.GetAllUserRatingByUserId(userId)).Select(DTO_Extensions.Spawn_DTO_Old<UserRatingDTO, UserRating>);
 
             if (result == null) return NotFound();
             return Ok(result);

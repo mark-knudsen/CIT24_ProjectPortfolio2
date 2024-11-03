@@ -10,7 +10,7 @@ namespace MovieWebApi.Controllers.UserStuff
     [ApiController]
     [Route("api/bookmarks/person")]
     public class UserPersonBookmarkController : ControllerBase
-    { 
+    {
         public record CreateUserPersonBookmark(string PersonId, string Annotation);
         public record UpdateUserPersonBookmark(string Annotation);
         readonly UserPersonBookmarkRepository _userPersonBookmarkRepository;
@@ -34,7 +34,7 @@ namespace MovieWebApi.Controllers.UserStuff
         [HttpGet]
         public async Task<IActionResult> GetAll([FromHeader] int id)
         {
-            var result = (await _userPersonBookmarkRepository.GetAll(id)).Select(DTO_Extensions.Spawn_DTO<UserBookmarkDTO, UserPersonBookmark>);
+            var result = (await _userPersonBookmarkRepository.GetAll(id)).Select(DTO_Extensions.Spawn_DTO_Old<UserBookmarkDTO, UserPersonBookmark>);
 
             if (!result.Any() || result == null) return NotFound();
             return Ok(result);
@@ -56,7 +56,7 @@ namespace MovieWebApi.Controllers.UserStuff
             return NoContent();
         }
 
-        
+
         [HttpPut("{personId}")]
         public async Task<IActionResult> Put([FromHeader] int userId, string personId, UpdateUserPersonBookmark updateUserPersonBookmark)
         {

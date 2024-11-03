@@ -6,6 +6,7 @@ using MovieDataLayer;
 using MovieDataLayer.DataService.UserFrameworkRepository;
 using Mapster;
 using MovieWebApi.SearchDTO;
+using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace MovieWebApi.Controllers
 {
@@ -26,21 +27,27 @@ namespace MovieWebApi.Controllers
         [HttpGet("{id}", Name = nameof(Get))]
         public async Task<IActionResult> Get(string id) // id tt9126600
         {
-            var title = CreateNavigationForTitle((await _titleRepository.GetTitle(id)).MapTitleToTitleDetailedDTO());
+            var title = (await _titleRepository.GetTitle(id)).MapTitleToTitleDetailedDTO(HttpContext, _linkGenerator, nameof(Get)); //Generic use of Method from DTO_Extensions, add URL to DTO
             if (title == null) return NotFound();
+
             return Ok(title);
         }
 
         [HttpGet(Name = nameof(GetAllTitles))]
         public async Task<IActionResult> GetAllTitles(int page = 0, int pageSize = 10) // We really just want the plot and poster at all times in the title, same with some of the collections
         {
-            var titles = (await _titleRepository.GetAll(page, pageSize)).Select(DTO_Extensions.Spawn_DTO<TitleDetailedDTO, Title>);
+            if (page < 0 || pageSize < 0) return BadRequest("Page and PageSize must be 0 or greater"); //If time, add this check to other endpoints too..
+
+            //Generic use of Spawn_DTO, including URL mapped to the DTO
+            var titles = (await _titleRepository.GetAllTitles(page, pageSize)).Select(title => title.Spawn_DTO<TitleDetailedDTO, Title>(HttpContext, _linkGenerator, nameof(GetAllTitles)));
             if (titles == null || !titles.Any()) return NotFound();
 
             var numberOfEntities = await _titleRepository.NumberOfElementsInTable();
-            titles = CreateNavigationForTitleList(titles.ToList());
+            //titles = CreateNavigationForTitleList(titles.ToList());
 
             object result = CreatePaging(nameof(GetAllTitles), page, pageSize, numberOfEntities, titles);
+            if (result == null) return StatusCode(500, "Error while creating paginating in GetAllTitles"); //Custom StatusCode & message
+
 
             return Ok(result);
         }
@@ -50,11 +57,11 @@ namespace MovieWebApi.Controllers
         [HttpGet("genre/{id}")]
         public async Task<IActionResult> GetTitleByGenre(int id, int page = 0, int pageSize = 10) // id tt7856872
         {
-            var titles = (await _titleRepository.GetTitleByGenre(id, page, pageSize)).MapTitleToTitleDetailedDTO();
+            var titles = (await _titleRepository.GetTitleByGenre(id, page, pageSize));
             if (titles == null) return NotFound();
 
             var numberOfEntities = await _titleRepository.NumberOfElementsInTable();
-            titles = CreateNavigationForTitleList(titles);
+            var titleDTOs = titles.Select(title => title.MapTitleToTitleDetailedDTO(HttpContext, _linkGenerator, nameof(GetTitleByGenre)));
             object result = CreatePaging(nameof(GetTitleByGenre), page, pageSize, numberOfEntities, titles);
             return Ok(result);
         }
@@ -78,7 +85,7 @@ namespace MovieWebApi.Controllers
         }
 
         //Page Navigation
-        
+
         private TitleDetailedDTO? CreateNavigationForTitle(TitleDetailedDTO? titleDTO)
         {
             if (titleDTO == null)

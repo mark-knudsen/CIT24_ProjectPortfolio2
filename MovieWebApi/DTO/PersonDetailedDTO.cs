@@ -1,6 +1,7 @@
 ﻿namespace MovieWebApi;
 public class PersonDetailedDTO
 {
+    public string? Url { get; set; }
     public string Id { get; set; }
     public string Name { get; set; }
     public int? BirthYear { get; set; }
