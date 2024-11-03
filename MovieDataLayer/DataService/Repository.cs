@@ -23,6 +23,7 @@ namespace MovieDataLayer.DataService
         public async Task<T> Get(object id)
         {
             return await _dbSet.FindAsync(id);
+
         }
 
         public async Task<IList<T>> GetAll(int page = 0, int pageSize = 10) //should not use default values when fully implemented?
@@ -88,6 +89,6 @@ namespace MovieDataLayer.DataService
             return await _dbSet.AsNoTracking().CountAsync();
         }
 
-       
+
     }
 }

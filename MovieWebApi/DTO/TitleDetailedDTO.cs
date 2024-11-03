@@ -1,5 +1,5 @@
 ﻿namespace MovieWebApi;
-public class TitleDetailedDTO
+public class TitleDetailedDTO : INeedUrl
 {
     public string? Url { get; set; }
     public string Id { get; set; }

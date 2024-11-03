@@ -1,6 +1,8 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Net.NetworkInformation;
 using Mapster;
+using Microsoft.AspNetCore.Http;
 using MovieDataLayer;
 using MovieDataLayer.Models.IMDB_Models;
 using MovieDataLayer.Models.IMDB_Models.IMDB_DTO;
@@ -18,7 +20,7 @@ namespace MovieWebApi.Extensions
             return model;
         }
 
-        public static TitleDetailedDTO MapTitleToTitleDetailedDTO(this Title title) // IMPORTANT, sometimes some values are null, but that will throw an axception when trying to set it here, add nullable in DTO and in here
+        public static TitleDetailedDTO MapTitleToTitleDetailedDTO(this Title title, HttpContext httpContext, string routeName) // IMPORTANT, sometimes some values are null, but that will throw an axception when trying to set it here, add nullable in DTO and in here
         {
             var model = title.Adapt<TitleDetailedDTO>();
             model.GenresList = title.GenresList?.Select(x => x.Genre.Name).ToList();
@@ -29,16 +31,10 @@ namespace MovieWebApi.Extensions
             model.PrincipalCastList = title.PrincipalCastList?.Select(x => x.Person.Name).ToList();
             model.DirectorsList = title.DirectorsList?.Select(x => x.Person.Name).ToList();
             model.AverageRating = title.Rating?.AverageRating;
-
+            model.Url = httpContext.RequestServices.GetService<LinkGenerator>()?.GetUriByName(httpContext, routeName, new { id = title.Id });
             return model;
         }
-        public static IEnumerable<TitleDetailedDTO> MapTitleToTitleDetailedDTO(this IEnumerable<Title> _title)   
-        {
-            var models = new List<TitleDetailedDTO>();
-            foreach (var title in _title) models.Add(title.MapTitleToTitleDetailedDTO());  // not that elegant looking
 
-            return models;
-        }
 
         public static PersonDetailedDTO MapPersonToPersonDTO(this Person person)
         {

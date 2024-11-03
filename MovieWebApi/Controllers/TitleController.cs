@@ -6,6 +6,7 @@ using MovieDataLayer;
 using MovieDataLayer.DataService.UserFrameworkRepository;
 using Mapster;
 using MovieWebApi.SearchDTO;
+using Microsoft.AspNetCore.Routing;
 
 namespace MovieWebApi.Controllers
 {
@@ -13,34 +14,43 @@ namespace MovieWebApi.Controllers
     [Route("api/titles")]
     public class TitleController : GenericController
     {
+        private readonly Entity_To_DTO_Extensions _entity_To_DTO_Extensions;
         private readonly TitleRepository _titleRepository;
 
-        private readonly LinkGenerator _linkGenerator;
 
-        public TitleController(TitleRepository titleRepository, LinkGenerator linkGenerator) : base(linkGenerator)
+        //private readonly LinkGenerator _linkGenerator;
+
+        public TitleController(TitleRepository titleRepository, LinkGenerator linkGenerator, Entity_To_DTO_Extensions entity_To_DTO_Extensions) : base(linkGenerator, entity_To_DTO_Extensions)
         {
             _titleRepository = titleRepository;
-            _linkGenerator = linkGenerator;
+            _entity_To_DTO_Extensions = entity_To_DTO_Extensions;
+
+
         }
 
         [HttpGet("{id}", Name = nameof(Get))]
         public async Task<IActionResult> Get(string id) // id tt9126600
         {
-            var title = CreateNavigationForTitle((await _titleRepository.GetTitle(id)).MapTitleToTitleDetailedDTO());
+            var title = (await _titleRepository.GetTitle(id));
+
             if (title == null) return NotFound();
-            return Ok(title);
+            //var titleDTO = title.MapTitleToTitleDetailedDTO(HttpContext, nameof(Get));
+            var titleDetailedDto = title.MapTitleToTitleDetailedDTO(HttpContext, nameof(Get));
+            return Ok(titleDetailedDto);
         }
 
         [HttpGet(Name = nameof(GetAllTitles))]
         public async Task<IActionResult> GetAllTitles(int page = 0, int pageSize = 10) // We really just want the plot and poster at all times in the title, same with some of the collections
         {
-            var titles = (await _titleRepository.GetAll(page, pageSize)).Select(DTO_Extensions.Spawn_DTO<TitleDetailedDTO, Title>);
+            var titles = (await _titleRepository.GetAll(page, pageSize));
             if (titles == null || !titles.Any()) return NotFound();
 
             var numberOfEntities = await _titleRepository.NumberOfElementsInTable();
-            titles = CreateNavigationForTitleList(titles.ToList());
+            //titles = CreateNavigationForTitleList(titles.ToList());
 
-            object result = CreatePaging(nameof(GetAllTitles), page, pageSize, numberOfEntities, titles);
+            var titleDTOs = titles.Select(title => title.MapTitleToTitleDetailedDTO(HttpContext, nameof(Get)));
+
+            object result = CreatePaging<TitleDetailedDTO>(nameof(GetAllTitles), page, pageSize, numberOfEntities, titleDTOs);
 
             return Ok(result);
         }
@@ -50,23 +60,23 @@ namespace MovieWebApi.Controllers
         [HttpGet("genre/{id}")]
         public async Task<IActionResult> GetTitleByGenre(int id, int page = 0, int pageSize = 10) // id tt7856872
         {
-            var titles = (await _titleRepository.GetTitleByGenre(id, page, pageSize)).MapTitleToTitleDetailedDTO();
+            var titles = (await _titleRepository.GetTitleByGenre(id, page, pageSize));
             if (titles == null) return NotFound();
 
             var numberOfEntities = await _titleRepository.NumberOfElementsInTable();
-            titles = CreateNavigationForTitleList(titles);
-            object result = CreatePaging(nameof(GetTitleByGenre), page, pageSize, numberOfEntities, titles);
+            //titles = CreateNavigationForTitleList(titles);
+            object result = CreatePaging<Title>(nameof(GetTitleByGenre), page, pageSize, numberOfEntities, titles);
             return Ok(result);
         }
 
         [HttpGet("search")]
         public async Task<IActionResult> Search([FromHeader] int userId, string searchTerm, int page = 0, int pageSize = 10) // should probably be authorized ALOT to be allowed to call this
         {
-            var searchResult = (await _titleRepository.TitleSearch(userId, searchTerm)).MapTitleSearchResultModelToTitleSearchResultDTO();
-            searchResult = CreateNavigationForSearchList(searchResult);
+            var searchResult = (await _titleRepository.TitleSearch(userId, searchTerm));
+            // searchResult = CreateNavigationForSearchList(searchResult);
             var numberOfEntities = await _titleRepository.NumberOfElementsInTable();
 
-            object result = CreatePaging(nameof(GetAllTitles), page, pageSize, numberOfEntities, searchResult);
+            object result = CreatePaging<Title>(nameof(GetAllTitles), page, pageSize, numberOfEntities, (IEnumerable<Title>)searchResult);
             return Ok(result);
         }
 
@@ -78,7 +88,7 @@ namespace MovieWebApi.Controllers
         }
 
         //Page Navigation
-        
+
         private TitleDetailedDTO? CreateNavigationForTitle(TitleDetailedDTO? titleDTO)
         {
             if (titleDTO == null)
