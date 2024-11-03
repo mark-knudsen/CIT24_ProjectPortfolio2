@@ -25,8 +25,8 @@ namespace MovieDataLayer
         public DbSet<Poster> Posters { get; set; }
         public DbSet<Rating> Ratings { get; set; }
         public DbSet<Writer> Writers { get; set; }
-        public DbSet<TitleSearchResultDTO> TitleSearchResultDTO { get; set; }
-        public DbSet<SimilarTitleSearchDTO> SimilarTitleSearchDTO { get; set; }
+        public DbSet<TitleSearchResultModel> TitleSearchResultDTO { get; set; }
+        public DbSet<SimilarTitleSearchModel> SimilarTitleSearchDTO { get; set; }
 
         //UserFramework tables:
         public DbSet<User> Users { get; set; }
@@ -142,20 +142,27 @@ namespace MovieDataLayer
         }
         private void MapUserTitleSearch(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<TitleSearchResultDTO>().HasNoKey();
+            modelBuilder.Entity<TitleSearchResultModel>().HasNoKey();
             //columns
-            modelBuilder.Entity<TitleSearchResultDTO>().Property(p => p.TitleId).HasColumnName("title_id");
-            modelBuilder.Entity<TitleSearchResultDTO>().Property(p => p.PrimaryTitle).HasColumnName("primary_title");
+            modelBuilder.Entity<TitleSearchResultModel>().Property(p => p.TitleId).HasColumnName("title_id");
+            modelBuilder.Entity<TitleSearchResultModel>().Property(p => p.PrimaryTitle).HasColumnName("primary_title");
+  
+              modelBuilder.Entity<TitleSearchResultModel>()
+            .Ignore(t => t.Id);
+
+            modelBuilder.Entity<TitleSearchResultModel>()
+            .Ignore(t => t.Url);
+        
         }
         private void MapTitleSearch(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<SimilarTitleSearchDTO>().HasNoKey();
+            modelBuilder.Entity<SimilarTitleSearchModel>().HasNoKey();
             //columns
-            modelBuilder.Entity<SimilarTitleSearchDTO>().Property(p => p.SimilarTitleId).HasColumnName("similar_title_id");
-            modelBuilder.Entity<SimilarTitleSearchDTO>().Property(p => p.PrimaryTitle).HasColumnName("primary_title");
-            modelBuilder.Entity<SimilarTitleSearchDTO>().Property(p => p.Genres).HasColumnName("genres");
-            modelBuilder.Entity<SimilarTitleSearchDTO>().Property(p => p.IsAdult).HasColumnName("isadult");
-            modelBuilder.Entity<SimilarTitleSearchDTO>().Property(p => p.TitleType).HasColumnName("title_type");
+            modelBuilder.Entity<SimilarTitleSearchModel>().Property(p => p.SimilarTitleId).HasColumnName("similar_title_id");
+            modelBuilder.Entity<SimilarTitleSearchModel>().Property(p => p.PrimaryTitle).HasColumnName("primary_title");
+            modelBuilder.Entity<SimilarTitleSearchModel>().Property(p => p.Genres).HasColumnName("genres");
+            modelBuilder.Entity<SimilarTitleSearchModel>().Property(p => p.IsAdult).HasColumnName("isadult");
+            modelBuilder.Entity<SimilarTitleSearchModel>().Property(p => p.TitleType).HasColumnName("title_type");
         }
 
         private void MapPerson(ModelBuilder modelBuilder)

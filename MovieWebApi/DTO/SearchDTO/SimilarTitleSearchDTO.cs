@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MovieDataLayer
+namespace MovieWebApi.SearchDTO
 {
     public class SimilarTitleSearchDTO
     {
