@@ -5,6 +5,7 @@ using MovieDataLayer.DataService.UserFrameworkRepository;
 using MovieDataLayer.Models.IMDB_Models;
 using MovieWebApi.DTO;
 using MovieWebApi.Extensions;
+using MovieWebApi.Helpers;
 
 namespace MovieWebApi.Controllers.UserStuff;
 [ApiController]
@@ -14,10 +15,12 @@ public class UserController : GenericController
     public record UpdateUserModel(string email, string firstName, string password);
     readonly UserRepository _userRepository; //Private, explicit?
     private readonly LinkGenerator _linkGenerator;
-    public UserController(UserRepository userRepository, LinkGenerator linkGenerator) : base(linkGenerator)
+    private readonly AuthenticatorHelper _authenticatorHelper;
+    public UserController(UserRepository userRepository, LinkGenerator linkGenerator, AuthenticatorHelper authenticatorHelper) : base(linkGenerator)
     {
         _userRepository = userRepository;
         _linkGenerator = linkGenerator;
+        _authenticatorHelper = authenticatorHelper;
     }
 
 
@@ -83,6 +86,16 @@ public class UserController : GenericController
         bool success = await _userRepository.Delete(id);
         if (success) return NoContent();
         return NotFound();
+    }
+
+    [HttpPost("login")]
+    public async Task<IActionResult> Login(UserLoginDTO userLoginDTO)
+    {
+        var user = await _userRepository.Login(userLoginDTO.Email, userLoginDTO.Password);
+
+        if (user == null) return Unauthorized();
+        var token = _authenticatorHelper.GenerateJWTToken(user);
+        return Ok(token);
     }
 }
 

@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using MovieDataLayer;
 using MovieDataLayer.DataService.UserFrameworkRepository;
 using MovieWebApi.DTO;
@@ -35,6 +36,7 @@ namespace MovieWebApi.Controllers.UserStuff
             return NoContent();
         }
 
+        [Authorize]
         [HttpGet]
         public async Task<IActionResult> GetAll([FromHeader] int id)
         {
