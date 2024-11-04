@@ -4,15 +4,19 @@ KEEP IT UPDATED.
 
 
 #NeedToHave
-Use CallSQL.cs to implement structured_string_search from DB - Are done!
-Use CallSQL.cs to implement find_similar_movies from DB - Are done!
-Implement linkgenerator and pagination for Title  - See note in branch "Adding-Link-gen-and-pagination", solved in branch. Todo: Merge to main
-Impelment tests for Datalayer and WebAPI -Jeff + Mark - Are done!
-Authentication
-
+Ensure all diagram are updated to current state of project
+Nice rapport setup
+Read Domain models and finish up
+Write about authentication
+Read endpoints chapter through
+Finish section A.3 JSON
+TALK ABOUT URI, PAGING STUFF 
+Finish section Testing
 
 
 #NiceToHave
+Authentication for User Rating and Search History!
+Controller for Search History
 All names for methods in Controllers should be same convention AKA "Post()/Get()/Delete()/Put()". Meaning no "GetAllUserRatings()".  
 In Datalayer ensure if equating between strings use .Equals() and if equating between ints use ==
 In WebAPI>Controllers for all Create/update methods return relevant object (has to be displayed with link).
