@@ -4,6 +4,7 @@ using MovieDataLayer;
 using MovieDataLayer.DataService.UserFrameworkRepository;
 using MovieWebApi.DTO;
 using MovieWebApi.Extensions;
+using MovieWebApi.Helpers;
 
 namespace MovieWebApi.Controllers.UserStuff
 {
@@ -16,11 +17,14 @@ namespace MovieWebApi.Controllers.UserStuff
         public record CreateUserTitleBookmark(string TitleId, string Annotation);
         public record UpdateUserTitleBookmark(string annotation);
 
-        readonly UserTitleBookmarkRepository _userTitleBookmarkRepository;
-
-        public UserTitleBookmarkController(UserTitleBookmarkRepository userTitleBookmarkRepository)
+        private readonly UserTitleBookmarkRepository _userTitleBookmarkRepository;
+        private readonly UserRepository _userRepository;
+        private readonly AuthenticatorHelper _authenticatorHelper;
+        public UserTitleBookmarkController(UserTitleBookmarkRepository userTitleBookmarkRepository, UserRepository userRepository, AuthenticatorHelper authenticatorHelper)
         {
             _userTitleBookmarkRepository = userTitleBookmarkRepository;
+            _authenticatorHelper = authenticatorHelper;
+            _userRepository = userRepository;
         }
 
         [HttpPost]
@@ -38,11 +42,18 @@ namespace MovieWebApi.Controllers.UserStuff
 
         [Authorize]
         [HttpGet]
-        public async Task<IActionResult> GetAll([FromHeader] int id)
+        public async Task<IActionResult> GetAll([FromHeader] int id, [FromHeader] string Authorization)
         {
+            var user = await _userRepository.Get(id);
+            if (user == null) return BadRequest();
+            bool isValidUser = _authenticatorHelper.ValidateUser(Authorization, user.Id, user.Email);
+
+            if (!isValidUser) return Unauthorized();
+
             var result = (await _userTitleBookmarkRepository.GetAllTitleBookmarks(id)).Select(DTO_Extensions.Spawn_DTO_Old<UserBookmarkDTO, UserTitleBookmark>);
 
             if (!result.Any() || result == null) return NotFound();
+
             return Ok(result);
         }
 

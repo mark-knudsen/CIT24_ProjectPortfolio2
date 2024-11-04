@@ -14,6 +14,7 @@ namespace MovieWebApi.Helpers
             var claims = new List<Claim> {
         new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
         new Claim(ClaimTypes.Email, user.Email),
+
     };
             var jwtToken = new JwtSecurityToken(
                 claims: claims,
@@ -26,6 +27,22 @@ namespace MovieWebApi.Helpers
                     SecurityAlgorithms.HmacSha256Signature)
                 );
             return new JwtSecurityTokenHandler().WriteToken(jwtToken);
+        }
+
+        public bool ValidateUser(string token, int userId, string email)
+        {
+            var tokenHandler = new JwtSecurityTokenHandler();
+            var key = tokenHandler.ReadJwtToken(token.Substring(7)); //Remove "Bearer " from token
+
+            bool isCorrectUserId = key.Claims.Any(claim => claim.Type == ClaimTypes.NameIdentifier && claim.Value.Equals(userId.ToString()));
+            bool isCorrectEmail = key.Claims.Any(claim => claim.Type == ClaimTypes.Email && claim.Value.Equals(email));
+
+            if (isCorrectUserId && isCorrectEmail)
+            {
+                return true;
+            }
+
+            return false;
         }
     }
 }

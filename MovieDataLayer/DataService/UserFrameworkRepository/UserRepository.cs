@@ -32,10 +32,12 @@ namespace MovieDataLayer.DataService.UserFrameworkRepository
             return user;
         }
 
-        //public async Task<User> GetUser(int id)
-        //{
-        //    return await _dbSet.Where(u => u.Id == id).FirstOrDefaultAsync();
-        //}
+
+
+        public async Task<User> GetUser(int id)
+        {
+            return await _dbSet.Where(u => u.Id == id).FirstOrDefaultAsync();
+        }
 
         //**** Proof of concept, CallSql.cs: ****//
 
