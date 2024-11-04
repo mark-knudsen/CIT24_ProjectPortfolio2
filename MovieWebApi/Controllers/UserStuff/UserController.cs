@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Routing;
 using MovieDataLayer;
 using MovieDataLayer.DataService.UserFrameworkRepository;
@@ -6,8 +7,11 @@ using MovieDataLayer.Models.IMDB_Models;
 using MovieWebApi.DTO;
 using MovieWebApi.Extensions;
 using MovieWebApi.Helpers;
+using System.Net;
 
 namespace MovieWebApi.Controllers.UserStuff;
+
+[Authorize]
 [ApiController]
 [Route("api/user")]
 public class UserController : GenericController
@@ -51,7 +55,7 @@ public class UserController : GenericController
         return Ok(result);
     }
 
-
+    [AllowAnonymous]
     [HttpPost]
     public async Task<IActionResult> RegisterUser(UserRegistrationDTO userRegistrationDTO)
     {
@@ -88,6 +92,7 @@ public class UserController : GenericController
         return NotFound();
     }
 
+    [AllowAnonymous] // User does not need to be authenticated to be albe to login
     [HttpPost("login")]
     public async Task<IActionResult> Login(UserLoginDTO userLoginDTO)
     {
@@ -97,6 +102,7 @@ public class UserController : GenericController
         var token = _authenticatorHelper.GenerateJWTToken(user);
         return Ok(token);
     }
+
 }
 
 

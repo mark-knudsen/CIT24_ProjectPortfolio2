@@ -1,8 +1,12 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Routing;
 using MovieDataLayer;
 using MovieDataLayer.DataService.UserFrameworkRepository;
+using MovieDataLayer.Models.IMDB_Models;
 using MovieWebApi.DTO;
 using MovieWebApi.Extensions;
+using MovieWebApi.Helpers;
+using System.Net;
 using static MovieWebApi.Controllers.UserStuff.UserTitleBookmarkController;
 
 namespace MovieWebApi.Controllers.UserStuff
@@ -14,13 +18,24 @@ namespace MovieWebApi.Controllers.UserStuff
         public record CreateUserPersonBookmark(string PersonId, string Annotation);
         public record UpdateUserPersonBookmark(string Annotation);
         readonly UserPersonBookmarkRepository _userPersonBookmarkRepository;
-        public UserPersonBookmarkController(UserPersonBookmarkRepository userPersonBookmarkRepository)
+        private readonly UserRepository _userRepository;
+        private readonly AuthenticatorHelper _authenticatorHelper;
+        private readonly LinkGenerator _linkGenerator;
+
+        public UserPersonBookmarkController(UserPersonBookmarkRepository userPersonBookmarkRepository, UserRepository userRepository, AuthenticatorHelper authenticatorHelper, LinkGenerator linkGenerator)
         {
             _userPersonBookmarkRepository = userPersonBookmarkRepository;
+            _authenticatorHelper = authenticatorHelper;
+            _userRepository = userRepository;
+            _linkGenerator = linkGenerator;
         }
-        [HttpPost]
-        public async Task<IActionResult> Post([FromHeader] int userId, CreateUserPersonBookmark userPersonBookmark)
+
+        [HttpPost(Name = nameof(PostBookmark))]
+        public async Task<IActionResult> PostBookmark([FromHeader] int userId, CreateUserPersonBookmark userPersonBookmark, [FromHeader] string Authorization)
         {
+            StatusCodeResult code = await Validate(userId, Authorization);
+            if (code != null) return code;
+
             var _userPersonBookmark = new UserPersonBookmark();
             _userPersonBookmark.UserId = userId;
             _userPersonBookmark.Annotation = userPersonBookmark.Annotation; // improve when use authentication
@@ -28,29 +43,56 @@ namespace MovieWebApi.Controllers.UserStuff
 
             var success = await _userPersonBookmarkRepository.Add(_userPersonBookmark);
             if (!success) return BadRequest();
-            return NoContent();
+
+            var result = (await _userPersonBookmarkRepository.Get(userId, userPersonBookmark.PersonId));
+            if (result == null) return NotFound();
+            var finalResult = result.Spawn_DTO<UserBookmarkDTO, UserPersonBookmark>(HttpContext, _linkGenerator, nameof(PostBookmark));
+
+            return Ok(finalResult); // Method unable to return CreatedAt during Post however createAt is set in DB
+        }
+
+        [HttpGet("{personId}", Name = nameof(GetBookMark))]
+        public async Task<IActionResult> GetBookMark([FromHeader] int userId, [FromHeader] string Authorization, string personId)
+        {
+            StatusCodeResult code = await Validate(userId, Authorization);
+            if (code != null) return code;
+
+            var result = (await _userPersonBookmarkRepository.Get(userId, personId));
+            if (result == null) return NotFound();
+            var finalResult = result.Spawn_DTO<UserBookmarkDTO, UserPersonBookmark>(HttpContext, _linkGenerator, nameof(GetBookMark));
+
+            return Ok(finalResult);
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetAll([FromHeader] int id)
+        public async Task<IActionResult> GetAll([FromHeader] int userId, [FromHeader] string Authorization)
         {
-            var result = (await _userPersonBookmarkRepository.GetAll(id)).Select(DTO_Extensions.Spawn_DTO_Old<UserBookmarkDTO, UserPersonBookmark>);
+            StatusCodeResult code = await Validate(userId, Authorization);
+            if (code != null) return code;
+
+            var result = (await _userPersonBookmarkRepository.GetAll(userId)).Select(DTO_Extensions.Spawn_DTO_Old<UserBookmarkDTO, UserPersonBookmark>);
 
             if (!result.Any() || result == null) return NotFound();
             return Ok(result);
         }
 
         [HttpDelete("{personId}")]
-        public async Task<IActionResult> Delete([FromHeader] int userId, string personId)
+        public async Task<IActionResult> Delete([FromHeader] int userId, string personId, [FromHeader] string Authorization)
         {
+            StatusCodeResult code = await Validate(userId, Authorization);
+            if (code != null) return code;
+
             bool success = await _userPersonBookmarkRepository.Delete(userId, personId);
             if (!success) return NotFound();
             return NoContent();
         }
 
         [HttpDelete]
-        public async Task<IActionResult> DeleteAll([FromHeader] int userId)
+        public async Task<IActionResult> DeleteAll([FromHeader] int userId, [FromHeader] string Authorization)
         {
+            StatusCodeResult code = await Validate(userId, Authorization);
+            if (code != null) return code;
+
             bool success = await _userPersonBookmarkRepository.DeleteAll(userId);
             if (!success) return NotFound();
             return NoContent();
@@ -58,8 +100,11 @@ namespace MovieWebApi.Controllers.UserStuff
 
 
         [HttpPut("{personId}")]
-        public async Task<IActionResult> Put([FromHeader] int userId, string personId, UpdateUserPersonBookmark updateUserPersonBookmark)
+        public async Task<IActionResult> Put([FromHeader] int userId, string personId, UpdateUserPersonBookmark updateUserPersonBookmark, [FromHeader] string Authorization)
         {
+            StatusCodeResult code = await Validate(userId, Authorization);
+            if (code != null) return code;
+
             UserPersonBookmark personBookmark = await _userPersonBookmarkRepository.Get(userId, personId);
             if (personBookmark != null)
             {
@@ -70,6 +115,16 @@ namespace MovieWebApi.Controllers.UserStuff
             bool success = await _userPersonBookmarkRepository.Update(personBookmark);
             if (success) return NoContent();
             return BadRequest();
+        }
+
+        private async Task<StatusCodeResult> Validate(int id, string Authorization)
+        {
+            var user = await _userRepository.Get(id);
+            if (user == null) return BadRequest();
+            bool isValidUser = _authenticatorHelper.ValidateUser(Authorization, user.Id, user.Email);
+
+            if (!isValidUser) return Unauthorized();
+            else return null;
         }
     }
 }

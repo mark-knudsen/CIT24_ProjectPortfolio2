@@ -53,11 +53,11 @@ namespace MovieDataLayer.DataService.UserFrameworkRepository
                     return false;
                 }
             }
-            catch 
+            catch
             {
                 return false;
             }
         }
-        
+
     }
 }

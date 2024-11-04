@@ -25,6 +25,12 @@ namespace MovieWebApi.Extensions
                 case PersonDetailedDTO personDetailedDTO when entity is Person person && typeof(TModel) == typeof(PersonDetailedDTO):
                     model = (TModel)(object)MapPersonToPersonDTO(person, httpContext, linkGenerator, routeName);
                     break;
+                case UserBookmarkDTO userBookmarkDTO when entity is UserTitleBookmark userTitleBookmark && typeof(TModel) == typeof(UserBookmarkDTO):
+                    model = (TModel)(object)MapUserTitleBookmarkToUserBookmarkDTO(userTitleBookmark, httpContext, linkGenerator, routeName);
+                    break;
+                case UserBookmarkDTO userBookmarkDTO when entity is UserPersonBookmark userPersonBookmark && typeof(TModel) == typeof(UserBookmarkDTO):
+                    model = (TModel)(object)MapUserPersonBookmarkToUserBookmarkDTO(userPersonBookmark, httpContext, linkGenerator, routeName);
+                    break;
 
 
             }
@@ -37,7 +43,6 @@ namespace MovieWebApi.Extensions
             if (entity == null) return null;
 
             var model = entity.Adapt<TModel>();
-
 
             return model;
 
@@ -89,6 +94,26 @@ namespace MovieWebApi.Extensions
 
             return model;
         }
+
+
+
+        public static UserBookmarkDTO MapUserTitleBookmarkToUserBookmarkDTO(this UserTitleBookmark userTitleBookmark, HttpContext httpContext, LinkGenerator linkGenerator, string routeName)
+        {
+            var model = userTitleBookmark.Adapt<UserBookmarkDTO>();
+            model.Url = linkGenerator.GetUriByName(httpContext, routeName, new { id = userTitleBookmark.TitleId });
+
+            return model;
+        }
+        public static UserBookmarkDTO MapUserPersonBookmarkToUserBookmarkDTO(this UserPersonBookmark userPersonBookmark, HttpContext httpContext, LinkGenerator linkGenerator, string routeName)
+        {
+            var model = userPersonBookmark.Adapt<UserBookmarkDTO>();
+            model.Url = linkGenerator.GetUriByName(httpContext, routeName, new { id = userPersonBookmark.PersonId });
+
+
+            return model;
+        }
+
+
 
         public static TitleSearchResultDTO MapOneTitleSearchResultModelToTitleSearchResultDTO(this TitleSearchResultModel titleSearchResultModel)
         {

@@ -5,10 +5,11 @@ using MovieDataLayer.DataService.UserFrameworkRepository;
 using MovieWebApi.DTO;
 using MovieWebApi.Extensions;
 using MovieWebApi.Helpers;
+using System.Net;
 
 namespace MovieWebApi.Controllers.UserStuff
 {
-
+    [Authorize]
     [ApiController]
     [Route("api/bookmarks/title")]
     public class UserTitleBookmarkController : ControllerBase
@@ -28,8 +29,11 @@ namespace MovieWebApi.Controllers.UserStuff
         }
 
         [HttpPost]
-        public async Task<IActionResult> Post([FromHeader] int userId, CreateUserTitleBookmark userTitleBookmark)
+        public async Task<IActionResult> Post([FromHeader] int userId, CreateUserTitleBookmark userTitleBookmark, [FromHeader] string Authorization)
         {
+            StatusCodeResult code = await Validate(userId, Authorization);
+            if (code != null) return code;
+
             var d = new UserTitleBookmark();
             d.UserId = userId;
             d.Annotation = userTitleBookmark.Annotation; // improve when use authentication
@@ -40,17 +44,13 @@ namespace MovieWebApi.Controllers.UserStuff
             return NoContent();
         }
 
-        [Authorize]
+
         [HttpGet]
-        public async Task<IActionResult> GetAll([FromHeader] int id, [FromHeader] string Authorization)
+        public async Task<IActionResult> GetAll([FromHeader] int userId, [FromHeader] string Authorization)
         {
-            var user = await _userRepository.Get(id);
-            if (user == null) return BadRequest();
-            bool isValidUser = _authenticatorHelper.ValidateUser(Authorization, user.Id, user.Email);
-
-            if (!isValidUser) return Unauthorized();
-
-            var result = (await _userTitleBookmarkRepository.GetAllTitleBookmarks(id)).Select(DTO_Extensions.Spawn_DTO_Old<UserBookmarkDTO, UserTitleBookmark>);
+            StatusCodeResult code = await Validate(userId, Authorization);
+            if (code != null) return code;
+            var result = (await _userTitleBookmarkRepository.GetAllTitleBookmarks(userId)).Select(DTO_Extensions.Spawn_DTO_Old<UserBookmarkDTO, UserTitleBookmark>);
 
             if (!result.Any() || result == null) return NotFound();
 
@@ -58,16 +58,20 @@ namespace MovieWebApi.Controllers.UserStuff
         }
 
         [HttpDelete("{titleId}")]
-        public async Task<IActionResult> Delete([FromHeader] int userId, string titleId)
+        public async Task<IActionResult> Delete([FromHeader] int userId, string titleId, [FromHeader] string Authorization)
         {
+            StatusCodeResult code = await Validate(userId, Authorization);
+            if (code != null) return code;
             bool success = await _userTitleBookmarkRepository.DeleteTitleBookmark(userId, titleId);
             if (!success) return NotFound();
             return NoContent();
         }
 
         [HttpDelete]
-        public async Task<IActionResult> DeleteAll([FromHeader] int userId)
+        public async Task<IActionResult> DeleteAll([FromHeader] int userId, [FromHeader] string Authorization)
         {
+            StatusCodeResult code = await Validate(userId, Authorization);
+            if (code != null) return code;
             bool success = await _userTitleBookmarkRepository.DeleteAllTitleBookmarks(userId);
             if (!success) return NotFound();
             return NoContent();
@@ -75,8 +79,10 @@ namespace MovieWebApi.Controllers.UserStuff
 
 
         [HttpPut("{titleId}")]
-        public async Task<IActionResult> Put([FromHeader] int userId, string titleId, UpdateUserTitleBookmark updateUserTitleBookmark)
+        public async Task<IActionResult> Put([FromHeader] int userId, string titleId, UpdateUserTitleBookmark updateUserTitleBookmark, [FromHeader] string Authorization)
         {
+            StatusCodeResult code = await Validate(userId, Authorization);
+            if (code != null) return code;
             UserTitleBookmark titleBookmark = await _userTitleBookmarkRepository.GetTitleBookmark(userId, titleId);
             if (titleBookmark != null)
             {
@@ -87,6 +93,17 @@ namespace MovieWebApi.Controllers.UserStuff
             bool success = await _userTitleBookmarkRepository.Update(titleBookmark);
             if (success) return NoContent();
             return BadRequest();
+        }
+
+
+        private async Task<StatusCodeResult> Validate(int id, string Authorization)
+        {
+            var user = await _userRepository.Get(id);
+            if (user == null) return BadRequest();
+            bool isValidUser = _authenticatorHelper.ValidateUser(Authorization, user.Id, user.Email);
+
+            if (!isValidUser) return Unauthorized();
+            else return null;
         }
     }
 }
