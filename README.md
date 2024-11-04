@@ -27,7 +27,4 @@ Function find_similar_movies() from database can return doublicates titles - Are
 
 
 #Database:
-Add Rating.customer_ID as FK to customer 
 Rating.rating needs to be limited to 10 max, currently 99.9 is possible rating.
-Add triggers for all tables containing Updated_at field. 
-Ensure all FK's cascade on delete as appropriate.
