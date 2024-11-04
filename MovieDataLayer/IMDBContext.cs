@@ -110,7 +110,12 @@ namespace MovieDataLayer
             //columns
             modelBuilder.Entity<UserPersonBookmark>().Property(p => p.UserId).HasColumnName("customer_id");
             modelBuilder.Entity<UserPersonBookmark>().Property(p => p.PersonId).HasColumnName("person_id");
-            modelBuilder.Entity<UserPersonBookmark>().Property(p => p.CreatedAt).HasColumnName("created_at").HasColumnType("timestamp without time zone");
+            modelBuilder.Entity<UserPersonBookmark>()
+                .Property(p => p.CreatedAt)
+                .HasDefaultValueSql("CURRENT_TIMESTAMP") // Sets default to current timestamp in PostgreSQL
+                .ValueGeneratedOnAdd() // Specifies that the value is generated when the entity is added
+                .HasColumnName("created_at")
+                .HasColumnType("timestamp without time zone");
             modelBuilder.Entity<UserPersonBookmark>().Property(p => p.Annotation).HasColumnName("annotation");
 
         }
@@ -146,13 +151,13 @@ namespace MovieDataLayer
             //columns
             modelBuilder.Entity<TitleSearchResultModel>().Property(p => p.TitleId).HasColumnName("title_id");
             modelBuilder.Entity<TitleSearchResultModel>().Property(p => p.PrimaryTitle).HasColumnName("primary_title");
-  
-              modelBuilder.Entity<TitleSearchResultModel>()
-            .Ignore(t => t.Id);
+
+            modelBuilder.Entity<TitleSearchResultModel>()
+          .Ignore(t => t.Id);
 
             modelBuilder.Entity<TitleSearchResultModel>()
             .Ignore(t => t.Url);
-        
+
         }
         private void MapTitleSearch(ModelBuilder modelBuilder)
         {

@@ -48,7 +48,8 @@ namespace MovieWebApi.Controllers.UserStuff
             if (result == null) return NotFound();
             var finalResult = result.Spawn_DTO<UserBookmarkDTO, UserPersonBookmark>(HttpContext, _linkGenerator, nameof(PostBookmark));
 
-            return Ok(finalResult); // Method unable to return CreatedAt during Post however createAt is set in DB
+            return CreatedAtRoute(nameof(GetBookMark), new { personId = finalResult.PersonId }, finalResult);
+            //return Ok(finalResult);
         }
 
         [HttpGet("{personId}", Name = nameof(GetBookMark))]

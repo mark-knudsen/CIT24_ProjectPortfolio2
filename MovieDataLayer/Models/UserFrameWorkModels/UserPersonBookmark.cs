@@ -1,4 +1,6 @@
-﻿namespace MovieDataLayer;
+﻿using System.ComponentModel.DataAnnotations.Schema;
+
+namespace MovieDataLayer;
 public class UserPersonBookmark
 {
     public int UserId { get; set; }
