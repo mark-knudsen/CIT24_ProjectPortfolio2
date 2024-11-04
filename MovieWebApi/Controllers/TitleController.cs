@@ -62,7 +62,7 @@ namespace MovieWebApi.Controllers
 
             var numberOfEntities = await _titleRepository.NumberOfElementsInTable();
             var titleDTOs = titles.Select(title => title.MapTitleToTitleDetailedDTO(HttpContext, _linkGenerator, nameof(GetTitleByGenre)));
-            object result = CreatePaging(nameof(GetTitleByGenre), page, pageSize, numberOfEntities, titles);
+            object result = CreatePaging(nameof(GetTitleByGenre), page, pageSize, numberOfEntities, titleDTOs);
             return Ok(result);
         }
 
