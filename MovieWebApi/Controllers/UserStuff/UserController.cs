@@ -34,7 +34,7 @@ public class UserController : GenericController
     [HttpGet]
     public async Task<IActionResult> GetAll(int page = 0, int pageSize = 10)
     {
-        var result = (await _userRepository.GetAll(page = 0, pageSize = 10)).Select(user => user.Spawn_DTO<UserDTO, User>(HttpContext, _linkGenerator, nameof(GetAll))); // maybe never retrieve the password, just a thought you know!
+        var result = (await _userRepository.GetAllWithPaging(page = 0, pageSize = 10)).Select(user => user.Spawn_DTO<UserDTO, User>(HttpContext, _linkGenerator, nameof(GetAll))); // maybe never retrieve the password, just a thought you know!
         return Ok(result);
     }
 

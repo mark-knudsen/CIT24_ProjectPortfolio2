@@ -25,12 +25,17 @@ namespace MovieDataLayer.DataService
             return await _dbSet.FindAsync(id);
         }
 
-        public async Task<IList<T>> GetAll(int page = 0, int pageSize = 10) //should not use default values when fully implemented?
+        public async Task<IList<T>> GetAllWithPaging(int page = 0, int pageSize = 10) //should not use default values when fully implemented?
         {
             const int maxPageSize = 26; //Max size of page retrieved from DB
 
             pageSize = pageSize > maxPageSize ? maxPageSize : pageSize; //Sets pageSize to maxPageSize if greater than maxPageSize
             return await _dbSet.AsNoTracking().Skip(page * pageSize).Take(pageSize).ToListAsync();
+        }
+
+        public async Task<IList<T>> GetAll() //Gets ALL!
+        {
+            return await _dbSet.AsNoTracking().ToListAsync();
         }
 
         // TODO: Add try catch to avoid runtime error.

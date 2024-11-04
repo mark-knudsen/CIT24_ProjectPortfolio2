@@ -33,7 +33,7 @@ namespace MovieWebApi.Controllers
         [HttpGet]
         public async Task<IActionResult> GetAll(int page = 0, int pageSize = 10)
         {
-            var result = (await _personRepository.GetAll(page = 0, pageSize = 10)).Select(person => person.Spawn_DTO<PersonDetailedDTO, Person>(HttpContext, _linkGenerator, nameof(GetAll)));
+            var result = (await _personRepository.GetAllWithPaging(page = 0, pageSize = 10)).Select(person => person.Spawn_DTO<PersonDetailedDTO, Person>(HttpContext, _linkGenerator, nameof(GetAll)));
             if (result == null || !result.Any()) return NotFound();
             return Ok(result);
         }

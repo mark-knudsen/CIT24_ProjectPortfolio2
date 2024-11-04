@@ -29,7 +29,7 @@ public class GenreController : GenericController
         if (page < 0 || pageSize < 0) return BadRequest("Page and PageSize must be 0 or greater");
 
         //Generic use of Spawn_DTO, including URL mapped to the DTO
-        var result = (await _dataService.GetAll(page, pageSize)).Select(genre => genre.Spawn_DTO<GenreModel, Genre>(HttpContext, _linkGenerator, nameof(GetAll)));
+        var result = (await _dataService.GetAllWithPaging(page, pageSize)).Select(genre => genre.Spawn_DTO<GenreModel, Genre>(HttpContext, _linkGenerator, nameof(GetAll)));
         if (result == null || !result.Any())
         {
 
