@@ -4,14 +4,14 @@ KEEP IT UPDATED.
 
 
 #NeedToHave
+Read Domain models and finish up - Hassan
+Write about authentication - Jacob
+Finish section A.3 JSON - Jeff
+TALK ABOUT URI, PAGING STUFF - Hassan
+Finish section Testing - Mark
 Ensure all diagram are updated to current state of project
 Nice rapport setup
-Read Domain models and finish up
-Write about authentication
 Read endpoints chapter through
-Finish section A.3 JSON
-TALK ABOUT URI, PAGING STUFF 
-Finish section Testing
 
 
 #NiceToHave
