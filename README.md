@@ -27,4 +27,4 @@ Function find_similar_movies() from database can return doublicates titles - Are
 
 
 #Database:
-Rating.rating needs to be limited to 10 max, currently 99.9 is possible rating.
+All done
