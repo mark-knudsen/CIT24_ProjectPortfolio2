@@ -9,20 +9,20 @@ namespace MovieUnitTests
     {
 
         readonly string baseUrl = "https://localhost:7154/api/user";
-        Random rng = new Random();
 
         [Fact]
         public async Task CallWebService_API_UserController_Func_GetAll_ShouldReturnOk()
         {
             // Arrange
             HttpClient httpClient = new HttpClient();
+            HttpStatusCode expectedValue = HttpStatusCode.OK;
 
             // Act
             using HttpResponseMessage response = await httpClient.GetAsync(baseUrl);
-            HttpStatusCode statusCode = response.EnsureSuccessStatusCode().StatusCode;
+            HttpStatusCode actualValue = response.EnsureSuccessStatusCode().StatusCode;
 
             // Assert
-            Assert.Equal(HttpStatusCode.OK, statusCode);
+            Assert.Equal(expectedValue, actualValue);
 
         }
 
@@ -31,14 +31,16 @@ namespace MovieUnitTests
         {
             // Arrange
             HttpClient httpClient = new HttpClient();
+            HttpStatusCode expectedValue = HttpStatusCode.NotFound;
+            string userId = "9999";
 
             // Act
-            httpClient.DefaultRequestHeaders.Add("id", "9999");
+            httpClient.DefaultRequestHeaders.Add("id", userId);
             using HttpResponseMessage response = await httpClient.GetAsync(baseUrl + "/user-profile");
-            HttpStatusCode statusCode = response.StatusCode;
+            HttpStatusCode actualValue = response.StatusCode;
 
             // Assert
-            Assert.Equal(HttpStatusCode.NotFound, statusCode);
+            Assert.Equal(expectedValue, actualValue);
 
         }
 
@@ -47,6 +49,7 @@ namespace MovieUnitTests
         {
             // Arrange
             HttpClient httpClient = new HttpClient();
+            HttpStatusCode expectedValue = HttpStatusCode.BadRequest;
 
             using StringContent jsonContent = new(
             JsonSerializer.Serialize(new
@@ -60,10 +63,10 @@ namespace MovieUnitTests
 
             // Act
             using HttpResponseMessage response = await httpClient.PostAsync(baseUrl, jsonContent);
-            HttpStatusCode statusCode = response.StatusCode;
+            HttpStatusCode actualValue = response.StatusCode;
 
             // Assert
-            Assert.Equal(HttpStatusCode.BadRequest, statusCode);
+            Assert.Equal(expectedValue, actualValue);
         }
 
 
@@ -135,15 +138,16 @@ namespace MovieUnitTests
         {
             // Arrange
             HttpClient httpClient = new HttpClient();
+            HttpStatusCode expectedValue = HttpStatusCode.NotFound;
             string userID = "404";
 
             // Act
             httpClient.DefaultRequestHeaders.Add("id", userID);
             using HttpResponseMessage response = await httpClient.DeleteAsync(baseUrl);
-            HttpStatusCode statusCode = response.StatusCode;
+            HttpStatusCode actualValue = response.StatusCode;
 
             // Assert
-            Assert.Equal(HttpStatusCode.NotFound, statusCode);
+            Assert.Equal(expectedValue, actualValue);
         }
 
 
