@@ -18,12 +18,16 @@ namespace MovieWebApi.Extensions
             return _linkgenerator.GetUriByName(HttpContext, pathName, entity);
         }
 
-        protected string? GetLink(string pathName, int page, int pageSize)
+        protected string? GetLink(string pathName, int page, int pageSize, int? id = null)
         {
-            return GetUrl(pathName, new { page, pageSize });
+            if (!id.HasValue) return GetUrl(pathName, new { page, pageSize });
+
+            return GetUrl(pathName, new { page, pageSize, id });
+
+
         }
 
-        protected object CreatePaging<T>(string pathName, int pageNumber, int pageSize, int total, IEnumerable<T>? entities)
+        protected object CreatePaging<T>(string pathName, int pageNumber, int pageSize, int total, IEnumerable<T>? entities, int? id = null)
         {
             const int maxPageSize = 10;
 
@@ -31,11 +35,11 @@ namespace MovieWebApi.Extensions
 
             var numberOfPages = (int)Math.Ceiling(total / (double)pageSize); //Calculates the number of pages and adds an extra page if there is a remainder
 
-            var currentPageUrl = GetLink(pathName, pageNumber, pageSize); //Gets the current page
+            var currentPageUrl = GetLink(pathName, pageNumber, pageSize, id); //Gets the current page
 
-            var nextPageUrl = pageNumber < numberOfPages - 1 ? GetLink(pathName, pageNumber + 1, pageSize) : null; //NumberOfPages - 1, because we start on page 1. If 10 pages we can click "next page" 9 times
+            var nextPageUrl = pageNumber < numberOfPages - 1 ? GetLink(pathName, pageNumber + 1, pageSize, id) : null; //NumberOfPages - 1, because we start on page 1. If 10 pages we can click "next page" 9 times
 
-            var previousPageUrl = pageNumber > 0 ? GetLink(pathName, pageNumber - 1, pageSize) : null;
+            var previousPageUrl = pageNumber > 0 ? GetLink(pathName, pageNumber - 1, pageSize, id) : null;
 
             var result = new
             {
