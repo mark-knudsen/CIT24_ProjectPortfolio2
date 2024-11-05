@@ -20,22 +20,24 @@ namespace MovieWebApi.Controllers
             _linkGenerator = linkGenerator;
         }
 
-        [HttpGet("{id}")]
-        public async Task<IActionResult> Get(string id)
+        [HttpGet("{id}", Name = nameof(GetPerson))]
+        public async Task<IActionResult> GetPerson(string id)
         {
 
-            var person = (await _personRepository.GetPerson(id)).MapPersonToPersonDTO(HttpContext, _linkGenerator, nameof(Get));
+            var person = (await _personRepository.GetPerson(id)).MapPersonToPersonDTO(HttpContext, _linkGenerator, nameof(GetPerson));
             if (person == null) return NotFound();
 
             return Ok(person);
         }
 
-        [HttpGet]
+        [HttpGet(Name = nameof(GetAll))]
         public async Task<IActionResult> GetAll(int page = 0, int pageSize = 10)
         {
-            var result = (await _personRepository.GetAllWithPaging(page = 0, pageSize = 10)).Select(person => person.Spawn_DTO<PersonDetailedDTO, Person>(HttpContext, _linkGenerator, nameof(GetAll)));
+            if (page < 0 || pageSize <= 0) return BadRequest("Page and PageSize must be 0 or greater");
+            var result = (await _personRepository.GetAllWithPaging(page = 0, pageSize = 10)).Select(person => person.Spawn_DTO<PersonDetailedDTO, Person>(HttpContext, _linkGenerator, nameof(GetPerson)));
             if (result == null || !result.Any()) return NotFound();
             return Ok(result);
+            //Properties MostRelevantTitles and PrimaryProfessions, should be considered removed from DTO, as they are not needed in the list?
         }
 
     }
