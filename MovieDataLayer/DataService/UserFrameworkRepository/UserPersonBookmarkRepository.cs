@@ -5,14 +5,13 @@ namespace MovieDataLayer.DataService.UserFrameworkRepository
     public class UserPersonBookmarkRepository : Repository<UserPersonBookmark>
     {
         public UserPersonBookmarkRepository(IMDBContext context) : base(context) { }
-
         public async Task<IList<UserPersonBookmark>> GetAll(int id)
         {
             return await _dbSet.AsNoTracking().Where(x => x.UserId == id).ToListAsync();
         }
         public async Task<UserPersonBookmark> Get(int userId, string personId)
         {
-            return await _dbSet.Where(x => x.UserId == userId && x.PersonId.Equals(personId)).FirstOrDefaultAsync();
+            return await _dbSet.AsNoTracking().Where(x => x.UserId == userId && x.PersonId.Equals(personId)).FirstOrDefaultAsync();
         }
 
         public async Task<bool> Delete(int userId, string titleId)

@@ -9,10 +9,9 @@ namespace MovieDataLayer.DataService.UserFrameworkRepository
         {
             return await _dbSet.AsNoTracking().Where(x => x.UserId == id).ToListAsync();
         }
-
         public async Task<UserTitleBookmark> GetTitleBookmark(int userId, string titleId)
         {
-            return await _dbSet.Where(x => x.UserId == userId && x.TitleId.Equals(titleId)).FirstOrDefaultAsync();
+            return await _dbSet.AsNoTracking().Where(x => x.UserId == userId && x.TitleId.Equals(titleId)).FirstOrDefaultAsync();
         }
 
         public async Task<bool> DeleteTitleBookmark(int userId, string titleId)
@@ -54,7 +53,7 @@ namespace MovieDataLayer.DataService.UserFrameworkRepository
                     return false;
                 }
             }
-            catch 
+            catch
             {
                 return false;
             }

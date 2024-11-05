@@ -45,13 +45,12 @@ namespace MovieUnitTests
         {
             // Arrange
             UserRepository userRepository = new UserRepository(new IMDBContext());
-            bool expectedValue = true;
 
             // Act
-            bool actualValue = await userRepository.Add(new User() { Id = default, Email = "test@ruc99.dk", FirstName = "Harry", Password = "bigsecrets" });
+            bool success = await userRepository.Add(new User() { Id = default, Email = "test@ruc99.dk", FirstName = "Bob", Password = "12345" });
 
             // Assert
-            Assert.Equal(expectedValue, actualValue);
+            Assert.True(success);
 
             // Clean up
             User user = (await userRepository.GetAll()).Where(x => x.Email == "test@ruc99.dk").First();
@@ -62,13 +61,13 @@ namespace MovieUnitTests
         public async Task CallAPI_UserReposity_Func_Update_ShouldUpdateUser()
         {
             // Arrange
-            UserRepository userRepository = new UserRepository(new IMDBContext());
-            var expectedValue = new { Id = 2, Email = "test@ruc22.dk", FirstName = "Harry potter", Password = "bigsecrets" };
+            IMDBContext imdbContext = new IMDBContext();
+            UserRepository userRepository = new UserRepository(imdbContext);
+            var expectedValue = new { Id = 1, Email = "test@ruc.dk", FirstName = "Harry potter", Password = "bigsecrets" };
 
             // Act
-            await userRepository.Update(new User() { Id = 2, Email = "test@ruc22.dk", FirstName = "Harry potter", Password = "bigsecrets" });
-            var actualValue = await userRepository.Get(2);
-
+            await userRepository.Update(new User() { Id = 1, Email = "test@ruc.dk", FirstName = "Harry potter", Password = "bigsecrets" });
+            var actualValue = await userRepository.Get(1);
 
             // Assert
             Assert.Equal(expectedValue.Id, actualValue.Id);
@@ -76,18 +75,23 @@ namespace MovieUnitTests
             Assert.Equal(expectedValue.FirstName, actualValue.FirstName);
 
             // Clean up
-            await userRepository.Update(new User() { Id = 2, Email = "test@ruc22.dk", FirstName = "Harry", Password = "bigsecrets" });
+            imdbContext.Dispose();
+            imdbContext = new IMDBContext();
+            userRepository = new UserRepository(imdbContext);
+            await userRepository.Update(new User() { Id = 1, Email = "test@ruc.dk", FirstName = "Harry", Password = "bigsecrets" });
         }
+
+
 
         [Fact]
         public async Task CallAPI_UserReposity_Func_Delete_ShouldDeleteUser()
         {
             // Arrange
             UserRepository userRepository = new UserRepository(new IMDBContext());
+            await userRepository.Add(new User() { Id = default, Email = "bobby@ruc22.dk", FirstName = "Bobby", Password = "12345" });
+            User user = (await userRepository.GetAll()).Where(x => x.Email == "bobby@ruc22.dk").First();
 
             // Act
-            await userRepository.Add(new User() { Id = default, Email = "test@ruc22.dk", FirstName = "Harry potter", Password = "bigsecrets" });
-            User user = (await userRepository.GetAll()).Where(x => x.Email == "test@ruc22.dk").First();
             var success = await userRepository.Delete(user.Id);
 
             // Assert

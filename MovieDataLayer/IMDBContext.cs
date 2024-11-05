@@ -112,8 +112,8 @@ namespace MovieDataLayer
             modelBuilder.Entity<UserPersonBookmark>().Property(p => p.PersonId).HasColumnName("person_id");
             modelBuilder.Entity<UserPersonBookmark>()
                 .Property(p => p.CreatedAt)
-                .HasDefaultValueSql("CURRENT_TIMESTAMP") // Sets default to current timestamp in PostgreSQL
-                .ValueGeneratedOnAdd() // Specifies that the value is generated when the entity is added
+                //.HasDefaultValueSql("CURRENT_TIMESTAMP") // Sets default to current timestamp in PostgreSQL
+                //.ValueGeneratedOnAdd() // Specifies that the value is generated when the entity is added
                 .HasColumnName("created_at")
                 .HasColumnType("timestamp without time zone");
             modelBuilder.Entity<UserPersonBookmark>().Property(p => p.Annotation).HasColumnName("annotation");

@@ -19,7 +19,12 @@ namespace MovieDataLayer.DataService.UserFrameworkRepository
         {
             return await _context.Set<UserTitleBookmark>().AsNoTracking().Where(x => x.UserId == id).ToListAsync();
         }
+        public async Task UpdateUser(User user)
+        {
+            _context.Update(user);
 
+            await _context.SaveChangesAsync();
+        }
         public async Task<User> Login(string email, string password)
         {
 

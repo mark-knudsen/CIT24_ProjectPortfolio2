@@ -30,8 +30,8 @@ namespace MovieWebApi.Controllers.UserStuff
             _linkGenerator = linkGenerator;
         }
 
-        [HttpPost(Name = nameof(PostBookmark))]
-        public async Task<IActionResult> PostBookmark([FromHeader] int userId, CreateUserPersonBookmark userPersonBookmark, [FromHeader] string Authorization)
+        [HttpPost(Name = nameof(Post))]
+        public async Task<IActionResult> Post([FromHeader] int userId, CreateUserPersonBookmark userPersonBookmark, [FromHeader] string Authorization)
         {
             StatusCodeResult code = await Validate(userId, Authorization);
             if (code != null) return code;
@@ -46,9 +46,9 @@ namespace MovieWebApi.Controllers.UserStuff
 
             var result = (await _userPersonBookmarkRepository.Get(userId, userPersonBookmark.PersonId));
             if (result == null) return NotFound();
-            var finalResult = result.Spawn_DTO<UserBookmarkDTO, UserPersonBookmark>(HttpContext, _linkGenerator, nameof(PostBookmark));
+            var finalResult = result.Spawn_DTO<UserBookmarkDTO, UserPersonBookmark>(HttpContext, _linkGenerator, nameof(Post));
 
-            //return CreatedAtRoute(nameof(GetBookmark), new { personId = finalResult.PersonId }, finalResult); // It works without using this!
+
             return Ok(finalResult);
         }
 

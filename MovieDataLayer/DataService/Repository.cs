@@ -22,7 +22,10 @@ namespace MovieDataLayer.DataService
 
         public async Task<T> Get(object id)
         {
-            return await _dbSet.FindAsync(id);
+            T x = await _dbSet.FindAsync(id);
+            _context.Entry(x).State = EntityState.Detached;
+            return x;
+
         }
 
         public async Task<IList<T>> GetAllWithPaging(int page = 0, int pageSize = 10) //should not use default values when fully implemented?
@@ -78,8 +81,12 @@ namespace MovieDataLayer.DataService
         {
             try
             {
+                // _context.Entry(entity).State = EntityState.Detached; // Detach any existing tracked entity
+                //await _context.Entry(entity).ReloadAsync(); // Reload
                 _dbSet.Update(entity);
+
                 await _context.SaveChangesAsync();
+
                 return true;
             }
             catch (Exception)
