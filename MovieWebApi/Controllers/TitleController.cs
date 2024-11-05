@@ -70,6 +70,7 @@ namespace MovieWebApi.Controllers
         public async Task<IActionResult> Search([FromHeader] int userId, string searchTerm, int page = 0, int pageSize = 10) // should probably be authorized ALOT to be allowed to call this
         {
             var searchResult = (await _titleRepository.TitleSearch(userId, searchTerm)).MapTitleSearchResultModelToTitleSearchResultDTO();
+            if (searchResult == null || !searchResult.Any()) return NotFound();
             searchResult = CreateNavigationForSearchList(searchResult);
             var numberOfEntities = await _titleRepository.NumberOfElementsInTable();
 

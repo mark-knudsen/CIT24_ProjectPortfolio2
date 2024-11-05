@@ -81,6 +81,7 @@ namespace MovieWebApi.Extensions
         public static PersonDetailedDTO MapPersonToPersonDTO(this Person person, HttpContext httpContext, LinkGenerator linkGenerator, string routeName)
         {
             var model = person.Adapt<PersonDetailedDTO>();
+            if (model == null) return null;
             model.MostRelevantTitles = person.MostRelevantTitles?.Select(x => x.Title.PrimaryTitle).ToList();
             model.PrimaryProfessions = person.PrimaryProfessions?.Select(x => x.Profession.Name).ToList();
             model.Url = linkGenerator.GetUriByName(httpContext, routeName, new { id = person.Id });
@@ -89,6 +90,7 @@ namespace MovieWebApi.Extensions
         public static PersonDetailedDTO MapUserTitleBookmarkToUserTitleBookmarkDTO(this Person person)
         {
             var model = person.Adapt<PersonDetailedDTO>();
+            if (model == null) return null;
             model.MostRelevantTitles = person.MostRelevantTitles.Select(x => x.Title.PrimaryTitle).ToList();
             model.PrimaryProfessions = person.PrimaryProfessions.Select(x => x.Profession.Name).ToList();
 
@@ -100,6 +102,7 @@ namespace MovieWebApi.Extensions
         public static UserBookmarkDTO MapUserTitleBookmarkToUserBookmarkDTO(this UserTitleBookmark userTitleBookmark, HttpContext httpContext, LinkGenerator linkGenerator, string routeName)
         {
             var model = userTitleBookmark.Adapt<UserBookmarkDTO>();
+            if (model == null) return null;
             model.Url = linkGenerator.GetUriByName(httpContext, routeName, new { id = userTitleBookmark.TitleId });
 
             return model;
@@ -107,6 +110,7 @@ namespace MovieWebApi.Extensions
         public static UserBookmarkDTO MapUserPersonBookmarkToUserBookmarkDTO(this UserPersonBookmark userPersonBookmark, HttpContext httpContext, LinkGenerator linkGenerator, string routeName)
         {
             var model = userPersonBookmark.Adapt<UserBookmarkDTO>();
+            if (model == null) return null;
             model.Url = linkGenerator.GetUriByName(httpContext, routeName, new { id = userPersonBookmark.PersonId });
             model.CreatedAt = userPersonBookmark.CreatedAt;
 
@@ -122,6 +126,7 @@ namespace MovieWebApi.Extensions
         }
         public static IEnumerable<TitleSearchResultDTO> MapTitleSearchResultModelToTitleSearchResultDTO(this IEnumerable<TitleSearchResultModel> titleSearchResultModel)
         {
+
             var models = new List<TitleSearchResultDTO>();
             foreach (var searchResult in titleSearchResultModel) models.Add(searchResult.MapOneTitleSearchResultModelToTitleSearchResultDTO());  // Really not that elegant looking
 

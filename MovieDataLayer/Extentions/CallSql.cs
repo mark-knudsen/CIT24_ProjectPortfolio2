@@ -6,6 +6,7 @@ public static class CallSql
 {
     public static async Task<IEnumerable<T>> CallQuery<T>(this IMDBContext context, string query, int page, int pageLen) where T : class
     {
+
         return await context.Set<T>().FromSqlRaw(query).Skip(page * pageLen).Take(pageLen).ToListAsync();
 
     }
