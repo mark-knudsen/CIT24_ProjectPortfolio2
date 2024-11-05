@@ -12,6 +12,7 @@ Finish section Testing - Mark
 Ensure all diagram are updated to current state of project
 Nice rapport setup
 Read endpoints chapter through
+Fix Url for individual element like link to title or person.
 
 
 #NiceToHave
