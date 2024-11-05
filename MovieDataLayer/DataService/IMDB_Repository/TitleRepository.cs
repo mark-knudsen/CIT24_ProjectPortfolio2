@@ -65,7 +65,7 @@ namespace MovieDataLayer.DataService.IMDB_Repository
         {
             // Should fix so the distinc is made in the function in the DB, then use the shorter version below!
             //string query = $"SELECT * FROM find_similar_movies('{titleID}') LIMIT 8;";
-            string query = $"SELECT DISTINCT ON(primary_title) similar_title_id, primary_title, isadult, title_type, genres FROM find_similar_movies('{titleID}') ORDER BY primary_title DESC LIMIT 8;";
+            string query = $"SELECT DISTINCT ON(primary_title) similar_title_id, primary_title, isadult, title_type, genres FROM find_similar_movies('{titleID}') ORDER BY primary_title DESC LIMIT 8";
             return await _context.CallQuery<SimilarTitleSearchModel>(query, page, pageSize);
         }
         public async Task<int> CountByGenre(int genreId)
