@@ -18,16 +18,17 @@ namespace MovieWebApi.Extensions
             return _linkgenerator.GetUriByName(HttpContext, pathName, entity);
         }
 
-        protected string? GetLink(string pathName, int page, int pageSize, int? id = null)
+        protected string? GetLink(string pathName, int page, int pageSize, object? id = null)
         {
-            if (!id.HasValue) return GetUrl(pathName, new { page, pageSize });
+            if (id == null) return GetUrl(pathName, new { page, pageSize });
 
-            return GetUrl(pathName, new { page, pageSize, id });
+            return GetUrl(pathName, new { page, pageSize, id }); //if id is not null, it will be added to the URL. E.g. if we want to have navigation url to a path with id
 
 
         }
 
-        protected object CreatePaging<T>(string pathName, int pageNumber, int pageSize, int total, IEnumerable<T>? entities, int? id = null)
+        protected object CreatePaging<T>(string pathName, int pageNumber, int pageSize, int total, IEnumerable<T>? entities, object? id = null) //id is the id of an entity, could fx. be id for a specific genre.
+                                                                                                                                                //is object, so accepts both string and int. 
         {
             const int maxPageSize = 10;
 

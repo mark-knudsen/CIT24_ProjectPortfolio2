@@ -55,19 +55,24 @@ namespace MovieWebApi.Controllers
 
 
         //Not able to give URL/Path
-        [HttpGet("genre/{id?}", Name = nameof(GetTitleByGenre))]
+        [HttpGet("genre/{id}", Name = nameof(GetTitleByGenre))]
         public async Task<IActionResult> GetTitleByGenre(int id, int page = 0, int pageSize = 10) // id tt7856872
         {
+            if (id.Equals(null))
+            {
+                return BadRequest();
+            }
+
             var titles = (await _titleRepository.GetTitleByGenre(id, page, pageSize));
             if (titles == null) return NotFound();
 
             var numberOfEntities = await _titleRepository.NumberOfElementsInTable();
             var titleDTOs = titles.Select(title => title.MapTitleToTitleDetailedDTO(HttpContext, _linkGenerator, nameof(Get)));
-            object result = CreatePaging(nameof(GetTitleByGenre), page, pageSize, numberOfEntities, titleDTOs, id);
+            object result = CreatePaging(nameof(GetTitleByGenre), page, pageSize, numberOfEntities, titleDTOs, id); //Now including id, so we can generate url for getting titles with a specific genre
             return Ok(result);
         }
 
-        [HttpGet("search")]
+        [HttpGet("search", Name = nameof(Search))] //This method only works when called with an userid. Aka no searching without being logged in... Should prop be fixed?..
         public async Task<IActionResult> Search([FromHeader] int userId, string searchTerm, int page = 0, int pageSize = 10) // should probably be authorized ALOT to be allowed to call this
         {
             var searchResult = (await _titleRepository.TitleSearch(userId, searchTerm)).MapTitleSearchResultModelToTitleSearchResultDTO();
@@ -75,7 +80,7 @@ namespace MovieWebApi.Controllers
             searchResult = CreateNavigationForSearchList(searchResult);
             var numberOfEntities = await _titleRepository.NumberOfElementsInTable();
 
-            object result = CreatePaging(nameof(GetAllTitles), page, pageSize, numberOfEntities, searchResult);
+            object result = CreatePaging(nameof(GetAllTitles), page, pageSize, numberOfEntities, searchResult); //Navigation url currently doesn't work
             return Ok(result);
         }
 
