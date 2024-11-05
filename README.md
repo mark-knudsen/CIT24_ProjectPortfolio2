@@ -11,7 +11,9 @@ TALK ABOUT URI, PAGING STUFF - Hassan
 Finish section Testing - Mark
 Ensure all diagram are updated to current state of project
 Nice rapport setup
-Read endpoints chapter through
+Read endpoints chapter through - Mark
+Read testing chapter - Jeff
+Fix Url for individual element like link to title or person.
 
 
 #NiceToHave
