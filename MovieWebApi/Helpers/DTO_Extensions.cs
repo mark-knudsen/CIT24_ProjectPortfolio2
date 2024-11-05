@@ -21,6 +21,9 @@ namespace MovieWebApi.Extensions
                 case TitleDetailedDTO titleDetailedDTO when entity is Title title && typeof(TModel) == typeof(TitleDetailedDTO):
                     model = (TModel)(object)MapTitleToTitleDetailedDTO(title, httpContext, linkGenerator, routeName); //Casting to TModel object, idk maybe we can improve?
                     break;
+                case TitleSimpleDTO titleSimpleDTO when entity is Title title && typeof(TModel) == typeof(TitleSimpleDTO):
+                    model = (TModel)(object)MapTitleToTitleSimpleDTO(title, httpContext, linkGenerator, routeName); //Casting to TModel object, idk maybe we can improve?
+                    break;
 
                 case PersonDetailedDTO personDetailedDTO when entity is Person person && typeof(TModel) == typeof(PersonDetailedDTO):
                     model = (TModel)(object)MapPersonToPersonDTO(person, httpContext, linkGenerator, routeName);
@@ -32,22 +35,17 @@ namespace MovieWebApi.Extensions
                     model = (TModel)(object)MapUserPersonBookmarkToUserBookmarkDTO(userPersonBookmark, httpContext, linkGenerator, routeName);
                     break;
 
-
             }
             return model;
-
         }
 
         public static TModel? Spawn_DTO_Old<TModel, TEntity>(this TEntity entity) where TEntity : class where TModel : class
         {
             if (entity == null) return null;
-
             var model = entity.Adapt<TModel>();
 
             return model;
-
         }
-
 
         public static TitleDetailedDTO MapTitleToTitleDetailedDTO(this Title title, HttpContext httpContext, LinkGenerator linkGenerator, string routeName) // IMPORTANT, sometimes some values are null, but that will throw an axception when trying to set it here, add nullable in DTO and in here
         {
@@ -59,6 +57,16 @@ namespace MovieWebApi.Extensions
             model.VoteCount = title.Rating?.VoteCount;
             model.PrincipalCastList = title.PrincipalCastList?.Select(x => x.Person.Name).ToList();
             model.DirectorsList = title.DirectorsList?.Select(x => x.Person.Name).ToList();
+            model.AverageRating = title.Rating?.AverageRating;
+            model.Url = linkGenerator.GetUriByName(httpContext, routeName, new { id = title.Id });
+            return model;
+        }
+
+        public static TitleSimpleDTO MapTitleToTitleSimpleDTO(this Title title, HttpContext httpContext, LinkGenerator linkGenerator, string routeName) // IMPORTANT, sometimes some values are null, but that will throw an axception when trying to set it here, add nullable in DTO and in here
+        {
+            var model = title.Adapt<TitleSimpleDTO>();
+            model.GenresList = title.GenresList?.Select(x => x.Genre.Name).ToList();
+            model.PosterUrl = title.Poster?.PosterUrl;
             model.AverageRating = title.Rating?.AverageRating;
             model.Url = linkGenerator.GetUriByName(httpContext, routeName, new { id = title.Id });
             return model;
@@ -98,7 +106,6 @@ namespace MovieWebApi.Extensions
         }
 
 
-
         public static UserBookmarkDTO MapUserTitleBookmarkToUserBookmarkDTO(this UserTitleBookmark userTitleBookmark, HttpContext httpContext, LinkGenerator linkGenerator, string routeName)
         {
             var model = userTitleBookmark.Adapt<UserBookmarkDTO>();
@@ -118,7 +125,6 @@ namespace MovieWebApi.Extensions
         }
 
 
-
         public static TitleSearchResultDTO MapOneTitleSearchResultModelToTitleSearchResultDTO(this TitleSearchResultModel titleSearchResultModel)
         {
             var model = titleSearchResultModel.Adapt<TitleSearchResultDTO>();
@@ -126,12 +132,10 @@ namespace MovieWebApi.Extensions
         }
         public static IEnumerable<TitleSearchResultDTO> MapTitleSearchResultModelToTitleSearchResultDTO(this IEnumerable<TitleSearchResultModel> titleSearchResultModel)
         {
-
             var models = new List<TitleSearchResultDTO>();
             foreach (var searchResult in titleSearchResultModel) models.Add(searchResult.MapOneTitleSearchResultModelToTitleSearchResultDTO());  // Really not that elegant looking
 
             return models;
-
         }
     }
 }
