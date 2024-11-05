@@ -39,7 +39,7 @@ namespace MovieWebApi.Controllers
             if (page < 0 || pageSize < 0) return BadRequest("Page and PageSize must be 0 or greater"); //If time, add this check to other endpoints too..
 
             //Generic use of Spawn_DTO, including URL mapped to the DTO
-            var titles = (await _titleRepository.GetAllTitles(page, pageSize)).Select(title => title.Spawn_DTO<TitleDetailedDTO, Title>(HttpContext, _linkGenerator, nameof(GetAllTitles)));
+            var titles = (await _titleRepository.GetAllTitles(page, pageSize)).Select(title => title.Spawn_DTO<TitleDetailedDTO, Title>(HttpContext, _linkGenerator, nameof(Get)));
             if (titles == null || !titles.Any()) return NotFound();
 
             var numberOfEntities = await _titleRepository.NumberOfElementsInTable();
