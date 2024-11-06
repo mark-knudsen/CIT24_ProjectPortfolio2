@@ -11,7 +11,6 @@ namespace MovieWebApi.Controllers.UserStuff
     [ApiController]
     [Route("api/users/rating")]
     public class UserRatingController : ControllerBase
-
     {
         public record CreateUserRating(string TitleId, float Rating);
 
@@ -27,14 +26,11 @@ namespace MovieWebApi.Controllers.UserStuff
 
         public async Task<IActionResult> Get([FromHeader] int userId, string titleId)
         {
-
             var rating = DTO_Extensions.Spawn_DTO_Old<UserRatingDTO, UserRating>(await _userRatingRepository.GetUserRating(userId, titleId));
             if (rating == null) return NotFound();
 
-
             return Ok(rating);
         }
-
 
         [HttpGet]
         public async Task<IActionResult> GetAll([FromHeader] int userId)

@@ -7,27 +7,20 @@ using MovieWebApi.DTO;
 using MovieWebApi.Extensions;
 using MovieWebApi.Helpers;
 using System.Net;
-using static MovieWebApi.Controllers.UserStuff.UserTitleBookmarkController;
 
 namespace MovieWebApi.Controllers.UserStuff
 {
     [ApiController]
     [Route("api/bookmarks/person")]
-    public class UserPersonBookmarkController : ControllerBase
+    public class UserPersonBookmarkController : GenericController
     {
         public record CreateUserPersonBookmark(string PersonId, string Annotation);
         public record UpdateUserPersonBookmark(string Annotation);
         readonly UserPersonBookmarkRepository _userPersonBookmarkRepository;
-        private readonly UserRepository _userRepository;
-        private readonly AuthenticatorHelper _authenticatorHelper;
-        private readonly LinkGenerator _linkGenerator;
 
-        public UserPersonBookmarkController(UserPersonBookmarkRepository userPersonBookmarkRepository, UserRepository userRepository, AuthenticatorHelper authenticatorHelper, LinkGenerator linkGenerator)
+        public UserPersonBookmarkController(UserPersonBookmarkRepository userPersonBookmarkRepository, LinkGenerator linkGenerator, UserRepository userRepository, AuthenticatorHelper authenticatorHelper) : base(linkGenerator, userRepository, authenticatorHelper)
         {
             _userPersonBookmarkRepository = userPersonBookmarkRepository;
-            _authenticatorHelper = authenticatorHelper;
-            _userRepository = userRepository;
-            _linkGenerator = linkGenerator;
         }
 
         [HttpPost(Name = nameof(Post))]
@@ -48,24 +41,10 @@ namespace MovieWebApi.Controllers.UserStuff
             if (result == null) return NotFound();
             var finalResult = result.Spawn_DTO<UserBookmarkDTO, UserPersonBookmark>(HttpContext, _linkGenerator, nameof(Post));
 
-
             return Ok(finalResult);
         }
 
-        [HttpGet("{personId}", Name = nameof(GetBookmark))]
-        public async Task<IActionResult> GetBookmark([FromHeader] int userId, [FromHeader] string Authorization, string personId)
-        {
-            StatusCodeResult code = await Validate(userId, Authorization);
-            if (code != null) return code;
-
-            var result = (await _userPersonBookmarkRepository.Get(userId, personId));
-            if (result == null) return NotFound();
-            var finalResult = result.Spawn_DTO<UserBookmarkDTO, UserPersonBookmark>(HttpContext, _linkGenerator, nameof(GetBookmark));
-
-            return Ok(finalResult);
-        }
-
-        [HttpGet]
+                [HttpGet]
         public async Task<IActionResult> GetAll([FromHeader] int userId, [FromHeader] string Authorization)
         {
             StatusCodeResult code = await Validate(userId, Authorization);
@@ -75,6 +54,19 @@ namespace MovieWebApi.Controllers.UserStuff
 
             if (!result.Any() || result == null) return NotFound();
             return Ok(result);
+        }
+
+        [HttpGet("{personId}", Name = nameof(GetPersonBookmark))]
+        public async Task<IActionResult> GetPersonBookmark([FromHeader] int userId, [FromHeader] string Authorization, string personId)
+        {
+            StatusCodeResult code = await Validate(userId, Authorization);
+            if (code != null) return code;
+
+            var result = (await _userPersonBookmarkRepository.Get(userId, personId));
+            if (result == null) return NotFound();
+            var finalResult = result.Spawn_DTO<UserBookmarkDTO, UserPersonBookmark>(HttpContext, _linkGenerator, nameof(GetPersonBookmark));
+
+            return Ok(finalResult);
         }
 
         [HttpDelete("{personId}")]
@@ -116,16 +108,6 @@ namespace MovieWebApi.Controllers.UserStuff
             bool success = await _userPersonBookmarkRepository.Update(personBookmark);
             if (success) return NoContent();
             return BadRequest();
-        }
-
-        private async Task<StatusCodeResult> Validate(int id, string Authorization)
-        {
-            var user = await _userRepository.Get(id);
-            if (user == null) return BadRequest();
-            bool isValidUser = _authenticatorHelper.ValidateUser(Authorization, user.Id, user.Email);
-
-            if (!isValidUser) return Unauthorized();
-            else return null;
         }
     }
 }

@@ -1,21 +1,27 @@
 ﻿using System.Runtime.InteropServices;
 using Microsoft.AspNetCore.Mvc;
+using MovieDataLayer.DataService.UserFrameworkRepository;
+using MovieWebApi.Helpers;
 
 namespace MovieWebApi.Extensions
 {
     [ApiController] //why?
     public class GenericController : ControllerBase
     {
-        private readonly LinkGenerator _linkgenerator;
+        protected readonly LinkGenerator _linkGenerator;
+        protected readonly UserRepository _userRepository;
+        protected readonly AuthenticatorHelper _authenticatorHelper;
 
-        public GenericController(LinkGenerator linkgenerator)
+        public GenericController(LinkGenerator linkgenerator, UserRepository userRepository, AuthenticatorHelper authenticatorHelper)
         {
-            _linkgenerator = linkgenerator;
+            _linkGenerator = linkgenerator;
+            _userRepository = userRepository;
+            _authenticatorHelper = authenticatorHelper;
         }
 
         protected string? GetUrl(string pathName, object entity)
         {
-            return _linkgenerator.GetUriByName(HttpContext, pathName, entity);
+            return _linkGenerator.GetUriByName(HttpContext, pathName, entity);
         }
 
         protected string? GetLink(string pathName, int page, int pageSize, IComparable? id = null)
@@ -23,8 +29,6 @@ namespace MovieWebApi.Extensions
             if (id == null) return GetUrl(pathName, new { page, pageSize });
 
             return GetUrl(pathName, new { page, pageSize, id }); //if id is not null, it will be added to the URL. E.g. if we want to have navigation url to a path with id
-
-
         }
 
         protected object CreatePaging<T>(string pathName, int pageNumber, int pageSize, int total, IEnumerable<T>? entities, IComparable? id = null) //id is the id of an entity, could fx. be id for a specific genre.
@@ -55,6 +59,14 @@ namespace MovieWebApi.Extensions
 
         }
 
+        protected async Task<StatusCodeResult> Validate(int id, string Authorization)
+        {
+            var user = await _userRepository.Get(id);
+            if (user == null) return BadRequest();
+            bool isValidUser = _authenticatorHelper.ValidateUser(Authorization, user.Id, user.Email);
 
+            if (!isValidUser) return Unauthorized();
+            else return null;
+        }
     }
 }

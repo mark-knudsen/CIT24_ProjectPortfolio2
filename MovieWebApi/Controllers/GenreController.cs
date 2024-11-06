@@ -2,9 +2,11 @@
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Routing;
 using MovieDataLayer.DataService.IMDB_Repository;
+using MovieDataLayer.DataService.UserFrameworkRepository;
 using MovieDataLayer.Interfaces;
 using MovieDataLayer.Models.IMDB_Models;
 using MovieWebApi.Extensions;
+using MovieWebApi.Helpers;
 
 namespace MovieWebApi.Controllers;
 [ApiController]
@@ -14,14 +16,10 @@ public class GenreController : GenericController
     public record GenreModel(string Name); // Reocrds in a good way to make
 
     private readonly IRepository<Genre> _dataService;
-    private readonly LinkGenerator _linkGenerator;
-    public GenreController(IRepository<Genre> dataService, LinkGenerator linkGenerator) : base(linkGenerator)
+    public GenreController(IRepository<Genre> dataService, LinkGenerator linkGenerator, UserRepository userRepository, AuthenticatorHelper authenticatorHelper) : base(linkGenerator, userRepository, authenticatorHelper)
     {
         _dataService = dataService;
-        _linkGenerator = linkGenerator;
-
     }
-
 
     [HttpGet]
     public async Task<IActionResult> GetAll(int page = 0, int pageSize = 30)
@@ -39,6 +37,4 @@ public class GenreController : GenericController
         //object paging = CreatePaging(nameof(GetAll), page, pageSize, numberOfEntities, result);
         return Ok(result);
     }
-
-
 }
