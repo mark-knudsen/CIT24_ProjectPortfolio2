@@ -31,6 +31,7 @@ Read testing chapter - Jeff
 Authentication for User Rating and Search History!
 Controller for Search History
 Make search method in TitleController return a URL
+Make search method in TitleController use correct navigation URL for pagination
 All names for methods in Controllers should be same convention AKA "Post()/Get()/Delete()/Put()". Meaning no "GetAllUserRatings()".  
 In Datalayer ensure if equating between strings use .Equals() and if equating between ints use ==
 In WebAPI>Controllers for all Create/update methods return relevant object (has to be displayed with link).
