@@ -92,7 +92,7 @@ namespace MovieWebApi.Extensions
             if (model == null) return null;
             model.MostRelevantTitles = person.MostRelevantTitles?.Select(x => x.Title.PrimaryTitle).ToList();
             model.PrimaryProfessions = person.PrimaryProfessions?.Select(x => x.Profession.Name).ToList();
-            model.Url = linkGenerator.GetUriByRouteValues(httpContext, routeName, new { id = person.Id });
+            model.Url = linkGenerator.GetUriByName(httpContext, routeName, new { id = person.Id });
             return model;
         }
         public static PersonDetailedDTO MapUserTitleBookmarkToUserTitleBookmarkDTO(this Person person)
