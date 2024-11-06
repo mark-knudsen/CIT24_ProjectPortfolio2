@@ -1,7 +1,11 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.AspNetCore.Routing;
 using MovieDataLayer;
+using MovieDataLayer.DataService.IMDB_Repository;
 using MovieDataLayer.DataService.UserFrameworkRepository;
+using MovieDataLayer.Models.IMDB_Models;
 using MovieWebApi.DTO;
 using MovieWebApi.Extensions;
 using MovieWebApi.Helpers;
@@ -12,20 +16,16 @@ namespace MovieWebApi.Controllers.UserStuff
     [Authorize]
     [ApiController]
     [Route("api/bookmarks/title")]
-    public class UserTitleBookmarkController : ControllerBase
+    public class UserTitleBookmarkController : GenericController
     {
 
         public record CreateUserTitleBookmark(string TitleId, string Annotation);
         public record UpdateUserTitleBookmark(string annotation);
 
         private readonly UserTitleBookmarkRepository _userTitleBookmarkRepository;
-        private readonly UserRepository _userRepository;
-        private readonly AuthenticatorHelper _authenticatorHelper;
-        public UserTitleBookmarkController(UserTitleBookmarkRepository userTitleBookmarkRepository, UserRepository userRepository, AuthenticatorHelper authenticatorHelper)
+        public UserTitleBookmarkController(UserTitleBookmarkRepository userTitleBookmarkRepository,LinkGenerator linkGenerator, UserRepository userRepository, AuthenticatorHelper authenticatorHelper) : base(linkGenerator, userRepository, authenticatorHelper)
         {
             _userTitleBookmarkRepository = userTitleBookmarkRepository;
-            _authenticatorHelper = authenticatorHelper;
-            _userRepository = userRepository;
         }
 
         [HttpPost]
@@ -44,17 +44,33 @@ namespace MovieWebApi.Controllers.UserStuff
             return NoContent();
         }
 
-
         [HttpGet]
         public async Task<IActionResult> GetAll([FromHeader] int userId, [FromHeader] string Authorization)
         {
             StatusCodeResult code = await Validate(userId, Authorization);
             if (code != null) return code;
-            var result = (await _userTitleBookmarkRepository.GetAllTitleBookmarks(userId)).Select(DTO_Extensions.Spawn_DTO_Old<UserBookmarkDTO, UserTitleBookmark>);
+            var result = (await _userTitleBookmarkRepository.GetAll(userId));
 
-            if (!result.Any() || result == null) return NotFound();
+            var d = result.Select(x => x.Spawn_DTO<UserBookmarkDTO, UserTitleBookmark>(HttpContext, _linkGenerator, nameof(GetTitleBookmark)));
+            
+            //var titles = (await _titleRepository.GetAllTitles(page, pageSize)).Select(title => title.Spawn_DTO<TitleSimpleDTO, Title>(HttpContext, _linkGenerator, nameof(Get)));
 
-            return Ok(result);
+            if (!d.Any() || d == null) return NotFound();
+
+            return Ok(d);
+        }
+
+        [HttpGet("{titleId}", Name = nameof(GetTitleBookmark))]
+        public async Task<IActionResult> GetTitleBookmark([FromHeader] int userId, [FromHeader] string Authorization, string titleId)
+        {
+            StatusCodeResult code = await Validate(userId, Authorization);
+            if (code != null) return code;
+
+            var result = (await _userTitleBookmarkRepository.Get(userId, titleId));
+            if (result == null) return NotFound();
+            var finalResult = result.Spawn_DTO<UserBookmarkDTO, UserTitleBookmark>(HttpContext, _linkGenerator, nameof(GetTitleBookmark));
+
+            return Ok(finalResult);
         }
 
         [HttpDelete("{titleId}")]
@@ -83,7 +99,7 @@ namespace MovieWebApi.Controllers.UserStuff
         {
             StatusCodeResult code = await Validate(userId, Authorization);
             if (code != null) return code;
-            UserTitleBookmark titleBookmark = await _userTitleBookmarkRepository.GetTitleBookmark(userId, titleId);
+            UserTitleBookmark titleBookmark = await _userTitleBookmarkRepository.Get(userId, titleId);
             if (titleBookmark != null)
             {
                 titleBookmark.Annotation = updateUserTitleBookmark.annotation != "" ? updateUserTitleBookmark.annotation : titleBookmark.Annotation;
@@ -93,19 +109,6 @@ namespace MovieWebApi.Controllers.UserStuff
             bool success = await _userTitleBookmarkRepository.Update(titleBookmark);
             if (success) return NoContent();
             return BadRequest();
-        }
-
-
-
-
-        private async Task<StatusCodeResult> Validate(int id, string Authorization)
-        {
-            var user = await _userRepository.Get(id);
-            if (user == null) return BadRequest();
-            bool isValidUser = _authenticatorHelper.ValidateUser(Authorization, user.Id, user.Email);
-
-            if (!isValidUser) return Unauthorized();
-            else return null;
         }
     }
 }

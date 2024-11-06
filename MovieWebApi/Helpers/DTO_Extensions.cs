@@ -111,6 +111,7 @@ namespace MovieWebApi.Extensions
             var model = userTitleBookmark.Adapt<UserBookmarkDTO>();
             if (model == null) return null;
             model.Url = linkGenerator.GetUriByName(httpContext, routeName, new { id = userTitleBookmark.TitleId });
+            model.CreatedAt = userTitleBookmark.CreatedAt;
 
             return model;
         }

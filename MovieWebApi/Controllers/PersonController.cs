@@ -2,9 +2,11 @@
 using Microsoft.AspNetCore.Routing;
 using MovieDataLayer;
 using MovieDataLayer.DataService.IMDB_Repository;
+using MovieDataLayer.DataService.UserFrameworkRepository;
 using MovieDataLayer.Interfaces;
 using MovieDataLayer.Models.IMDB_Models;
 using MovieWebApi.Extensions;
+using MovieWebApi.Helpers;
 
 namespace MovieWebApi.Controllers
 {
@@ -13,11 +15,9 @@ namespace MovieWebApi.Controllers
     public class PersonController : GenericController
     {
         private readonly PersonRepository _personRepository;
-        private readonly LinkGenerator _linkGenerator;
-        public PersonController(PersonRepository personRepository, LinkGenerator linkGenerator) : base(linkGenerator)
+        public PersonController(PersonRepository personRepository, LinkGenerator linkGenerator, UserRepository userRepository, AuthenticatorHelper authenticatorHelper) : base(linkGenerator, userRepository, authenticatorHelper)
         {
             _personRepository = personRepository;
-            _linkGenerator = linkGenerator;
         }
 
         [HttpGet("{id}", Name = nameof(GetPerson))]
@@ -39,6 +39,5 @@ namespace MovieWebApi.Controllers
             return Ok(result);
             //Properties MostRelevantTitles and PrimaryProfessions, should be considered removed from DTO, as they are not needed in the list?
         }
-
     }
 }

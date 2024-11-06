@@ -17,23 +17,14 @@ namespace MovieWebApi.Controllers.UserStuff;
 public class UserController : GenericController
 {
     public record UpdateUserModel(string email, string firstName, string password);
-    readonly UserRepository _userRepository; //Private, explicit?
-    private readonly LinkGenerator _linkGenerator;
-    private readonly AuthenticatorHelper _authenticatorHelper;
-    public UserController(UserRepository userRepository, LinkGenerator linkGenerator, AuthenticatorHelper authenticatorHelper) : base(linkGenerator)
+    public UserController(UserRepository userRepository, LinkGenerator linkGenerator, AuthenticatorHelper authenticatorHelper) : base(linkGenerator, userRepository, authenticatorHelper)
     {
-        _userRepository = userRepository;
-        _linkGenerator = linkGenerator;
-        _authenticatorHelper = authenticatorHelper;
     }
-
-
 
     [HttpGet("user-profile")] //Is this url ok?
     public async Task<IActionResult> GetById([FromHeader] int id)
     {
-
-        var result = (await _userRepository.Get(id)).Spawn_DTO<UserDTO, User>(HttpContext, _linkGenerator, nameof(GetById));
+        var result = (await _userRepository.Get(id)).Spawn_DTO_Old<UserDTO, User>();
         if (result == null) return NotFound();
         return Ok(result);
     }
@@ -102,7 +93,4 @@ public class UserController : GenericController
         var token = _authenticatorHelper.GenerateJWTToken(user);
         return Ok(token);
     }
-
 }
-
-
