@@ -15,6 +15,7 @@ namespace MovieUnitTests
         {
             // Arrange
             HttpClient httpClient = new HttpClient();
+            await Util.UserLoginHelper(httpClient);
             HttpStatusCode expectedValue = HttpStatusCode.OK;
 
             // Act
@@ -31,6 +32,7 @@ namespace MovieUnitTests
         {
             // Arrange
             HttpClient httpClient = new HttpClient();
+            await Util.UserLoginHelper(httpClient);
             HttpStatusCode expectedValue = HttpStatusCode.NotFound;
             string userId = "9999";
 
@@ -49,6 +51,7 @@ namespace MovieUnitTests
         {
             // Arrange
             HttpClient httpClient = new HttpClient();
+            await Util.UserLoginHelper(httpClient);
             HttpStatusCode expectedValue = HttpStatusCode.BadRequest;
 
             using StringContent jsonContent = new(
@@ -75,6 +78,7 @@ namespace MovieUnitTests
         {
             // Arrange
             HttpClient httpClient = new HttpClient();
+            await Util.UserLoginHelper(httpClient);
 
             // check initial value
             using StringContent jsonContent_Harry = new(
@@ -138,6 +142,7 @@ namespace MovieUnitTests
         {
             // Arrange
             HttpClient httpClient = new HttpClient();
+            await Util.UserLoginHelper(httpClient);
             HttpStatusCode expectedValue = HttpStatusCode.NotFound;
             string userID = "404";
 
@@ -153,5 +158,28 @@ namespace MovieUnitTests
 
 
 
+    }
+    //Helper class and methods
+    public static class Util
+    {
+        public static async Task UserLoginHelper(HttpClient httpClient) //Helper method to login user, and return the JWT token
+        {
+            StringContent userLoginToJSON = new(
+                        JsonSerializer.Serialize(new
+                        {
+                            email = "test@ruc.dk",
+                            password = "bigsecrets"
+                        }),
+                        Encoding.UTF8,
+                        "application/json");
+
+            var loginUserResponse = await httpClient.PostAsync("https://localhost:7154/api/user/login", userLoginToJSON);
+
+            loginUserResponse.EnsureSuccessStatusCode(); //Throws error if login was unsuccessful
+            var token = await loginUserResponse.Content.ReadAsStringAsync();
+
+            httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token); //Adds JWT token to Request Header
+
+        }
     }
 }
