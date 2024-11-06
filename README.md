@@ -6,6 +6,8 @@ KEEP IT UPDATED.
 Fix Url for individual element like link to title or person.
 Authentication: Check if Validate is even required or if Authentication tag in Controller is sufficient
 Seperate DTO's into folders
+Delete TitleWriterDTO.cs
+
 
 
 
