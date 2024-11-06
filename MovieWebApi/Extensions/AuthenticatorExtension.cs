@@ -32,7 +32,7 @@ namespace MovieWebApi.Helpers
         public bool ValidateUser(string token, int userId, string email)
         {
             var tokenHandler = new JwtSecurityTokenHandler();
-            var key = tokenHandler.ReadJwtToken(token.Substring(7)); //Remove "Bearer " from token
+            var key = tokenHandler.ReadJwtToken(token.Substring(7)); //Removes 7 letter word "Bearer " from token
 
             bool isCorrectUserId = key.Claims.Any(claim => claim.Type == ClaimTypes.NameIdentifier && claim.Value.Equals(userId.ToString()));
             bool isCorrectEmail = key.Claims.Any(claim => claim.Type == ClaimTypes.Email && claim.Value.Equals(email));
@@ -41,7 +41,6 @@ namespace MovieWebApi.Helpers
             {
                 return true;
             }
-
             return false;
         }
 

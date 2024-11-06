@@ -18,18 +18,17 @@ builder.Services.AddControllers();
 
 builder.Services.AddDbContext<IMDBContext>();
 
-//builder.Services.AddScoped<IMovieDataRepository<Person, string>, MovieDataRepository<Person, string>>(); //Using AddScoped to ensure new instance of DataService is created for each HTTP request
-//builder.Services.AddScoped<IMovieDataRepository<Title, string>, MovieDataRepository<Title, string>>(); //Using AddScoped to ensure new instance of DataService is created for each HTTP request
 
-builder.Services.AddScoped(typeof(IRepository<>), typeof(Repository<>)); //Currently not needed, maybe should be removed? //Dependency Injection for Repository base class.
-builder.Services.AddScoped<TitleRepository>(); //Dependency Injection for TitleRepository class, concrete.
-builder.Services.AddScoped<UserRepository>(); //Dependency Injection for UserRepository class, concrete.
+builder.Services.AddScoped(typeof(IRepository<>), typeof(Repository<>)); //Dependency Injection for Repository base class.
+builder.Services.AddScoped<TitleRepository>(); //Dependency InjectionS for related class, concrete.
+builder.Services.AddScoped<UserRepository>(); 
 builder.Services.AddScoped<PersonRepository>();
 builder.Services.AddScoped<UserRatingRepository>();
 
 builder.Services.AddScoped<UserTitleBookmarkRepository>();
 builder.Services.AddScoped<UserPersonBookmarkRepository>();
 builder.Services.AddSingleton<AuthenticatorExtension>();
+
 //Adds JWT Authentication configuration:
 builder.Services.AddAuthentication(cfg =>
 {

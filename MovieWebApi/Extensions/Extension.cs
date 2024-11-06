@@ -33,7 +33,6 @@ namespace MovieWebApi.Extensions
                 case UserBookmarkDTO userBookmarkDTO when entity is UserPersonBookmarkModel userPersonBookmark && typeof(TModel) == typeof(UserBookmarkDTO):
                     model = (TModel)(object)MapUserPersonBookmarkToUserBookmarkDTO(userPersonBookmark, httpContext, linkGenerator, routeName);
                     break;
-
             }
             return model;
         }
@@ -42,7 +41,6 @@ namespace MovieWebApi.Extensions
         {
             if (entity == null) return null;
             var model = entity.Adapt<TModel>();
-
             return model;
         }
 
@@ -90,7 +88,6 @@ namespace MovieWebApi.Extensions
             if (model == null) return null;
             model.MostRelevantTitles = person.MostRelevantTitles.Select(x => x.Title.PrimaryTitle).ToList();
             model.PrimaryProfessions = person.PrimaryProfessions.Select(x => x.Profession.Name).ToList();
-
             return model;
         }
 
@@ -100,7 +97,6 @@ namespace MovieWebApi.Extensions
             if (model == null) return null;
             model.Url = linkGenerator.GetUriByName(httpContext, routeName, new { titleId = userTitleBookmark.TitleId });
             model.CreatedAt = userTitleBookmark.CreatedAt;
-
             return model;
         }
 
@@ -108,9 +104,8 @@ namespace MovieWebApi.Extensions
         {
             var model = userPersonBookmark.Adapt<UserBookmarkDTO>();
             if (model == null) return null;
-            model.Url = linkGenerator.GetUriByName(httpContext, routeName, new { personId = userPersonBookmark.PersonId }); //Naming of anonymous object must reflect valuename of path in controller. So in this case, it should be called PersonId
+            model.Url = linkGenerator.GetUriByName(httpContext, routeName, new { personId = userPersonBookmark.PersonId });
             model.CreatedAt = userPersonBookmark.CreatedAt;
-
             return model;
         }
 
@@ -123,7 +118,6 @@ namespace MovieWebApi.Extensions
         {
             var models = new List<TitleSearchResultDTO>();
             foreach (var searchResult in titleSearchResultModel) models.Add(searchResult.MapOneTitleSearchResultModelToTitleSearchResultDTO());  // Really not that elegant looking
-
             return models;
         }
     }

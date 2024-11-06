@@ -75,12 +75,10 @@ namespace MovieDataLayer.DataService
             }
         }
 
-        public async Task<bool> Update(T entity) //maybe add id, and think about serialize
+        public async Task<bool> Update(T entity) //maybe add id, and consider serialization
         {
-            try
+            try //expensive, would if() suffice?
             {
-                // _context.Entry(entity).State = EntityState.Detached; // Detach any existing tracked entity
-                //await _context.Entry(entity).ReloadAsync(); // Reload
                 _dbSet.Update(entity);
 
                 await _context.SaveChangesAsync();

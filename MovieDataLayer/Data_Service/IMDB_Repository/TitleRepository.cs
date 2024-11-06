@@ -17,14 +17,14 @@ namespace MovieDataLayer.DataService.IMDB_Repository
                 .Include(t => t.Poster)
                 .Include(t => t.Plot)
                 .Include(t => t.Rating)
-                //.Include(t => t.LocalizedTitlesList)
+                //.Include(t => t.LocalizedTitlesList) //not planning to use this.
                 .Include(t => t.WritersList).ThenInclude(w => w.Person)
                 .Include(t => t.DirectorsList).ThenInclude(d => d.Person)
                 .Include(t => t.GenresList).ThenInclude(g => g.Genre)
                 .Include(t => t.PrincipalCastList).ThenInclude(p => p.Person).FirstOrDefaultAsync();
         }
 
-        public async Task<IList<TitleModel>> GetAllTitles(int page = 0, int pageSize = 10) // could these be reused and not duplicated?
+        public async Task<IList<TitleModel>> GetAllTitles(int page = 0, int pageSize = 10) // could these be reused and not duplicated? for future iterations!
         {
             return await _dbSet.AsNoTracking()
                 .Include(t => t.Poster)
@@ -33,7 +33,6 @@ namespace MovieDataLayer.DataService.IMDB_Repository
                 .Include(t => t.GenresList).ThenInclude(g => g.Genre)
                 .Skip(page * pageSize).Take(pageSize).ToListAsync();
         }
-        //AsNoTracking().Skip(page* pageSize).Take(pageSize).ToListAsync()
 
         public async Task<IList<TitleModel>> GetTitleByGenre(int id, int page = 0, int pageSize = 10)
         {
@@ -41,31 +40,28 @@ namespace MovieDataLayer.DataService.IMDB_Repository
                 .Include(t => t.Poster)
                 .Include(t => t.Plot)
                 .Include(t => t.Rating)
-                //.Include(t => t.LocalizedTitlesList)
+                //.Include(t => t.LocalizedTitlesList)  //not planning to use this.
                 .Include(t => t.WritersList).ThenInclude(w => w.Person)
                 .Include(t => t.DirectorsList).ThenInclude(d => d.Person)
                 .Include(t => t.GenresList).ThenInclude(g => g.Genre)
                 .Include(t => t.PrincipalCastList).ThenInclude(p => p.Person).Where(x => x.GenresList.Any(x => x.GenreId == id)).Skip(page * pageSize).Take(pageSize).ToListAsync();
         }
-        public async Task<IEnumerable<TitleSearchResultTempTable>> TitleSearch(int userId, string searchTerm, int page = 0, int pageSize = 10) // also have to remember to make them async
+        public async Task<IEnumerable<TitleSearchResultTempTable>> TitleSearch(int userId, string searchTerm, int page = 0, int pageSize = 10)
         {
             string query = $"SELECT * FROM string_search('{userId}', '{searchTerm}')";
             return await _context.CallQuery<TitleSearchResultTempTable>(query, page, pageSize);
         }
-        public async Task<IEnumerable<SimilarTitleSearchTempTable>> SimilarTitles(string titleID, int page = 0, int pageSize = 10) // also have to remember to make them async
+        public async Task<IEnumerable<SimilarTitleSearchTempTable>> SimilarTitles(string titleID, int page = 0, int pageSize = 10) 
         {
-            // Should fix so the distinc is made in the function in the DB, then use the shorter version below!
+            //Should fix so the distinct is made in the function in the DB, then use the shorter version below!
             //string query = $"SELECT * FROM find_similar_movies('{titleID}') LIMIT 8;";
             string query = $"SELECT DISTINCT ON(primary_title) similar_title_id, primary_title, isadult, title_type, genres FROM find_similar_movies('{titleID}') ORDER BY primary_title DESC LIMIT 8";
             return await _context.CallQuery<SimilarTitleSearchTempTable>(query, page, pageSize);
         }
         public async Task<int> CountByGenre(int genreId)
         {
-            return await _dbSet.AsNoTracking().Where(title => title.GenresList.Any(g => g.GenreId == genreId)).CountAsync(); //should it be async?
+            return await _dbSet.AsNoTracking().Where(title => title.GenresList.Any(g => g.GenreId == genreId)).CountAsync(); 
         }
-        //public IList<Title> GetAllTitleButWithLimit(int id)
-        //{
-        //    return _dbSet.Take(id).ToList();
-        //}
+        
     }
 }
