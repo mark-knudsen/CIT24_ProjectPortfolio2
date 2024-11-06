@@ -12,7 +12,7 @@ Delete TitleWriterDTO.cs
 
 
 #NeedToHave Database:
-Add a search function that does not require user_id
+Add a search function that does not require user_id - DONE
 
 
 #NeedToHave Report
