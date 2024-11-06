@@ -18,7 +18,7 @@ namespace MovieWebApi.Extensions
             return _linkgenerator.GetUriByName(HttpContext, pathName, entity);
         }
 
-        protected string? GetLink(string pathName, int page, int pageSize, object? id = null)
+        protected string? GetLink(string pathName, int page, int pageSize, IComparable? id = null)
         {
             if (id == null) return GetUrl(pathName, new { page, pageSize });
 
@@ -27,8 +27,8 @@ namespace MovieWebApi.Extensions
 
         }
 
-        protected object CreatePaging<T>(string pathName, int pageNumber, int pageSize, int total, IEnumerable<T>? entities, object? id = null) //id is the id of an entity, could fx. be id for a specific genre.
-                                                                                                                                                //is object, so accepts both string and int. 
+        protected object CreatePaging<T>(string pathName, int pageNumber, int pageSize, int total, IEnumerable<T>? entities, IComparable? id = null) //id is the id of an entity, could fx. be id for a specific genre.
+                                                                                                                                                     //is object, so accepts both string and int. 
         {
             const int maxPageSize = 10;
 
