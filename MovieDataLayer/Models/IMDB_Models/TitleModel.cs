@@ -14,15 +14,12 @@ namespace MovieDataLayer.Models.IMDB_Models
         public bool IsAdult { get; set; }
         public PosterModel Poster { get; set; }
         public PlotModel Plot { get; set; }
-        //[JsonIgnore]
+        //[JsonIgnore] remember me
         public ICollection<TitleGenreModel> GenresList { get; set; }
         public RatingModel Rating { get; set; }
-        // public ICollection<LocalizedTitle> LocalizedTitlesList { get; } = new List<LocalizedTitle>();
-        //[JsonIgnore]
+        // public ICollection<LocalizedTitle> LocalizedTitlesList { get; } = new List<LocalizedTitle>(); // not planning to use this currently
         public ICollection<PrincipalCastModel> PrincipalCastList { get; set; }
-       // [JsonIgnore]
         public ICollection<WriterModel> WritersList { get; set; }
-        //[JsonIgnore]
         public ICollection<DirectorModel> DirectorsList { get; set; }
 
     }

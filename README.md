@@ -10,7 +10,7 @@ Seperate DTO's into folders
 #NeedToHave Report
 TALK ABOUT URI, PAGING STUFF - Hassan
 Nice rapport setup
-Read testing chapter - Jeff
+Read testing chapter - Jeff 
 
 
 #NiceToHave

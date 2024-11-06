@@ -24,8 +24,8 @@ namespace MovieDataLayer
         public DbSet<PosterModel> Posters { get; set; }
         public DbSet<RatingModel> Ratings { get; set; }
         public DbSet<WriterModel> Writers { get; set; }
-        public DbSet<TitleSearchResultModel> TitleSearchResultDTO { get; set; }
-        public DbSet<SimilarTitleSearchModel> SimilarTitleSearchDTO { get; set; }
+        public DbSet<TitleSearchResultTempTable> TitleSearchResult { get; set; }
+        public DbSet<SimilarTitleSearchTempTable> SimilarTitleSearch { get; set; }
 
         //UserFramework tables:
         public DbSet<UserModel> Users { get; set; }
@@ -110,8 +110,6 @@ namespace MovieDataLayer
             modelBuilder.Entity<UserPersonBookmarkModel>().Property(p => p.PersonId).HasColumnName("person_id");
             modelBuilder.Entity<UserPersonBookmarkModel>()
                 .Property(p => p.CreatedAt)
-                //.HasDefaultValueSql("CURRENT_TIMESTAMP") // Sets default to current timestamp in PostgreSQL
-                //.ValueGeneratedOnAdd() // Specifies that the value is generated when the entity is added
                 .HasColumnName("created_at")
                 .HasColumnType("timestamp without time zone");
             modelBuilder.Entity<UserPersonBookmarkModel>().Property(p => p.Annotation).HasColumnName("annotation");
@@ -145,27 +143,20 @@ namespace MovieDataLayer
         }
         private void MapUserTitleSearch(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<TitleSearchResultModel>().HasNoKey();
+            modelBuilder.Entity<TitleSearchResultTempTable>().HasNoKey();
             //columns
-            modelBuilder.Entity<TitleSearchResultModel>().Property(p => p.TitleId).HasColumnName("title_id");
-            modelBuilder.Entity<TitleSearchResultModel>().Property(p => p.PrimaryTitle).HasColumnName("primary_title");
-
-            modelBuilder.Entity<TitleSearchResultModel>()
-          .Ignore(t => t.Id);
-
-            modelBuilder.Entity<TitleSearchResultModel>()
-            .Ignore(t => t.Url);
-
+            modelBuilder.Entity<TitleSearchResultTempTable>().Property(p => p.TitleId).HasColumnName("title_id");
+            modelBuilder.Entity<TitleSearchResultTempTable>().Property(p => p.PrimaryTitle).HasColumnName("primary_title");
         }
         private void MapTitleSearch(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<SimilarTitleSearchModel>().HasNoKey();
+            modelBuilder.Entity<SimilarTitleSearchTempTable>().HasNoKey();
             //columns
-            modelBuilder.Entity<SimilarTitleSearchModel>().Property(p => p.SimilarTitleId).HasColumnName("similar_title_id");
-            modelBuilder.Entity<SimilarTitleSearchModel>().Property(p => p.PrimaryTitle).HasColumnName("primary_title");
-            modelBuilder.Entity<SimilarTitleSearchModel>().Property(p => p.Genres).HasColumnName("genres");
-            modelBuilder.Entity<SimilarTitleSearchModel>().Property(p => p.IsAdult).HasColumnName("isadult");
-            modelBuilder.Entity<SimilarTitleSearchModel>().Property(p => p.TitleType).HasColumnName("title_type");
+            modelBuilder.Entity<SimilarTitleSearchTempTable>().Property(p => p.SimilarTitleId).HasColumnName("similar_title_id");
+            modelBuilder.Entity<SimilarTitleSearchTempTable>().Property(p => p.PrimaryTitle).HasColumnName("primary_title");
+            modelBuilder.Entity<SimilarTitleSearchTempTable>().Property(p => p.Genres).HasColumnName("genres");
+            modelBuilder.Entity<SimilarTitleSearchTempTable>().Property(p => p.IsAdult).HasColumnName("isadult");
+            modelBuilder.Entity<SimilarTitleSearchTempTable>().Property(p => p.TitleType).HasColumnName("title_type");
         }
 
         private void MapPerson(ModelBuilder modelBuilder)

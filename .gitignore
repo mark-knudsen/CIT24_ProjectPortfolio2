@@ -5,6 +5,7 @@
 
 # Secret folders and data
 SecretData/
+Secret_Data/
 
 # User-specific files
 *.rsuser
