@@ -2,11 +2,8 @@
 using MovieDataLayer.DataService.IMDB_Repository;
 using MovieDataLayer.Models.IMDB_Models;
 using MovieWebApi.Extensions;
-using MovieDataLayer;
 using MovieDataLayer.DataService.UserFrameworkRepository;
-using Mapster;
 using MovieWebApi.SearchDTO;
-using Microsoft.AspNetCore.Mvc.RazorPages;
 using MovieWebApi.Helpers;
 
 namespace MovieWebApi.Controllers

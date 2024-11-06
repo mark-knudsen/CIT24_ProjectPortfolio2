@@ -80,7 +80,7 @@ namespace MovieWebApi.Controllers.UserStuff
             UserRatingModel userRating = await _userRatingRepository.GetUserRating(userId, titleId);
             if (userRating != null)
             {
-                userRating.Rating = rating != null ? rating : userRating.Rating;
+                userRating.Rating = rating != default ? rating : userRating.Rating;
             }
             else return NotFound();
 
