@@ -75,6 +75,8 @@ namespace MovieWebApi.Controllers
         [HttpGet("search", Name = nameof(Search))] //This method only works when called with an userid. Aka no searching without being logged in... Should prop be fixed?..
         public async Task<IActionResult> Search([FromHeader] int userId, string searchTerm, int page = 0, int pageSize = 10) // should probably be authorized ALOT to be allowed to call this
         {
+            if (userId <= 0) return BadRequest();
+
             var searchResult = (await _titleRepository.TitleSearch(userId, searchTerm)).MapTitleSearchResultModelToTitleSearchResultDTO();
             if (searchResult == null || !searchResult.Any()) return NotFound();
             searchResult = CreateNavigationForSearchList(searchResult);
