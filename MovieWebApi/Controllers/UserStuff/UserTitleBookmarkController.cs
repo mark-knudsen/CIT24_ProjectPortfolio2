@@ -98,10 +98,6 @@ namespace MovieWebApi.Controllers.UserStuff
 
 
 
-
-
-
-
         private async Task<StatusCodeResult> Validate(int id, string Authorization)
         {
             var user = await _userRepository.Get(id);

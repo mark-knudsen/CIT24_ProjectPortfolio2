@@ -29,7 +29,12 @@ namespace MovieUnitTests
         {
             // Arrange
             UserRepository userRepository = new UserRepository(new IMDBContext());
-            var expectedValue = new { Id = 1, Email = "test@ruc.dk", FirstName = "Harry" };
+            var expectedValue = new
+            {
+                Id = 1,
+                Email = "test@ruc.dk",
+                FirstName = "Harry"
+            };
 
             // Act
             var actualValue = await userRepository.Get(1);
@@ -63,7 +68,13 @@ namespace MovieUnitTests
             // Arrange
             IMDBContext imdbContext = new IMDBContext();
             UserRepository userRepository = new UserRepository(imdbContext);
-            var expectedValue = new { Id = 1, Email = "test@ruc.dk", FirstName = "Harry potter", Password = "bigsecrets" };
+            var expectedValue = new
+            {
+                Id = 1,
+                Email = "test@ruc.dk",
+                FirstName = "Harry potter",
+                Password = "bigsecrets"
+            };
 
             // Act
             await userRepository.Update(new User() { Id = 1, Email = "test@ruc.dk", FirstName = "Harry potter", Password = "bigsecrets" });

@@ -22,9 +22,7 @@ namespace MovieDataLayer.DataService
 
         public async Task<T> Get(object id)
         {
-            T x = await _dbSet.FindAsync(id);
-            _context.Entry(x).State = EntityState.Detached;
-            return x;
+            return await _dbSet.FindAsync(id);
 
         }
 

@@ -157,7 +157,6 @@ namespace MovieUnitTests
 
 
 
-
     }
     //Helper class and methods
     public static class Util
