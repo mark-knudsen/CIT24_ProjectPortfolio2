@@ -79,6 +79,7 @@ namespace MovieUnitTests
             // Arrange
             HttpClient httpClient = new HttpClient();
             await Util.UserLoginHelper(httpClient);
+            string expectedValue = "Harry potter";
 
             // check initial value
             using StringContent jsonContent_Harry = new(
@@ -129,7 +130,7 @@ namespace MovieUnitTests
             var userToDelete = updatedUserList.Where(x => x.Email == "testharryp@ruc.dk").FirstOrDefault();
 
             // Assert
-            Assert.Equal("Harry potter", userToDelete.FirstName);
+            Assert.Equal(expectedValue, userToDelete.FirstName);
 
             // Clean up
             httpClient.DefaultRequestHeaders.Remove("id");
