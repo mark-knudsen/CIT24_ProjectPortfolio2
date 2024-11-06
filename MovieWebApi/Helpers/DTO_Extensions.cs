@@ -107,7 +107,7 @@ namespace MovieWebApi.Extensions
         {
             var model = userTitleBookmark.Adapt<UserBookmarkDTO>();
             if (model == null) return null;
-            model.Url = linkGenerator.GetUriByName(httpContext, routeName, new { id = userTitleBookmark.TitleId });
+            model.Url = linkGenerator.GetUriByName(httpContext, routeName, new { titleId = userTitleBookmark.TitleId });
             model.CreatedAt = userTitleBookmark.CreatedAt;
 
             return model;
@@ -116,7 +116,7 @@ namespace MovieWebApi.Extensions
         {
             var model = userPersonBookmark.Adapt<UserBookmarkDTO>();
             if (model == null) return null;
-            model.Url = linkGenerator.GetUriByName(httpContext, routeName, new { id = userPersonBookmark.PersonId });
+            model.Url = linkGenerator.GetUriByName(httpContext, routeName, new { PersonId = userPersonBookmark.PersonId }); //Naming of anonymous object must reflect valuename of path in controller. So in this case, it should be called PersonId
             model.CreatedAt = userPersonBookmark.CreatedAt;
 
             return model;
