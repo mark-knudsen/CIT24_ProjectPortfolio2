@@ -7,7 +7,7 @@
         public string TitleType { get; set; }
         public string PrimaryTitle { get; set; }
         public int StartYear { get; set; }
-        public int Runtime { get; set; }
+        // public int Runtime { get; set; }
         public bool IsAdult { get; set; }
         public string PosterUrl { get; set; }
         //public string Plot { get; set; }
