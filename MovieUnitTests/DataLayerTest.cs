@@ -11,7 +11,7 @@ namespace MovieUnitTests
     public class DataLayerTest
     {
         [Fact]
-        public async Task CallAPI_GenreReposity_Func_Get_ShouldGetAllGenres()
+        public async Task CallAPI_GenreRepository_Func_Get_ShouldGetAllGenres()
         {
             // Arrange
             Repository<GenreModel> genreController = new Repository<GenreModel>(new IMDBContext());
@@ -25,7 +25,7 @@ namespace MovieUnitTests
         }
 
         [Fact]
-        public async Task CallAPI_UserReposity_Func_Get_ShouldGetUser()
+        public async Task CallAPI_UserRepository_Func_Get_ShouldGetUser()
         {
             // Arrange
             UserRepository userRepository = new UserRepository(new IMDBContext());
@@ -46,7 +46,7 @@ namespace MovieUnitTests
         }
 
         [Fact]
-        public async Task CallAPI_UserReposity_Func_Add_ShouldAddUser()
+        public async Task CallAPI_UserRepository_Func_Add_ShouldAddUser()
         {
             // Arrange
             UserRepository userRepository = new UserRepository(new IMDBContext());
@@ -63,7 +63,7 @@ namespace MovieUnitTests
         }
 
         [Fact]
-        public async Task CallAPI_UserReposity_Func_Update_ShouldUpdateUser()
+        public async Task CallAPI_UserRepository_Func_Update_ShouldUpdateUser()
         {
             // Arrange
             IMDBContext imdbContext = new IMDBContext();
@@ -95,7 +95,7 @@ namespace MovieUnitTests
 
 
         [Fact]
-        public async Task CallAPI_UserReposity_Func_Delete_ShouldDeleteUser()
+        public async Task CallAPI_UserRepository_Func_Delete_ShouldDeleteUser()
         {
             // Arrange
             UserRepository userRepository = new UserRepository(new IMDBContext());
