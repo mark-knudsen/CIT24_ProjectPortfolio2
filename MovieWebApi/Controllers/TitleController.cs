@@ -16,7 +16,7 @@ namespace MovieWebApi.Controllers
     public class TitleController : GenericController
     {
         private readonly TitleRepository _titleRepository;
-        public TitleController(TitleRepository titleRepository, LinkGenerator linkGenerator, UserRepository userRepository,  AuthenticatorHelper authenticatorHelper) : base(linkGenerator, userRepository, authenticatorHelper)
+        public TitleController(TitleRepository titleRepository, LinkGenerator linkGenerator, UserRepository userRepository, AuthenticatorHelper authenticatorHelper) : base(linkGenerator, userRepository, authenticatorHelper)
         {
             _titleRepository = titleRepository;
         }
@@ -50,15 +50,16 @@ namespace MovieWebApi.Controllers
         }
 
         //Not able to give URL/Path
-        [HttpGet("genre/{id}")]
+        //[HttpGet("genre/{id?}")]
+        [HttpGet("genre/{id}", Name = nameof(GetTitleByGenre))]
         public async Task<IActionResult> GetTitleByGenre(int id, int page = 0, int pageSize = 10) // id tt7856872
         {
             var titles = (await _titleRepository.GetTitleByGenre(id, page, pageSize));
             if (titles == null) return NotFound();
 
             var numberOfEntities = await _titleRepository.NumberOfElementsInTable();
-            var titleDTOs = titles.Select(title => title.MapTitleToTitleDetailedDTO(HttpContext, _linkGenerator, nameof(GetTitleByGenre)));
-            object result = CreatePaging(nameof(GetTitleByGenre), page, pageSize, numberOfEntities, titleDTOs);
+            var titleDTOs = titles.Select(title => title.MapTitleToTitleDetailedDTO(HttpContext, _linkGenerator, nameof(Get)));
+            object result = CreatePaging(nameof(GetTitleByGenre), page, pageSize, numberOfEntities, titleDTOs, id);
             return Ok(result);
         }
 
