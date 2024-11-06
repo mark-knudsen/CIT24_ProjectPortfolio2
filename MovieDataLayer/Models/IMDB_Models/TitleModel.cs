@@ -2,7 +2,7 @@
 
 namespace MovieDataLayer.Models.IMDB_Models
 {
-    public class Title
+    public class TitleModel
     {
         public string Id { get; set; }
         public string TitleType { get; set; }
@@ -12,18 +12,18 @@ namespace MovieDataLayer.Models.IMDB_Models
         public int? EndYear { get; set; }
         public int? Runtime { get; set; }
         public bool IsAdult { get; set; }
-        public Poster Poster { get; set; }
-        public Plot Plot { get; set; }
+        public PosterModel Poster { get; set; }
+        public PlotModel Plot { get; set; }
         //[JsonIgnore]
-        public ICollection<TitleGenre> GenresList { get; set; }
-        public Rating Rating { get; set; }
+        public ICollection<TitleGenreModel> GenresList { get; set; }
+        public RatingModel Rating { get; set; }
         // public ICollection<LocalizedTitle> LocalizedTitlesList { get; } = new List<LocalizedTitle>();
         //[JsonIgnore]
-        public ICollection<PrincipalCast> PrincipalCastList { get; set; }
+        public ICollection<PrincipalCastModel> PrincipalCastList { get; set; }
        // [JsonIgnore]
-        public ICollection<Writer> WritersList { get; set; }
+        public ICollection<WriterModel> WritersList { get; set; }
         //[JsonIgnore]
-        public ICollection<Director> DirectorsList { get; set; }
+        public ICollection<DirectorModel> DirectorsList { get; set; }
 
     }
 }

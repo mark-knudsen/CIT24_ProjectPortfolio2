@@ -9,7 +9,7 @@ namespace MovieWebApi.Helpers
     // Source for this helper class: https://medium.com/@sajadshafi/jwt-authentication-in-c-net-core-7-web-api-b825b3aee11d
     public class AuthenticatorHelper(IConfiguration configuration) //Class definition and Class constructor
     {
-        public string GenerateJWTToken(User user)
+        public string GenerateJWTToken(UserModel user)
         {
             var claims = new List<Claim> {
         new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),

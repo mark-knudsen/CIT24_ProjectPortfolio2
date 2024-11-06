@@ -34,7 +34,7 @@ namespace MovieWebApi.Controllers.UserStuff
             StatusCodeResult code = await Validate(userId, Authorization);
             if (code != null) return code;
 
-            var d = new UserTitleBookmark();
+            var d = new UserTitleBookmarkModel();
             d.UserId = userId;
             d.Annotation = userTitleBookmark.Annotation; // improve when use authentication
             d.TitleId = userTitleBookmark.TitleId;
@@ -51,7 +51,7 @@ namespace MovieWebApi.Controllers.UserStuff
             if (code != null) return code;
             var result = (await _userTitleBookmarkRepository.GetAll(userId));
 
-            var d = result.Select(x => x.Spawn_DTO<UserBookmarkDTO, UserTitleBookmark>(HttpContext, _linkGenerator, nameof(GetTitleBookmark)));
+            var d = result.Select(x => x.Spawn_DTO<UserBookmarkDTO, UserTitleBookmarkModel>(HttpContext, _linkGenerator, nameof(GetTitleBookmark)));
             
             //var titles = (await _titleRepository.GetAllTitles(page, pageSize)).Select(title => title.Spawn_DTO<TitleSimpleDTO, Title>(HttpContext, _linkGenerator, nameof(Get)));
 
@@ -68,7 +68,7 @@ namespace MovieWebApi.Controllers.UserStuff
 
             var result = (await _userTitleBookmarkRepository.Get(userId, titleId));
             if (result == null) return NotFound();
-            var finalResult = result.Spawn_DTO<UserBookmarkDTO, UserTitleBookmark>(HttpContext, _linkGenerator, nameof(GetTitleBookmark));
+            var finalResult = result.Spawn_DTO<UserBookmarkDTO, UserTitleBookmarkModel>(HttpContext, _linkGenerator, nameof(GetTitleBookmark));
 
             return Ok(finalResult);
         }
@@ -99,7 +99,7 @@ namespace MovieWebApi.Controllers.UserStuff
         {
             StatusCodeResult code = await Validate(userId, Authorization);
             if (code != null) return code;
-            UserTitleBookmark titleBookmark = await _userTitleBookmarkRepository.Get(userId, titleId);
+            UserTitleBookmarkModel titleBookmark = await _userTitleBookmarkRepository.Get(userId, titleId);
             if (titleBookmark != null)
             {
                 titleBookmark.Annotation = updateUserTitleBookmark.annotation != "" ? updateUserTitleBookmark.annotation : titleBookmark.Annotation;

@@ -2,7 +2,7 @@
 
 namespace MovieDataLayer.Models.IMDB_Models
 {
-    public class PrincipalCast
+    public class PrincipalCastModel
     {
         public string PersonId { get; set; }
         public int Ordering { get; set; }
@@ -11,7 +11,7 @@ namespace MovieDataLayer.Models.IMDB_Models
         public string Category { get; set; }
         public string Job { get; set; }
         [JsonIgnore]
-        public Title Title { get; set; } = null!; //required ref. navigation
-        public Person Person { get; set; } = null!; //required ref. navigation
+        public TitleModel Title { get; set; } = null!; //required ref. navigation
+        public PersonModel Person { get; set; } = null!; //required ref. navigation
     }
 }

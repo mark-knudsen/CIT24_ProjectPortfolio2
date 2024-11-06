@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
 
 namespace MovieDataLayer;
-public class UserPersonBookmark
+public class UserPersonBookmarkModel
 {
     public int UserId { get; set; }
     public string PersonId { get; set; }

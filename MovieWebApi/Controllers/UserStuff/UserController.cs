@@ -24,7 +24,7 @@ public class UserController : GenericController
     [HttpGet("user-profile")] //Is this url ok?
     public async Task<IActionResult> GetById([FromHeader] int id)
     {
-        var result = (await _userRepository.Get(id)).Spawn_DTO_Old<UserDTO, User>();
+        var result = (await _userRepository.Get(id)).Spawn_DTO_Old<UserDTO, UserModel>();
         if (result == null) return NotFound();
         return Ok(result);
     }
@@ -32,14 +32,14 @@ public class UserController : GenericController
     [HttpGet]
     public async Task<IActionResult> GetAll(int page = 0, int pageSize = 10)
     {
-        var result = (await _userRepository.GetAllWithPaging(page = 0, pageSize = 10)).Select(user => user.Spawn_DTO<UserDTO, User>(HttpContext, _linkGenerator, nameof(GetAll))); // maybe never retrieve the password, just a thought you know!
+        var result = (await _userRepository.GetAllWithPaging(page = 0, pageSize = 10)).Select(user => user.Spawn_DTO<UserDTO, UserModel>(HttpContext, _linkGenerator, nameof(GetAll))); // maybe never retrieve the password, just a thought you know!
         return Ok(result);
     }
 
     [HttpGet("search_history")]
     public async Task<IActionResult> GetAllUserHistory([FromHeader] int id)
     {
-        var result = (await _userRepository.GetAllSearchHistoryByUserId(id)).Select(user => user.Spawn_DTO<UserSearchHistoryDTO, UserSearchHistory>(HttpContext, _linkGenerator, nameof(GetAll)));
+        var result = (await _userRepository.GetAllSearchHistoryByUserId(id)).Select(user => user.Spawn_DTO<UserSearchHistoryDTO, UserSearchHistoryModel>(HttpContext, _linkGenerator, nameof(GetAll)));
 
 
         if (result == null) return NotFound();
@@ -50,7 +50,7 @@ public class UserController : GenericController
     [HttpPost]
     public async Task<IActionResult> RegisterUser(UserRegistrationDTO userRegistrationDTO)
     {
-        var result = DTO_Extensions.Spawn_DTO_Old<User, UserRegistrationDTO>(userRegistrationDTO);
+        var result = DTO_Extensions.Spawn_DTO_Old<UserModel, UserRegistrationDTO>(userRegistrationDTO);
         bool success = await _userRepository.Add(result);
 
         if (!success) return BadRequest();
@@ -61,7 +61,7 @@ public class UserController : GenericController
 
     public async Task<IActionResult> Put([FromHeader] int id, UpdateUserModel updateUserModel)
     {
-        User user = await _userRepository.Get(id);
+        UserModel user = await _userRepository.Get(id);
         if (user != null)
         {
             user.Email = updateUserModel.email != "" ? updateUserModel.email : user.Email;

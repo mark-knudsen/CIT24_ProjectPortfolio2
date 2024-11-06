@@ -96,7 +96,7 @@ namespace MovieUnitTests
             using HttpResponseMessage getAllUsers = await httpClient.GetAsync(baseUrl);
 
             var usersJsonList = await getAllUsers.Content.ReadAsStringAsync();
-            var usersList = JsonSerializer.Deserialize<List<User>>(usersJsonList, new JsonSerializerOptions
+            var usersList = JsonSerializer.Deserialize<List<UserModel>>(usersJsonList, new JsonSerializerOptions
             {
                 PropertyNameCaseInsensitive = true
             });
@@ -121,7 +121,7 @@ namespace MovieUnitTests
             using HttpResponseMessage getAllUsers_numberTwo = await httpClient.GetAsync(baseUrl);
 
             var updatedUsersJsonList = await getAllUsers_numberTwo.Content.ReadAsStringAsync();
-            var updatedUserList = JsonSerializer.Deserialize<List<User>>(updatedUsersJsonList, new JsonSerializerOptions
+            var updatedUserList = JsonSerializer.Deserialize<List<UserModel>>(updatedUsersJsonList, new JsonSerializerOptions
             {
                 PropertyNameCaseInsensitive = true
             });

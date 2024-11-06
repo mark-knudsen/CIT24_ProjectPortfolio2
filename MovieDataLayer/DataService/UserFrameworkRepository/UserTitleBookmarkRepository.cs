@@ -3,14 +3,14 @@ using MovieDataLayer.Models.IMDB_Models;
 
 namespace MovieDataLayer.DataService.UserFrameworkRepository
 {
-    public class UserTitleBookmarkRepository : Repository<UserTitleBookmark>
+    public class UserTitleBookmarkRepository : Repository<UserTitleBookmarkModel>
     {
         public UserTitleBookmarkRepository(IMDBContext context) : base(context) { }
-        public async Task<IList<UserTitleBookmark>> GetAll(int id)
+        public async Task<IList<UserTitleBookmarkModel>> GetAll(int id)
         {
             return await _dbSet.AsNoTracking().Where(x => x.UserId == id).ToListAsync();
         }
-        public async Task<UserTitleBookmark> Get(int userId, string titleId)
+        public async Task<UserTitleBookmarkModel> Get(int userId, string titleId)
         {
             return await _dbSet.AsNoTracking().Where(x => x.UserId == userId && x.TitleId.Equals(titleId)).FirstOrDefaultAsync();
         }

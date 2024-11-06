@@ -8,16 +8,16 @@ using Microsoft.EntityFrameworkCore;
 
 namespace MovieDataLayer.DataService.UserFrameworkRepository
 {
-    public class UserRatingRepository : Repository<UserRating>
+    public class UserRatingRepository : Repository<UserRatingModel>
     {
         public UserRatingRepository(IMDBContext context) : base(context) { }
 
-        public async Task<IList<UserRating>> GetAllUserRatingByUserId(int id)
+        public async Task<IList<UserRatingModel>> GetAllUserRatingByUserId(int id)
         {
             return await _dbSet.AsNoTracking().Where(x => x.UserId.Equals(id)).ToListAsync();
         }
 
-        public async Task<UserRating> GetUserRating(int id, string titleId)
+        public async Task<UserRatingModel> GetUserRating(int id, string titleId)
         {
             return await _dbSet.AsNoTracking().Where(x => x.UserId.Equals(id) && x.TitleId.Equals(titleId)).FirstOrDefaultAsync();
         }

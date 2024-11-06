@@ -1,9 +1,6 @@
-﻿using System.Linq;
-using System.Net.NetworkInformation;
-using Mapster;
+﻿using Mapster;
 using MovieDataLayer;
 using MovieDataLayer.Models.IMDB_Models;
-using MovieDataLayer.Models.IMDB_Models.IMDB_DTO;
 using MovieWebApi.SearchDTO;
 
 namespace MovieWebApi.Extensions
@@ -18,20 +15,20 @@ namespace MovieWebApi.Extensions
 
             switch (model)
             {
-                case TitleDetailedDTO titleDetailedDTO when entity is Title title && typeof(TModel) == typeof(TitleDetailedDTO):
+                case TitleDetailedDTO titleDetailedDTO when entity is TitleModel title && typeof(TModel) == typeof(TitleDetailedDTO):
                     model = (TModel)(object)MapTitleToTitleDetailedDTO(title, httpContext, linkGenerator, routeName); //Casting to TModel object, idk maybe we can improve?
                     break;
-                case TitleSimpleDTO titleSimpleDTO when entity is Title title && typeof(TModel) == typeof(TitleSimpleDTO):
+                case TitleSimpleDTO titleSimpleDTO when entity is TitleModel title && typeof(TModel) == typeof(TitleSimpleDTO):
                     model = (TModel)(object)MapTitleToTitleSimpleDTO(title, httpContext, linkGenerator, routeName); //Casting to TModel object, idk maybe we can improve?
                     break;
 
-                case PersonDetailedDTO personDetailedDTO when entity is Person person && typeof(TModel) == typeof(PersonDetailedDTO):
+                case PersonDetailedDTO personDetailedDTO when entity is PersonModel person && typeof(TModel) == typeof(PersonDetailedDTO):
                     model = (TModel)(object)MapPersonToPersonDTO(person, httpContext, linkGenerator, routeName);
                     break;
-                case UserBookmarkDTO userBookmarkDTO when entity is UserTitleBookmark userTitleBookmark && typeof(TModel) == typeof(UserBookmarkDTO):
+                case UserBookmarkDTO userBookmarkDTO when entity is UserTitleBookmarkModel userTitleBookmark && typeof(TModel) == typeof(UserBookmarkDTO):
                     model = (TModel)(object)MapUserTitleBookmarkToUserBookmarkDTO(userTitleBookmark, httpContext, linkGenerator, routeName);
                     break;
-                case UserBookmarkDTO userBookmarkDTO when entity is UserPersonBookmark userPersonBookmark && typeof(TModel) == typeof(UserBookmarkDTO):
+                case UserBookmarkDTO userBookmarkDTO when entity is UserPersonBookmarkModel userPersonBookmark && typeof(TModel) == typeof(UserBookmarkDTO):
                     model = (TModel)(object)MapUserPersonBookmarkToUserBookmarkDTO(userPersonBookmark, httpContext, linkGenerator, routeName);
                     break;
 
@@ -47,7 +44,7 @@ namespace MovieWebApi.Extensions
             return model;
         }
 
-        public static TitleDetailedDTO MapTitleToTitleDetailedDTO(this Title title, HttpContext httpContext, LinkGenerator linkGenerator, string routeName) // IMPORTANT, sometimes some values are null, but that will throw an axception when trying to set it here, add nullable in DTO and in here
+        public static TitleDetailedDTO MapTitleToTitleDetailedDTO(this TitleModel title, HttpContext httpContext, LinkGenerator linkGenerator, string routeName) // IMPORTANT, sometimes some values are null, but that will throw an axception when trying to set it here, add nullable in DTO and in here
         {
             var model = title.Adapt<TitleDetailedDTO>();
             model.GenresList = title.GenresList?.Select(x => x.Genre.Name).ToList();
@@ -62,7 +59,7 @@ namespace MovieWebApi.Extensions
             return model;
         }
 
-        public static TitleSimpleDTO MapTitleToTitleSimpleDTO(this Title title, HttpContext httpContext, LinkGenerator linkGenerator, string routeName) // IMPORTANT, sometimes some values are null, but that will throw an axception when trying to set it here, add nullable in DTO and in here
+        public static TitleSimpleDTO MapTitleToTitleSimpleDTO(this TitleModel title, HttpContext httpContext, LinkGenerator linkGenerator, string routeName) // IMPORTANT, sometimes some values are null, but that will throw an axception when trying to set it here, add nullable in DTO and in here
         {
             var model = title.Adapt<TitleSimpleDTO>();
             model.GenresList = title.GenresList?.Select(x => x.Genre.Name).ToList();
@@ -86,7 +83,7 @@ namespace MovieWebApi.Extensions
         //    // model.Url = linkGenerator.GetUriByName(httpContext, routeName, new { id = title.Id });
         //    return model;
         //}
-        public static PersonDetailedDTO MapPersonToPersonDTO(this Person person, HttpContext httpContext, LinkGenerator linkGenerator, string routeName)
+        public static PersonDetailedDTO MapPersonToPersonDTO(this PersonModel person, HttpContext httpContext, LinkGenerator linkGenerator, string routeName)
         {
             var model = person.Adapt<PersonDetailedDTO>();
             if (model == null) return null;
@@ -95,7 +92,7 @@ namespace MovieWebApi.Extensions
             model.Url = linkGenerator.GetUriByName(httpContext, routeName, new { id = person.Id });
             return model;
         }
-        public static PersonDetailedDTO MapUserTitleBookmarkToUserTitleBookmarkDTO(this Person person)
+        public static PersonDetailedDTO MapUserTitleBookmarkToUserTitleBookmarkDTO(this PersonModel person)
         {
             var model = person.Adapt<PersonDetailedDTO>();
             if (model == null) return null;
@@ -106,7 +103,7 @@ namespace MovieWebApi.Extensions
         }
 
 
-        public static UserBookmarkDTO MapUserTitleBookmarkToUserBookmarkDTO(this UserTitleBookmark userTitleBookmark, HttpContext httpContext, LinkGenerator linkGenerator, string routeName)
+        public static UserBookmarkDTO MapUserTitleBookmarkToUserBookmarkDTO(this UserTitleBookmarkModel userTitleBookmark, HttpContext httpContext, LinkGenerator linkGenerator, string routeName)
         {
             var model = userTitleBookmark.Adapt<UserBookmarkDTO>();
             if (model == null) return null;
@@ -115,7 +112,7 @@ namespace MovieWebApi.Extensions
 
             return model;
         }
-        public static UserBookmarkDTO MapUserPersonBookmarkToUserBookmarkDTO(this UserPersonBookmark userPersonBookmark, HttpContext httpContext, LinkGenerator linkGenerator, string routeName)
+        public static UserBookmarkDTO MapUserPersonBookmarkToUserBookmarkDTO(this UserPersonBookmarkModel userPersonBookmark, HttpContext httpContext, LinkGenerator linkGenerator, string routeName)
         {
             var model = userPersonBookmark.Adapt<UserBookmarkDTO>();
             if (model == null) return null;

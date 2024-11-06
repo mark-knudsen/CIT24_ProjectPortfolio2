@@ -1,5 +1,5 @@
 ﻿namespace MovieDataLayer;
-public class UserTitleBookmark
+public class UserTitleBookmarkModel
 {
     public int UserId { get; set; }
     public string TitleId { get; set; }

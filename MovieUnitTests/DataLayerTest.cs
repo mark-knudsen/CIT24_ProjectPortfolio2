@@ -14,7 +14,7 @@ namespace MovieUnitTests
         public async Task CallAPI_GenreReposity_Func_Get_ShouldGetAllGenres()
         {
             // Arrange
-            Repository<Genre> genreController = new Repository<Genre>(new IMDBContext());
+            Repository<GenreModel> genreController = new Repository<GenreModel>(new IMDBContext());
             int expectedValue = 27;
 
             // Act
@@ -52,13 +52,13 @@ namespace MovieUnitTests
             UserRepository userRepository = new UserRepository(new IMDBContext());
 
             // Act
-            bool success = await userRepository.Add(new User() { Id = default, Email = "test@ruc99.dk", FirstName = "Bob", Password = "12345" });
+            bool success = await userRepository.Add(new UserModel() { Id = default, Email = "test@ruc99.dk", FirstName = "Bob", Password = "12345" });
 
             // Assert
             Assert.True(success);
 
             // Clean up
-            User user = (await userRepository.GetAll()).Where(x => x.Email == "test@ruc99.dk").First();
+            UserModel user = (await userRepository.GetAll()).Where(x => x.Email == "test@ruc99.dk").First();
             await userRepository.Delete(user.Id);
         }
 
@@ -77,7 +77,7 @@ namespace MovieUnitTests
             };
 
             // Act
-            await userRepository.Update(new User() { Id = 1, Email = "test@ruc.dk", FirstName = "Harry potter", Password = "bigsecrets" });
+            await userRepository.Update(new UserModel() { Id = 1, Email = "test@ruc.dk", FirstName = "Harry potter", Password = "bigsecrets" });
             var actualValue = await userRepository.Get(1);
 
             // Assert
@@ -89,7 +89,7 @@ namespace MovieUnitTests
             imdbContext.Dispose();
             imdbContext = new IMDBContext();
             userRepository = new UserRepository(imdbContext);
-            await userRepository.Update(new User() { Id = 1, Email = "test@ruc.dk", FirstName = "Harry", Password = "bigsecrets" });
+            await userRepository.Update(new UserModel() { Id = 1, Email = "test@ruc.dk", FirstName = "Harry", Password = "bigsecrets" });
         }
 
 
@@ -99,8 +99,8 @@ namespace MovieUnitTests
         {
             // Arrange
             UserRepository userRepository = new UserRepository(new IMDBContext());
-            await userRepository.Add(new User() { Id = default, Email = "bobby@ruc22.dk", FirstName = "Bobby", Password = "12345" });
-            User user = (await userRepository.GetAll()).Where(x => x.Email == "bobby@ruc22.dk").First();
+            await userRepository.Add(new UserModel() { Id = default, Email = "bobby@ruc22.dk", FirstName = "Bobby", Password = "12345" });
+            UserModel user = (await userRepository.GetAll()).Where(x => x.Email == "bobby@ruc22.dk").First();
 
             // Act
             var success = await userRepository.Delete(user.Id);

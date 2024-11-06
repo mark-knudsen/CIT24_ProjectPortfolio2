@@ -1,9 +1,9 @@
 ﻿namespace MovieDataLayer.Models.IMDB_Models
 {
-    public class Profession
+    public class ProfessionModel
     {
         public int Id { get; set; }
         public string Name { get; set; }
-        public ICollection<PrimaryProfession> PrimaryProfession { get; set; }
+        public ICollection<PrimaryProfessionModel> PrimaryProfession { get; set; }
     }
 }

@@ -26,7 +26,7 @@ namespace MovieWebApi.Controllers.UserStuff
 
         public async Task<IActionResult> Get([FromHeader] int userId, string titleId)
         {
-            var rating = DTO_Extensions.Spawn_DTO_Old<UserRatingDTO, UserRating>(await _userRatingRepository.GetUserRating(userId, titleId));
+            var rating = DTO_Extensions.Spawn_DTO_Old<UserRatingDTO, UserRatingModel>(await _userRatingRepository.GetUserRating(userId, titleId));
             if (rating == null) return NotFound();
 
             return Ok(rating);
@@ -35,7 +35,7 @@ namespace MovieWebApi.Controllers.UserStuff
         [HttpGet]
         public async Task<IActionResult> GetAll([FromHeader] int userId)
         {
-            var result = (await _userRatingRepository.GetAllUserRatingByUserId(userId)).Select(DTO_Extensions.Spawn_DTO_Old<UserRatingDTO, UserRating>);
+            var result = (await _userRatingRepository.GetAllUserRatingByUserId(userId)).Select(DTO_Extensions.Spawn_DTO_Old<UserRatingDTO, UserRatingModel>);
 
             if (result == null) return NotFound();
             return Ok(result);
@@ -60,7 +60,7 @@ namespace MovieWebApi.Controllers.UserStuff
         [HttpPost]
         public async Task<IActionResult> Post([FromHeader] int userId, CreateUserRating createUserRating)
         {
-            var _userRating = new UserRating();
+            var _userRating = new UserRatingModel();
             _userRating.UserId = userId;
             _userRating.TitleId = createUserRating.TitleId;
             _userRating.Rating = createUserRating.Rating;
@@ -77,7 +77,7 @@ namespace MovieWebApi.Controllers.UserStuff
         [HttpPut()]
         public async Task<IActionResult> Put([FromHeader] int userId, string titleId, double rating)
         {
-            UserRating userRating = await _userRatingRepository.GetUserRating(userId, titleId);
+            UserRatingModel userRating = await _userRatingRepository.GetUserRating(userId, titleId);
             if (userRating != null)
             {
                 userRating.Rating = rating != null ? rating : userRating.Rating;
