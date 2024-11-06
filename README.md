@@ -2,8 +2,17 @@
 PRIORITIZED LIST OF THINGS WE NEED TO DO. 
 KEEP IT UPDATED.
 
+#NeedToHave Code:
+Fix Url for individual element like link to title or person.
+Authentication: Check if Validate is even required or if Authentication tag in Controller is sufficient
 
-#NeedToHave
+
+
+#NeedToHave Database:
+Add a search function that does not require user_id
+
+
+#NeedToHave Report
 Read Domain models and finish up - Hassan
 Write about authentication - Jacob
 Finish section A.3 JSON - Jeff
@@ -13,7 +22,6 @@ Ensure all diagram are updated to current state of project
 Nice rapport setup
 Read endpoints chapter through - Mark
 Read testing chapter - Jeff
-Fix Url for individual element like link to title or person.
 
 
 #NiceToHave
@@ -29,5 +37,3 @@ SpawnDTO needs to overloaded to take single entities and lists of entities
 Function find_similar_movies() from database can return doublicates titles - Are done!
 
 
-#Database:
-All done
