@@ -50,10 +50,11 @@ namespace MovieWebApi.Controllers.UserStuff
             StatusCodeResult code = await Validate(userId, Authorization);
             if (code != null) return code;
 
-            var result = (await _userPersonBookmarkRepository.GetAll(userId)).Select(DTO_Extensions.Spawn_DTO_Old<UserBookmarkDTO, UserPersonBookmarkModel>);
+           // var result = (await _userPersonBookmarkRepository.GetAll(userId));
+            var mappedResult = (await _userPersonBookmarkRepository.GetAll(userId)).Select(x => x.Spawn_DTO<UserBookmarkDTO, UserPersonBookmarkModel>(HttpContext, _linkGenerator, nameof(GetPersonBookmark)));
 
-            if (!result.Any() || result == null) return NotFound();
-            return Ok(result);
+            if (!mappedResult.Any() || mappedResult == null) return NotFound();
+            return Ok(mappedResult);
         }
 
         [HttpGet("{personId}", Name = nameof(GetPersonBookmark))]

@@ -49,15 +49,13 @@ namespace MovieWebApi.Controllers.UserStuff
         {
             StatusCodeResult code = await Validate(userId, Authorization);
             if (code != null) return code;
-            var result = (await _userTitleBookmarkRepository.GetAll(userId));
 
-            var d = result.Select(x => x.Spawn_DTO<UserBookmarkDTO, UserTitleBookmarkModel>(HttpContext, _linkGenerator, nameof(GetTitleBookmark)));
+           // var result = (await _userTitleBookmarkRepository.GetAll(userId));
+            var mappedResult = (await _userTitleBookmarkRepository.GetAll(userId)).Select(x => x.Spawn_DTO<UserBookmarkDTO, UserTitleBookmarkModel>(HttpContext, _linkGenerator, nameof(GetTitleBookmark)));
             
-            //var titles = (await _titleRepository.GetAllTitles(page, pageSize)).Select(title => title.Spawn_DTO<TitleSimpleDTO, Title>(HttpContext, _linkGenerator, nameof(Get)));
+            if (!mappedResult.Any() || mappedResult == null) return NotFound();
 
-            if (!d.Any() || d == null) return NotFound();
-
-            return Ok(d);
+            return Ok(mappedResult);
         }
 
         [HttpGet("{titleId}", Name = nameof(GetTitleBookmark))]
