@@ -29,7 +29,7 @@ namespace MovieWebApi.Controllers.UserStuff
             StatusCodeResult code = await Validate(userId, Authorization);
             if (code != null) return code;
 
-            var _userPersonBookmark = new UserPersonBookmark();
+            var _userPersonBookmark = new UserPersonBookmarkModel();
             _userPersonBookmark.UserId = userId;
             _userPersonBookmark.Annotation = userPersonBookmark.Annotation; // improve when use authentication
             _userPersonBookmark.PersonId = userPersonBookmark.PersonId;
@@ -39,18 +39,18 @@ namespace MovieWebApi.Controllers.UserStuff
 
             var result = (await _userPersonBookmarkRepository.Get(userId, userPersonBookmark.PersonId));
             if (result == null) return NotFound();
-            var finalResult = result.Spawn_DTO<UserBookmarkDTO, UserPersonBookmark>(HttpContext, _linkGenerator, nameof(Post));
+            var finalResult = result.Spawn_DTO<UserBookmarkDTO, UserPersonBookmarkModel>(HttpContext, _linkGenerator, nameof(Post));
 
             return Ok(finalResult);
         }
 
-                [HttpGet]
+        [HttpGet]
         public async Task<IActionResult> GetAll([FromHeader] int userId, [FromHeader] string Authorization)
         {
             StatusCodeResult code = await Validate(userId, Authorization);
             if (code != null) return code;
 
-            var result = (await _userPersonBookmarkRepository.GetAll(userId)).Select(DTO_Extensions.Spawn_DTO_Old<UserBookmarkDTO, UserPersonBookmark>);
+            var result = (await _userPersonBookmarkRepository.GetAll(userId)).Select(DTO_Extensions.Spawn_DTO_Old<UserBookmarkDTO, UserPersonBookmarkModel>);
 
             if (!result.Any() || result == null) return NotFound();
             return Ok(result);
@@ -64,7 +64,7 @@ namespace MovieWebApi.Controllers.UserStuff
 
             var result = (await _userPersonBookmarkRepository.Get(userId, personId));
             if (result == null) return NotFound();
-            var finalResult = result.Spawn_DTO<UserBookmarkDTO, UserPersonBookmark>(HttpContext, _linkGenerator, nameof(GetPersonBookmark));
+            var finalResult = result.Spawn_DTO<UserBookmarkDTO, UserPersonBookmarkModel>(HttpContext, _linkGenerator, nameof(GetPersonBookmark));
 
             return Ok(finalResult);
         }
@@ -98,7 +98,7 @@ namespace MovieWebApi.Controllers.UserStuff
             StatusCodeResult code = await Validate(userId, Authorization);
             if (code != null) return code;
 
-            UserPersonBookmark personBookmark = await _userPersonBookmarkRepository.Get(userId, personId);
+            UserPersonBookmarkModel personBookmark = await _userPersonBookmarkRepository.Get(userId, personId);
             if (personBookmark != null)
             {
                 personBookmark.Annotation = updateUserPersonBookmark.Annotation != "" ? updateUserPersonBookmark.Annotation : personBookmark.Annotation;

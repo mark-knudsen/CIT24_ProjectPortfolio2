@@ -2,30 +2,30 @@
 
 namespace MovieDataLayer.DataService.UserFrameworkRepository
 {
-    public class UserRepository : Repository<User>
+    public class UserRepository : Repository<UserModel>
     {
         public UserRepository(IMDBContext context) : base(context) { } //Constructor that calls the base constructor, ensuring both the context and dbset are initialized. Btw we now can use the same context in both sub/super class
 
-        public async Task<IList<UserSearchHistory>> GetAllSearchHistoryByUserId(int id)
+        public async Task<IList<UserSearchHistoryModel>> GetAllSearchHistoryByUserId(int id)
         {
-            return await _context.Set<UserSearchHistory>().AsNoTracking().Where(x => x.UserId.Equals(id)).ToListAsync();
+            return await _context.Set<UserSearchHistoryModel>().AsNoTracking().Where(x => x.UserId.Equals(id)).ToListAsync();
         }
 
-        public async Task<IList<UserPersonBookmark>> GetAllPersonBookmarks(int id)
+        public async Task<IList<UserPersonBookmarkModel>> GetAllPersonBookmarks(int id)
         {
-            return await _context.Set<UserPersonBookmark>().AsNoTracking().Where(x => x.UserId == id).ToListAsync();
+            return await _context.Set<UserPersonBookmarkModel>().AsNoTracking().Where(x => x.UserId == id).ToListAsync();
         }
-        public async Task<IList<UserTitleBookmark>> GetAllTitleBookmarks(int id)
+        public async Task<IList<UserTitleBookmarkModel>> GetAllTitleBookmarks(int id)
         {
-            return await _context.Set<UserTitleBookmark>().AsNoTracking().Where(x => x.UserId == id).ToListAsync();
+            return await _context.Set<UserTitleBookmarkModel>().AsNoTracking().Where(x => x.UserId == id).ToListAsync();
         }
-        public async Task UpdateUser(User user)
+        public async Task UpdateUser(UserModel user)
         {
             _context.Update(user);
 
             await _context.SaveChangesAsync();
         }
-        public async Task<User> Login(string email, string password)
+        public async Task<UserModel> Login(string email, string password)
         {
 
             var user = await _dbSet.Where(u => u.Email == email && u.Password == password).SingleAsync();
@@ -39,7 +39,7 @@ namespace MovieDataLayer.DataService.UserFrameworkRepository
 
 
 
-        public async Task<User> GetUser(int id)
+        public async Task<UserModel> GetUser(int id)
         {
             return await _dbSet.Where(u => u.Id == id).FirstOrDefaultAsync();
         }

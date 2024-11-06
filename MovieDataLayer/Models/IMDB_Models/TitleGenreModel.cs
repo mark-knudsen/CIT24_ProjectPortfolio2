@@ -2,12 +2,12 @@
 
 namespace MovieDataLayer.Models.IMDB_Models
 {
-    public class TitleGenre
+    public class TitleGenreModel
     {
         public int GenreId { get; set; }
         public string TitleId { get; set; }
         [JsonIgnore]
-        public Title Title { get; set; } = null!; //required ref. navigation
-        public Genre Genre { get; set; }
+        public TitleModel Title { get; set; } = null!; //required ref. navigation
+        public GenreModel Genre { get; set; }
     }
 }

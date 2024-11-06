@@ -34,7 +34,7 @@ namespace MovieWebApi.Controllers
         public async Task<IActionResult> GetAll(int page = 0, int pageSize = 10)
         {
             if (page < 0 || pageSize <= 0) return BadRequest("Page and PageSize must be 0 or greater");
-            var result = (await _personRepository.GetAllWithPaging(page = 0, pageSize = 10)).Select(person => person.Spawn_DTO<PersonDetailedDTO, Person>(HttpContext, _linkGenerator, nameof(GetPerson)));
+            var result = (await _personRepository.GetAllWithPaging(page = 0, pageSize = 10)).Select(person => person.Spawn_DTO<PersonDetailedDTO, PersonModel>(HttpContext, _linkGenerator, nameof(GetPerson)));
             if (result == null || !result.Any()) return NotFound();
             return Ok(result);
             //Properties MostRelevantTitles and PrimaryProfessions, should be considered removed from DTO, as they are not needed in the list?

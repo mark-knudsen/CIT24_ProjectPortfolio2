@@ -1,23 +1,17 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using MovieDataLayer.Models.IMDB_Models;
-using MovieDataLayer.Models.IMDB_Models.IMDB_DTO;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace MovieDataLayer.DataService.IMDB_Repository
 {
-    public class TitleRepository : Repository<Title>
+    public class TitleRepository : Repository<TitleModel>
     {
         public TitleRepository(IMDBContext context) : base(context) { } //Constructor that calls the base constructor, ensuring both the context and dbset are initialized. Btw we now can use the same context in both sub/super class
 
-        public async Task<IList<Person>> GetWritersByMovieId(string id)
+        public async Task<IList<PersonModel>> GetWritersByMovieId(string id)
         {
             return await _dbSet.Where(t => t.Id.Equals(id)).Include(t => t.WritersList).ThenInclude(w => w.Person).SelectMany(t => t.WritersList.Select(w => w.Person)).ToListAsync(); //Using selectmany to flatten the list of lists. Needed because we are working with nested list here!
         }
-        public async Task<Title> GetTitle(string id)
+        public async Task<TitleModel> GetTitle(string id)
         {
             return await _dbSet.Where(t => t.Id.Equals(id))
                 .Include(t => t.Poster)
@@ -30,21 +24,18 @@ namespace MovieDataLayer.DataService.IMDB_Repository
                 .Include(t => t.PrincipalCastList).ThenInclude(p => p.Person).FirstOrDefaultAsync();
         }
 
-        public async Task<IList<Title>> GetAllTitles(int page = 0, int pageSize = 10)
+        public async Task<IList<TitleModel>> GetAllTitles(int page = 0, int pageSize = 10) // could these be reused and not duplicated?
         {
             return await _dbSet.AsNoTracking()
                 .Include(t => t.Poster)
                 .Include(t => t.Plot)
                 .Include(t => t.Rating)
-                //.Include(t => t.LocalizedTitlesList)
-                .Include(t => t.WritersList).ThenInclude(w => w.Person)
-                .Include(t => t.DirectorsList).ThenInclude(d => d.Person)
                 .Include(t => t.GenresList).ThenInclude(g => g.Genre)
-                .Include(t => t.PrincipalCastList).ThenInclude(p => p.Person).Skip(page * pageSize).Take(pageSize).ToListAsync();
+                .Skip(page * pageSize).Take(pageSize).ToListAsync();
         }
         //AsNoTracking().Skip(page* pageSize).Take(pageSize).ToListAsync()
 
-        public async Task<IList<Title>> GetTitleByGenre(int id, int page = 0, int pageSize = 10)
+        public async Task<IList<TitleModel>> GetTitleByGenre(int id, int page = 0, int pageSize = 10)
         {
             return await _dbSet
                 .Include(t => t.Poster)

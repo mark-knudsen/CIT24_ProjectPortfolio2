@@ -13,10 +13,10 @@ namespace MovieWebApi.Controllers;
 [Route("api/genres")]
 public class GenreController : GenericController
 {
-    public record GenreModel(string Name); // Reocrds in a good way to make
+    public record ReadGenreModel(string Name); // Reocrds in a good way to make
 
-    private readonly IRepository<Genre> _dataService;
-    public GenreController(IRepository<Genre> dataService, LinkGenerator linkGenerator, UserRepository userRepository, AuthenticatorHelper authenticatorHelper) : base(linkGenerator, userRepository, authenticatorHelper)
+    private readonly IRepository<GenreModel> _dataService;
+    public GenreController(IRepository<GenreModel> dataService, LinkGenerator linkGenerator, UserRepository userRepository, AuthenticatorHelper authenticatorHelper) : base(linkGenerator, userRepository, authenticatorHelper)
     {
         _dataService = dataService;
     }
@@ -27,7 +27,7 @@ public class GenreController : GenericController
         if (page < 0 || pageSize <= 0) return BadRequest("Page and PageSize must be 0 or greater");
 
         //Generic use of Spawn_DTO, including URL mapped to the DTO
-        var result = (await _dataService.GetAllWithPaging(page, pageSize)).Select(genre => genre.Spawn_DTO<GenreModel, Genre>(HttpContext, _linkGenerator, nameof(GetAll)));
+        var result = (await _dataService.GetAllWithPaging(page, pageSize)).Select(genre => genre.Spawn_DTO<ReadGenreModel, GenreModel>(HttpContext, _linkGenerator, nameof(GetAll)));
         if (result == null || !result.Any())
         {
 
