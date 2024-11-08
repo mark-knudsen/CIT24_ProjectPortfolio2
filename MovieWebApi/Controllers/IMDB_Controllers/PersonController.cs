@@ -4,7 +4,7 @@ using MovieDataLayer.DataService.UserFrameworkRepository;
 using MovieDataLayer.Models.IMDB_Models;
 using MovieWebApi.DTO.IMDB_DTO;
 using MovieWebApi.Extensions;
-using MovieWebApi.Helpers;
+
 
 namespace MovieWebApi.Controllers.IMDB_Controllers
 {

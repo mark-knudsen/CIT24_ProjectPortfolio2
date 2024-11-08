@@ -1,46 +1,50 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using MovieDataLayer;
 using MovieDataLayer.DataService.UserFrameworkRepository;
 using MovieWebApi.DTO.User_DTO;
 using MovieWebApi.Extensions;
 
+
 namespace MovieWebApi.Controllers.UserStuff
 {
+    [Authorize]
     [ApiController]
     [Route("api/users/rating")]
-    public class UserRatingController : ControllerBase
+    public class UserRatingController : GenericController
     {
         public record CreateUserRating(string TitleId, float Rating);
 
         readonly UserRatingRepository _userRatingRepository;
 
-        public UserRatingController(UserRatingRepository userRatingRepository)
-        {
+        public UserRatingController(UserRatingRepository userRatingRepository, UserRepository userRepository, AuthenticatorExtension authenticatorExtension, LinkGenerator linkGenerator) : base(linkGenerator, userRepository, authenticatorExtension) { 
+
             _userRatingRepository = userRatingRepository;
         }
 
         [HttpGet("{titleId}")]
-        public async Task<IActionResult> Get([FromHeader] int userId, string titleId)
+        public async Task<IActionResult> Get([FromHeader] string authorization, string titleId)
         {
+            int userId = _authenticatorExtension.ExtractUserID(authorization);
             var rating = Extension.Spawn_DTO<UserRatingDTO, UserRatingModel>(await _userRatingRepository.GetUserRating(userId, titleId));
             if (rating == null) return NotFound();
-
             return Ok(rating);
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetAll([FromHeader] int userId)
+        public async Task<IActionResult> GetAll([FromHeader] string authorization)
         {
+            int userId = _authenticatorExtension.ExtractUserID(authorization);
             var result = (await _userRatingRepository.GetAllUserRatingByUserId(userId)).Select(Extension.Spawn_DTO<UserRatingDTO, UserRatingModel>);
-
             if (result == null) return NotFound();
             return Ok(result);
         }
 
 
         [HttpPost]
-        public async Task<IActionResult> Post([FromHeader] int userId, CreateUserRating createUserRating)
+        public async Task<IActionResult> Post([FromHeader] string authorization, CreateUserRating createUserRating)
         {
+            int userId = _authenticatorExtension.ExtractUserID(authorization);
             var _userRating = new UserRatingModel();
             _userRating.UserId = userId;
             _userRating.TitleId = createUserRating.TitleId;
@@ -55,12 +59,13 @@ namespace MovieWebApi.Controllers.UserStuff
         }
 
         [HttpPut()]
-        public async Task<IActionResult> Put([FromHeader] int userId, string titleId, double rating)
+        public async Task<IActionResult> Put([FromHeader] string authorization, CreateUserRating createUserRating)
         {
-            UserRatingModel userRating = await _userRatingRepository.GetUserRating(userId, titleId);
+            int userId = _authenticatorExtension.ExtractUserID(authorization);
+            UserRatingModel userRating = await _userRatingRepository.GetUserRating(userId, createUserRating.TitleId);
             if (userRating != null)
             {
-                userRating.Rating = rating != default ? rating : userRating.Rating;
+                userRating.Rating = createUserRating.Rating != default ? createUserRating.Rating : userRating.Rating;
             }
             else return NotFound();
 
@@ -68,17 +73,20 @@ namespace MovieWebApi.Controllers.UserStuff
             if (!success) return BadRequest();
             return NoContent();
         }
+
         [HttpDelete("{titleId}")]
-        public async Task<IActionResult> Delete([FromHeader] int userId, string titleId)
+        public async Task<IActionResult> Delete([FromHeader] string authorization, string titleId)
         {
+            int userId = _authenticatorExtension.ExtractUserID(authorization);
             bool success = await _userRatingRepository.DeleteUserRating(userId, titleId);
             if (!success) return NotFound();
             return NoContent();
         }
 
         [HttpDelete]
-        public async Task<IActionResult> DeleteAll([FromHeader] int userId)
+        public async Task<IActionResult> DeleteAll([FromHeader] string authorization)
         {
+            int userId = _authenticatorExtension.ExtractUserID(authorization);
             bool success = await _userRatingRepository.DeleteAllUserRatings(userId);
             if (!success) return NotFound();
             return NoContent();

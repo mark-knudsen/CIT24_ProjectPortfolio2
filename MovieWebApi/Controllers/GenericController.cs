@@ -1,7 +1,7 @@
 ﻿using System.Runtime.InteropServices;
 using Microsoft.AspNetCore.Mvc;
 using MovieDataLayer.DataService.UserFrameworkRepository;
-using MovieWebApi.Helpers;
+using MovieWebApi.Extensions;
 
 namespace MovieWebApi.Controllers
 {
@@ -9,13 +9,13 @@ namespace MovieWebApi.Controllers
     {
         protected readonly LinkGenerator _linkGenerator;
         protected readonly UserRepository _userRepository;
-        protected readonly AuthenticatorExtension _authenticatorHelper;
+        protected readonly AuthenticatorExtension _authenticatorExtension;
 
         public GenericController(LinkGenerator linkgenerator, UserRepository userRepository, AuthenticatorExtension authenticatorHelper)
         {
             _linkGenerator = linkgenerator;
             _userRepository = userRepository;
-            _authenticatorHelper = authenticatorHelper;
+            _authenticatorExtension = authenticatorHelper;
         }
 
         protected string? GetUrl(string pathName, object entity)
@@ -60,7 +60,7 @@ namespace MovieWebApi.Controllers
         {
             var user = await _userRepository.Get(id);
             if (user == null) return BadRequest();
-            bool isValidUser = _authenticatorHelper.ValidateUser(Authorization, user.Id, user.Email);
+            bool isValidUser = _authenticatorExtension.ValidateUser(Authorization, user.Id, user.Email);
 
             if (!isValidUser) return Unauthorized();
             else return null;

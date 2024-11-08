@@ -8,7 +8,7 @@ using MovieDataLayer.Models.IMDB_Models;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
-using MovieWebApi.Helpers;
+using MovieWebApi.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
 

@@ -4,7 +4,7 @@ using MovieDataLayer;
 using MovieDataLayer.DataService.UserFrameworkRepository;
 using MovieWebApi.DTO.User_DTO;
 using MovieWebApi.Extensions;
-using MovieWebApi.Helpers;
+
 
 namespace MovieWebApi.Controllers.UserStuff;
 
@@ -85,7 +85,7 @@ public class UserController : GenericController
         var user = await _userRepository.Login(userLoginDTO.Email, userLoginDTO.Password);
 
         if (user == null) return Unauthorized();
-        var token = _authenticatorHelper.GenerateJWTToken(user);
+        var token = _authenticatorExtension.GenerateJWTToken(user);
         return Ok(token);
     }
 }
