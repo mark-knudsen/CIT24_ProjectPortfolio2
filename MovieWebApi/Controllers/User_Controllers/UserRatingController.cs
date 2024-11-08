@@ -4,6 +4,7 @@ using MovieDataLayer;
 using MovieDataLayer.DataService.UserFrameworkRepository;
 using MovieWebApi.DTO.User_DTO;
 using MovieWebApi.Extensions;
+using static MovieWebApi.Controllers.UserStuff.UserRatingController;
 
 
 namespace MovieWebApi.Controllers.UserStuff
@@ -14,10 +15,12 @@ namespace MovieWebApi.Controllers.UserStuff
     public class UserRatingController : GenericController
     {
         public record CreateUserRating(string TitleId, float Rating);
+        public record PutUserRating(float Rating);
 
         readonly UserRatingRepository _userRatingRepository;
 
-        public UserRatingController(UserRatingRepository userRatingRepository, UserRepository userRepository, AuthenticatorExtension authenticatorExtension, LinkGenerator linkGenerator) : base(linkGenerator, userRepository, authenticatorExtension) { 
+        public UserRatingController(UserRatingRepository userRatingRepository, UserRepository userRepository, AuthenticatorExtension authenticatorExtension, LinkGenerator linkGenerator) : base(linkGenerator, userRepository, authenticatorExtension)
+        {
 
             _userRatingRepository = userRatingRepository;
         }
@@ -58,14 +61,14 @@ namespace MovieWebApi.Controllers.UserStuff
             return NoContent();
         }
 
-        [HttpPut()]
-        public async Task<IActionResult> Put([FromHeader] string authorization, CreateUserRating createUserRating)
+        [HttpPut("{titleId}")]
+        public async Task<IActionResult> Put([FromHeader] string authorization, PutUserRating rating, [FromRoute] string titleId)
         {
             int userId = _authenticatorExtension.ExtractUserID(authorization);
-            UserRatingModel userRating = await _userRatingRepository.GetUserRating(userId, createUserRating.TitleId);
+            UserRatingModel userRating = await _userRatingRepository.GetUserRating(userId, titleId);
             if (userRating != null)
             {
-                userRating.Rating = createUserRating.Rating != default ? createUserRating.Rating : userRating.Rating;
+                userRating.Rating = rating != default ? rating.Rating : userRating.Rating;
             }
             else return NotFound();
 

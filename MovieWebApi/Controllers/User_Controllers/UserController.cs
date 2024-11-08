@@ -14,33 +14,36 @@ namespace MovieWebApi.Controllers.UserStuff;
 public class UserController : GenericController
 {
     public record UpdateUserModel(string email, string firstName, string password);
-    public UserController(UserRepository userRepository, LinkGenerator linkGenerator, AuthenticatorExtension authenticatorHelper) : base(linkGenerator, userRepository, authenticatorHelper)
+    public UserController(UserRepository userRepository, LinkGenerator linkGenerator, AuthenticatorExtension authenticatorExtension) : base(linkGenerator, userRepository, authenticatorExtension)
     {
     }
 
     [HttpGet("user-profile")]
-    public async Task<IActionResult> GetById([FromHeader] int id)
+    public async Task<IActionResult> GetById([FromHeader] string authorization)
     {
-        var result = (await _userRepository.Get(id)).Spawn_DTO<UserDTO, UserModel>();
+        int userId = _authenticatorExtension.ExtractUserID(authorization);
+        var result = (await _userRepository.Get(userId)).Spawn_DTO<UserDTO, UserModel>();
         if (result == null) return NotFound();
         return Ok(result);
     }
 
     [HttpGet]
-    public async Task<IActionResult> GetAll(int page = 0, int pageSize = 10)
+    public async Task<IActionResult> GetAll([FromHeader] string authorization, int page = 0, int pageSize = 10)
     {
+        int userId = _authenticatorExtension.ExtractUserID(authorization);
         var result = (await _userRepository.GetAllWithPaging(page = 0, pageSize = 10)).Select(user => user.Spawn_DTO_WithPagination<UserDTO, UserModel>(HttpContext, _linkGenerator, nameof(GetAll))); // maybe never retrieve the password, just a thought you know!
         return Ok(result);
     }
 
-    [HttpGet("search_history")]
-    public async Task<IActionResult> GetAllUserHistory([FromHeader] int id)
-    {
-        var result = (await _userRepository.GetAllSearchHistoryByUserId(id)).Select(user => user.Spawn_DTO_WithPagination<UserSearchHistoryDTO, UserSearchHistoryModel>(HttpContext, _linkGenerator, nameof(GetAll)));
+    //[HttpGet("search_history")]
+    //public async Task<IActionResult> GetAllUserHistory([FromHeader] int id, string authorization)
+    //{
+    //    int userId = _authenticatorExtension.ExtractUserID(authorization);
+    //    var result = (await _userRepository.GetAllSearchHistoryByUserId(id)).Select(user => user.Spawn_DTO_WithPagination<UserSearchHistoryDTO, UserSearchHistoryModel>(HttpContext, _linkGenerator, nameof(GetAll)));
 
-        if (result == null) return NotFound();
-        return Ok(result);
-    }
+    //    if (result == null) return NotFound();
+    //    return Ok(result);
+    //}
 
     [AllowAnonymous]
     [HttpPost]
@@ -55,9 +58,10 @@ public class UserController : GenericController
     }
 
     [HttpPut]
-    public async Task<IActionResult> Put([FromHeader] int id, UpdateUserModel updateUserModel)
+    public async Task<IActionResult> Put(UpdateUserModel updateUserModel, [FromHeader] string authorization)
     {
-        UserModel user = await _userRepository.Get(id);
+        int userId = _authenticatorExtension.ExtractUserID(authorization);
+        UserModel user = await _userRepository.Get(userId);
         if (user != null)
         {
             user.Email = updateUserModel.email != "" ? updateUserModel.email : user.Email;
@@ -67,13 +71,17 @@ public class UserController : GenericController
         else return NotFound();
         bool success = await _userRepository.Update(user);
         if (!success) return BadRequest();
-        return NoContent();
+
+        var token = _authenticatorExtension.GenerateJWTToken(user);
+
+        return Ok(token); // changed from NoContent to OK(Token)
     }
 
     [HttpDelete]
-    public async Task<IActionResult> Delete([FromHeader] int id)
+    public async Task<IActionResult> Delete([FromHeader] string authorization)
     {
-        bool success = await _userRepository.Delete(id);
+        int userId = _authenticatorExtension.ExtractUserID(authorization);
+        bool success = await _userRepository.Delete(userId);
         if (!success) return NotFound();
         return NoContent();
     }
