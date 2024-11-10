@@ -1,10 +1,9 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using MovieDataLayer;
-using MovieDataLayer.DataService.UserFrameworkRepository;
+using MovieDataLayer.Data_Service.User_Framework_Repository;
 using MovieWebApi.DTO.User_DTO;
 using MovieWebApi.Extensions;
-
 
 namespace MovieWebApi.Controllers.UserStuff;
 
@@ -34,16 +33,6 @@ public class UserController : GenericController
         var result = (await _userRepository.GetAllWithPaging(page = 0, pageSize = 10)).Select(user => user.Spawn_DTO_WithPagination<UserDTO, UserModel>(HttpContext, _linkGenerator, nameof(GetAll))); // maybe never retrieve the password, just a thought you know!
         return Ok(result);
     }
-
-    //[HttpGet("search_history")]
-    //public async Task<IActionResult> GetAllUserHistory([FromHeader] int id, string authorization)
-    //{
-    //    int userId = _authenticatorExtension.ExtractUserID(authorization);
-    //    var result = (await _userRepository.GetAllSearchHistoryByUserId(id)).Select(user => user.Spawn_DTO_WithPagination<UserSearchHistoryDTO, UserSearchHistoryModel>(HttpContext, _linkGenerator, nameof(GetAll)));
-
-    //    if (result == null) return NotFound();
-    //    return Ok(result);
-    //}
 
     [AllowAnonymous]
     [HttpPost]

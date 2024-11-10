@@ -1,11 +1,9 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using MovieDataLayer;
-using MovieDataLayer.DataService.UserFrameworkRepository;
+using MovieDataLayer.Data_Service.User_Framework_Repository;
 using MovieWebApi.DTO.User_DTO;
 using MovieWebApi.Extensions;
-using static MovieWebApi.Controllers.UserStuff.UserRatingController;
-
 
 namespace MovieWebApi.Controllers.UserStuff
 {

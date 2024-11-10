@@ -1,9 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
+using MovieDataLayer.Data_Service;
 using MovieDataLayer.Models.IMDB_Models;
 
 namespace MovieDataLayer.DataService.IMDB_Repository

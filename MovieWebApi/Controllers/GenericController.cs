@@ -1,6 +1,5 @@
-﻿using System.Runtime.InteropServices;
-using Microsoft.AspNetCore.Mvc;
-using MovieDataLayer.DataService.UserFrameworkRepository;
+﻿using Microsoft.AspNetCore.Mvc;
+using MovieDataLayer.Data_Service.User_Framework_Repository;
 using MovieWebApi.Extensions;
 
 namespace MovieWebApi.Controllers

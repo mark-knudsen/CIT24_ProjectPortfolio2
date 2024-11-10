@@ -1,12 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using MovieDataLayer.Interfaces;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace MovieDataLayer.DataService
+namespace MovieDataLayer.Data_Service
 {
     //This Repository class is a generic class that implements the IRepository interface
     public class Repository<T> : IRepository<T> where T : class

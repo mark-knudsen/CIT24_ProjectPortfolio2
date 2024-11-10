@@ -1,14 +1,12 @@
 using MovieDataLayer.Interfaces;
-using MovieDataLayer.DataService;
 using MovieDataLayer;
-using Microsoft.EntityFrameworkCore;
 using MovieDataLayer.DataService.IMDB_Repository;
-using MovieDataLayer.DataService.UserFrameworkRepository;
-using MovieDataLayer.Models.IMDB_Models;
+using MovieDataLayer.Data_Service.User_Framework_Repository;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using MovieWebApi.Extensions;
+using MovieDataLayer.Data_Service;
 
 var builder = WebApplication.CreateBuilder(args);
 

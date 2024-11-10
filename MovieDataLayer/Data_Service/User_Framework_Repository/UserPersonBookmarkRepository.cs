@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 
-namespace MovieDataLayer.DataService.UserFrameworkRepository
+namespace MovieDataLayer.Data_Service.User_Framework_Repository
 {
     public class UserPersonBookmarkRepository : Repository<UserPersonBookmarkModel>
     {

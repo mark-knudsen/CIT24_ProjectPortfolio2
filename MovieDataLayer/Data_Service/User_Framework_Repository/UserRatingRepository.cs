@@ -6,7 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 
-namespace MovieDataLayer.DataService.UserFrameworkRepository
+namespace MovieDataLayer.Data_Service.User_Framework_Repository
 {
     public class UserRatingRepository : Repository<UserRatingModel>
     {
@@ -42,7 +42,6 @@ namespace MovieDataLayer.DataService.UserFrameworkRepository
                 return false;
             }
         }
-
 
         public async Task<bool> DeleteAllUserRatings(int userId)
         {

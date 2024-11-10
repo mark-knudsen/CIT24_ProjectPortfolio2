@@ -1,24 +1,26 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using MovieDataLayer.DataService;
+
 
 namespace MovieDataLayer.Data_Service.User_Framework_Repository
 {
-    public class UserTitleBookmarkRepository : Repository<UserTitleBookmarkModel>
+    public class UserSearchHistoryRepository : Repository<UserSearchHistoryModel>
     {
-        public UserTitleBookmarkRepository(IMDBContext context) : base(context) { }
-        public async Task<IList<UserTitleBookmarkModel>> GetAll(int id)
-        {
-            return await _dbSet.AsNoTracking().Where(x => x.UserId == id).ToListAsync();
-        }
-        public async Task<UserTitleBookmarkModel> Get(int userId, string titleId)
-        {
-            return await _dbSet.AsNoTracking().Where(x => x.UserId == userId && x.TitleId.Equals(titleId)).FirstOrDefaultAsync();
-        }
+        public UserSearchHistoryRepository(IMDBContext context) : base(context) { }
 
-        public async Task<bool> DeleteTitleBookmark(int userId, string titleId)
+        public async Task<IList<UserSearchHistoryModel>> GetAllSearchHistoryByUserId(int id)
+        {
+            return await _dbSet.AsNoTracking().Where(x => x.UserId.Equals(id)).ToListAsync();
+        }
+        public async Task<UserSearchHistoryModel> Get(int userId, DateTime createdAt)
+        {
+            return await _dbSet.AsNoTracking().Where(x => x.UserId == userId && x.CreatedAt.Equals(createdAt)).FirstOrDefaultAsync();
+        }
+        public async Task<bool> Delete(int userId, DateTime createdAt)
         {
             try
             {
-                var entity = await Get(userId, titleId);
+                var entity = await Get(userId, createdAt);
 
                 if (entity != null)
                 {
@@ -37,7 +39,7 @@ namespace MovieDataLayer.Data_Service.User_Framework_Repository
             }
         }
 
-        public async Task<bool> DeleteAllTitleBookmarks(int userId)
+        public async Task<bool> DeleteAll(int userId)
         {
             try
             {
