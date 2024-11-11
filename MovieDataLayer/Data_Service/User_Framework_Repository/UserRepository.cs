@@ -14,14 +14,14 @@ namespace MovieDataLayer.Data_Service.User_Framework_Repository
         }
         public async Task<UserModel> Login(string email, string password)
         {
-
-            var user = await _dbSet.Where(u => u.Email == email && u.Password == password).SingleAsync();
-
-            if (user == null)
+            try
             {
-                return null;
+                return await _dbSet.Where(u => u.Email == email && u.Password == password).SingleAsync();
             }
-            return user;
+            catch
+            {
+                return null; // return error at some point
+            }
         }
 
         public async Task<UserModel> GetUser(int id)

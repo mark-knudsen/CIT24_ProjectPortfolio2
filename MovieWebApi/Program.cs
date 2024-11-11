@@ -25,6 +25,7 @@ builder.Services.AddScoped<UserRatingRepository>();
 
 builder.Services.AddScoped<UserTitleBookmarkRepository>();
 builder.Services.AddScoped<UserPersonBookmarkRepository>();
+builder.Services.AddScoped<UserSearchHistoryRepository>();
 builder.Services.AddSingleton<AuthenticatorExtension>();
 
 //Adds JWT Authentication configuration:

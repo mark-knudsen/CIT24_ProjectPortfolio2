@@ -36,7 +36,7 @@ public class UserController : GenericController
 
     [AllowAnonymous]
     [HttpPost]
-    public async Task<IActionResult> Post(UserRegistrationDTO userRegistrationDTO)
+    public async Task<IActionResult> Post(UserRegistrationDTO userRegistrationDTO) // password 8 char speciale
     {
         var result = Extension.Spawn_DTO<UserModel, UserRegistrationDTO>(userRegistrationDTO);
         bool success = await _userRepository.Add(result);
@@ -81,7 +81,7 @@ public class UserController : GenericController
     {
         var user = await _userRepository.Login(userLoginDTO.Email, userLoginDTO.Password);
 
-        if (user == null) return Unauthorized();
+        if (user == null) return Unauthorized(); 
         var token = _authenticatorExtension.GenerateJWTToken(user);
         return Ok(token);
     }
