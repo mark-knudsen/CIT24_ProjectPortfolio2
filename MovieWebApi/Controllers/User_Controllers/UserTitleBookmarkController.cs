@@ -22,10 +22,9 @@ namespace MovieWebApi.Controllers.UserStuff
         }
         
         [HttpGet("{titleId}", Name = nameof(GetTitleBookmark))]
-        public async Task<IActionResult> GetTitleBookmark([FromHeader] int userId, [FromHeader] string Authorization, string titleId)
+        public async Task<IActionResult> GetTitleBookmark([FromHeader] string authorization, string titleId)
         {
-            StatusCodeResult code = await Validate(userId, Authorization);
-            if (code != null) return code;
+            int userId = _authenticatorExtension.ExtractUserID(authorization);
 
             var result = (await _userTitleBookmarkRepository.Get(userId, titleId));
             if (result == null) return NotFound();
@@ -35,10 +34,12 @@ namespace MovieWebApi.Controllers.UserStuff
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetAll([FromHeader] int userId, [FromHeader] string Authorization)
+        public async Task<IActionResult> GetAll([FromHeader] string authorization)
         {
-            StatusCodeResult code = await Validate(userId, Authorization);
-            if (code != null) return code;
+            //StatusCodeResult code = await Validate(userId, Authorization);
+            //if (code != null) return code;
+
+            int userId = _authenticatorExtension.ExtractUserID(authorization);
 
             var mappedResult = (await _userTitleBookmarkRepository.GetAll(userId)).Select(x => x.Spawn_DTO_WithPagination<UserBookmarkDTO, UserTitleBookmarkModel>(HttpContext, _linkGenerator, nameof(GetTitleBookmark)));
             
@@ -48,26 +49,34 @@ namespace MovieWebApi.Controllers.UserStuff
         }
         
         [HttpPost]
-        public async Task<IActionResult> Post([FromHeader] int userId, CreateUserTitleBookmark userTitleBookmark, [FromHeader] string Authorization)
+        public async Task<IActionResult> Post([FromHeader] string authorization, CreateUserTitleBookmark userTitleBookmark)
         {
-            StatusCodeResult code = await Validate(userId, Authorization);
-            if (code != null) return code;
+            int userId = _authenticatorExtension.ExtractUserID(authorization);
 
-            var d = new UserTitleBookmarkModel();
-            d.UserId = userId;
-            d.Annotation = userTitleBookmark.Annotation;  // space for improvement
-            d.TitleId = userTitleBookmark.TitleId;
+            var _userTitleBookmark = new UserTitleBookmarkModel();
+            _userTitleBookmark.UserId = userId;
+            _userTitleBookmark.Annotation = userTitleBookmark.Annotation; // space for improvement
+            _userTitleBookmark.TitleId = userTitleBookmark.TitleId;
 
-            var success = await _userTitleBookmarkRepository.Add(d);
+            var success = await _userTitleBookmarkRepository.Add(_userTitleBookmark);
             if (!success) return BadRequest();
-            return NoContent();
+
+            var result = (await _userTitleBookmarkRepository.Get(userId, userTitleBookmark.TitleId));
+            if (result == null) return NotFound();
+            var finalResult = result.Spawn_DTO_WithPagination<UserBookmarkDTO, UserTitleBookmarkModel>(HttpContext, _linkGenerator, nameof(Post));
+
+            return Ok(finalResult);
         }
 
         [HttpPut("{titleId}")]
-        public async Task<IActionResult> Put([FromHeader] int userId, string titleId, UpdateUserTitleBookmark updateUserTitleBookmark, [FromHeader] string Authorization)
+        public async Task<IActionResult> Put([FromHeader] string authorization, string titleId, UpdateUserTitleBookmark updateUserTitleBookmark)
         {
-            StatusCodeResult code = await Validate(userId, Authorization);
-            if (code != null) return code;
+            int userId = _authenticatorExtension.ExtractUserID(authorization);
+
+            //StatusCodeResult code = await Validate(userId, Authorization);
+            //if (code != null) return code;
+
+
             UserTitleBookmarkModel titleBookmark = await _userTitleBookmarkRepository.Get(userId, titleId);
             if (titleBookmark != null)
             {
@@ -81,10 +90,11 @@ namespace MovieWebApi.Controllers.UserStuff
         }
 
         [HttpDelete("{titleId}")]
-        public async Task<IActionResult> Delete([FromHeader] int userId, string titleId, [FromHeader] string Authorization)
+        public async Task<IActionResult> Delete([FromHeader] string authorization, string titleId)
         {
-            StatusCodeResult code = await Validate(userId, Authorization);
-            if (code != null) return code;
+            //StatusCodeResult code = await Validate(userId, Authorization);
+            //if (code != null) return code;
+            int userId = _authenticatorExtension.ExtractUserID(authorization);
 
             bool success = await _userTitleBookmarkRepository.DeleteTitleBookmark(userId, titleId);
             if (!success) return NotFound();
@@ -92,10 +102,12 @@ namespace MovieWebApi.Controllers.UserStuff
         }
 
         [HttpDelete]
-        public async Task<IActionResult> DeleteAll([FromHeader] int userId, [FromHeader] string Authorization)
+        public async Task<IActionResult> DeleteAll([FromHeader] string authorization)
         {
-            StatusCodeResult code = await Validate(userId, Authorization);
-            if (code != null) return code;
+
+            int userId = _authenticatorExtension.ExtractUserID(authorization);
+            //StatusCodeResult code = await Validate(userId, Authorization);
+            //if (code != null) return code;
 
             bool success = await _userTitleBookmarkRepository.DeleteAllTitleBookmarks(userId);
             if (!success) return NotFound();

@@ -4,6 +4,7 @@ using MovieDataLayer;
 using MovieDataLayer.Data_Service.User_Framework_Repository;
 using MovieWebApi.DTO.User_DTO;
 using MovieWebApi.Extensions;
+using System.Security.Claims;
 
 namespace MovieWebApi.Controllers.UserStuff;
 
@@ -29,7 +30,6 @@ public class UserController : GenericController
     [HttpGet]
     public async Task<IActionResult> GetAll([FromHeader] string authorization, int page = 0, int pageSize = 10)
     {
-        int userId = _authenticatorExtension.ExtractUserID(authorization);
         var result = (await _userRepository.GetAllWithPaging(page = 0, pageSize = 10)).Select(user => user.Spawn_DTO_WithPagination<UserDTO, UserModel>(HttpContext, _linkGenerator, nameof(GetAll))); // maybe never retrieve the password, just a thought you know!
         return Ok(result);
     }
@@ -43,11 +43,15 @@ public class UserController : GenericController
 
         // this should return a token instead, no url plzz
         if (!success) return BadRequest();
+
+        //var token = _authenticatorExtension.GenerateJWTToken(user); // how do we get the newly created user?
+        //return Ok(token);
+
         return Created("", result);
     }
 
     [HttpPut]
-    public async Task<IActionResult> Put(UpdateUserModel updateUserModel, [FromHeader] string authorization)
+    public async Task<IActionResult> Put([FromHeader] string authorization, UpdateUserModel updateUserModel)
     {
         int userId = _authenticatorExtension.ExtractUserID(authorization);
         UserModel user = await _userRepository.Get(userId);
@@ -55,7 +59,7 @@ public class UserController : GenericController
         {
             user.Email = updateUserModel.email != "" ? updateUserModel.email : user.Email;
             user.FirstName = updateUserModel.firstName != "" ? updateUserModel.firstName : user.FirstName;
-            user.Password = updateUserModel.password != "" ? updateUserModel.password : user.Password;
+            user.Password = updateUserModel.password != "" ? updateUserModel.password : user.Password; // would argue to make a request solely for changeing password
         }
         else return NotFound();
         bool success = await _userRepository.Update(user);
@@ -65,6 +69,26 @@ public class UserController : GenericController
 
         return Ok(token); // changed from NoContent to OK(Token)
     }
+    
+    //[HttpPut] // make new password
+    //public async Task<IActionResult> Put([FromHeader] string authorization, string password)
+    //{
+    //    int userId = _authenticatorExtension.ExtractUserID(authorization);
+    //    UserModel user = await _userRepository.Get(userId);
+
+    //    if (user != null) // should we care to check in the web api, or solely do it in db, and then depending on what the db does throws of error we then react accordingly
+    //    {
+    //         user.Password = password;   
+    //    }
+    //    else return NotFound();
+
+    //    bool success = await _userRepository.Update(user);
+    //    if (!success) return BadRequest();
+
+    //    var token = _authenticatorExtension.GenerateJWTToken(user);
+
+    //    return Ok(token); 
+    //}
 
     [HttpDelete]
     public async Task<IActionResult> Delete([FromHeader] string authorization)

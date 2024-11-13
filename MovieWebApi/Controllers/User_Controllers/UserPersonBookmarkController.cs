@@ -45,7 +45,7 @@ namespace MovieWebApi.Controllers.UserStuff
         }
 
         [HttpPost(Name = nameof(Post))]
-        public async Task<IActionResult> Post(CreateUserPersonBookmark userPersonBookmark, [FromHeader] string authorization)
+        public async Task<IActionResult> Post([FromHeader] string authorization, CreateUserPersonBookmark userPersonBookmark)
         {
             int userId = _authenticatorExtension.ExtractUserID(authorization);
 
@@ -65,7 +65,7 @@ namespace MovieWebApi.Controllers.UserStuff
         }
 
         [HttpPut("{personId}")]
-        public async Task<IActionResult> Put(string personId, UpdateUserPersonBookmark updateUserPersonBookmark, [FromHeader] string authorization)
+        public async Task<IActionResult> Put([FromHeader] string authorization, string personId, UpdateUserPersonBookmark updateUserPersonBookmark)
         {
             int userId = _authenticatorExtension.ExtractUserID(authorization);
 
@@ -82,7 +82,7 @@ namespace MovieWebApi.Controllers.UserStuff
         }
 
         [HttpDelete("{personId}")]
-        public async Task<IActionResult> Delete(string personId, [FromHeader] string authorization)
+        public async Task<IActionResult> Delete([FromHeader] string authorization, string personId)
         {
             int userId = _authenticatorExtension.ExtractUserID(authorization);
 
