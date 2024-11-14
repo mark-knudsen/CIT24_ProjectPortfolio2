@@ -12,17 +12,32 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
+var MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
+builder.Services.AddCors(options =>
+{
+    //options.AddPolicy(name: MyAllowSpecificOrigins,
+    //                  policy =>
+    //                  {
+    //                      policy.WithOrigins("localhost:3000", "http://localhost:3000/",
+    //                                          "https://localhost:3000/", "https://localhost:7154").AllowAnyHeader().AllowAnyMethod().AllowCredentials();
+    //                  });
+    options.AddPolicy(name: MyAllowSpecificOrigins, policy =>
+    {
+        policy.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod();
+    });
+});
+
+
 builder.Services.AddControllers();
 
 builder.Services.AddDbContext<IMDBContext>();
 
-
 builder.Services.AddScoped(typeof(IRepository<>), typeof(Repository<>)); //Dependency Injection for Repository base class.
 builder.Services.AddScoped<TitleRepository>(); //Dependency InjectionS for related class, concrete.
-builder.Services.AddScoped<UserRepository>(); 
 builder.Services.AddScoped<PersonRepository>();
-builder.Services.AddScoped<UserRatingRepository>();
 
+builder.Services.AddScoped<UserRepository>(); 
+builder.Services.AddScoped<UserRatingRepository>();
 builder.Services.AddScoped<UserTitleBookmarkRepository>();
 builder.Services.AddScoped<UserPersonBookmarkRepository>();
 builder.Services.AddScoped<UserSearchHistoryRepository>();
@@ -64,11 +79,13 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-
 app.UseHttpsRedirection();
+
+app.UseCors(MyAllowSpecificOrigins);
 
 app.UseAuthentication();
 app.UseAuthorization();
+
 app.MapControllers();
 
 app.Run();
