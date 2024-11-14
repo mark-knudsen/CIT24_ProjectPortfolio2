@@ -23,7 +23,7 @@ namespace MovieDataLayer.Data_Service.User_Framework_Repository
                 if (entity != null)
                 {
                     _dbSet.Remove(entity);
-                    _context.SaveChanges();
+                    await _context.SaveChangesAsync();
                     return true;
                 }
                 else
@@ -44,7 +44,7 @@ namespace MovieDataLayer.Data_Service.User_Framework_Repository
                 if (entity.Any())
                 {
                     _dbSet.RemoveRange(entity);
-                    _context.SaveChanges();
+                    await _context.SaveChangesAsync();
                     return true;
                 }
                 else

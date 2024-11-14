@@ -47,7 +47,7 @@ namespace MovieWebApi.Extensions
         // IMPORTANT, sometimes some values are null, but that will throw an axception when trying to set it here
         // add nullable in DTO and in here
        
-        public static TitleDetailedDTO MapTitleToTitleDetailedDTO(this TitleModel title, HttpContext httpContext, LinkGenerator linkGenerator, string routeName) // IMPORTANT, sometimes some values are null, but that will throw an axception when trying to set it here, add nullable in DTO and in here
+        public static TitleDetailedDTO MapTitleToTitleDetailedDTO(this TitleModel title, HttpContext httpContext, LinkGenerator linkGenerator, string routeName) 
         {
             var model = title.Adapt<TitleDetailedDTO>();
             model.GenresList = title.GenresList?.Select(x => x.Genre.Name).ToList();
@@ -62,7 +62,7 @@ namespace MovieWebApi.Extensions
             return model;
         }
 
-        public static TitleSimpleDTO MapTitleToTitleSimpleDTO(this TitleModel title, HttpContext httpContext, LinkGenerator linkGenerator, string routeName) // IMPORTANT, sometimes some values are null, but that will throw an axception when trying to set it here, add nullable in DTO and in here
+        public static TitleSimpleDTO MapTitleToTitleSimpleDTO(this TitleModel title, HttpContext httpContext, LinkGenerator linkGenerator, string routeName) 
         {
             var model = title.Adapt<TitleSimpleDTO>();
             model.GenresList = title.GenresList?.Select(x => x.Genre.Name).ToList();
@@ -76,8 +76,8 @@ namespace MovieWebApi.Extensions
         {
             var model = person.Adapt<PersonDetailedDTO>();
             if (model == null) return null;
-            model.MostRelevantTitles = person.MostRelevantTitles?.Select(x => x.Title.PrimaryTitle).ToList();
-            model.PrimaryProfessions = person.PrimaryProfessions?.Select(x => x.Profession.Name).ToList();
+            model.MostRelevantTitles = person?.MostRelevantTitles?.Select(x => x.Title.PrimaryTitle).ToList();
+            model.PrimaryProfessions = person?.PrimaryProfessions?.Select(x => x.Profession.Name).ToList();
             model.Url = linkGenerator.GetUriByName(httpContext, routeName, new { id = person.Id });
             return model;
         }
@@ -86,8 +86,8 @@ namespace MovieWebApi.Extensions
         {
             var model = person.Adapt<PersonDetailedDTO>();
             if (model == null) return null;
-            model.MostRelevantTitles = person.MostRelevantTitles.Select(x => x.Title.PrimaryTitle).ToList();
-            model.PrimaryProfessions = person.PrimaryProfessions.Select(x => x.Profession.Name).ToList();
+            model.MostRelevantTitles = person?.MostRelevantTitles?.Select(x => x.Title.PrimaryTitle).ToList();
+            model.PrimaryProfessions = person?.PrimaryProfessions?.Select(x => x.Profession.Name).ToList();
             return model;
         }
 

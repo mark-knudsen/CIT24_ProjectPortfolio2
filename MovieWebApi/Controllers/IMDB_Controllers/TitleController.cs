@@ -61,9 +61,10 @@ namespace MovieWebApi.Controllers.IMDB_Controllers
         }
 
         [HttpGet("search")]
-        public async Task<IActionResult> Search([FromHeader] int userId, string searchTerm, int page = 0, int pageSize = 10) // should probably be authorized ALOT to be allowed to call this
+        public async Task<IActionResult> Search([FromHeader] string? authorization, string searchTerm, int page = 0, int pageSize = 10) 
         {
-            if (userId < 0) return BadRequest();
+            int userId = 0;
+            if(authorization != null) userId = _authenticatorExtension.ExtractUserID(authorization);
 
             var searchResult = (await _titleRepository.TitleSearch(userId, searchTerm)).MapTitleSearchResultModelToTitleSearchResultDTO();
             if (searchResult == null || !searchResult.Any()) return NotFound();
@@ -75,7 +76,7 @@ namespace MovieWebApi.Controllers.IMDB_Controllers
         }
 
         [HttpGet("similar-titles")] // Discuss if it is ok to use this URL!
-        public async Task<IActionResult> SimilarTitles(string titleId) // should probably be authorized ALOT to be allowed to call this
+        public async Task<IActionResult> SimilarTitles(string titleId) 
         {
             var result = await _titleRepository.SimilarTitles(titleId);
             return Ok(result);

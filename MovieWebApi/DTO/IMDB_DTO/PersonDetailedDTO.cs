@@ -6,8 +6,7 @@ public class PersonDetailedDTO
     public string Name { get; set; }
     public int? BirthYear { get; set; }
     public int? DeathYear { get; set; }
-    public IList<string> MostRelevantTitles { get; set; }
-    public IList<string> PrimaryProfessions { get; set; }
+    public IList<string>? MostRelevantTitles { get; set; } 
+    public IList<string>? PrimaryProfessions { get; set; } 
 
 }
-

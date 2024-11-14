@@ -5,7 +5,7 @@ using MovieDataLayer.Data_Service.User_Framework_Repository;
 using MovieWebApi.DTO.User_DTO;
 using MovieWebApi.Extensions;
 
-namespace MovieWebApi.Controllers.UserStuff
+namespace MovieWebApi.Controllers.User_Controllers
 {
     [Authorize]
     [ApiController]
@@ -19,7 +19,6 @@ namespace MovieWebApi.Controllers.UserStuff
 
         public UserRatingController(UserRatingRepository userRatingRepository, UserRepository userRepository, AuthenticatorExtension authenticatorExtension, LinkGenerator linkGenerator) : base(linkGenerator, userRepository, authenticatorExtension)
         {
-
             _userRatingRepository = userRatingRepository;
         }
 
@@ -41,17 +40,13 @@ namespace MovieWebApi.Controllers.UserStuff
             return Ok(result);
         }
 
-
         [HttpPost]
         public async Task<IActionResult> Post([FromHeader] string authorization, CreateUserRating createUserRating)
         {
             int userId = _authenticatorExtension.ExtractUserID(authorization);
-            var _userRating = new UserRatingModel();
+
+            var _userRating = createUserRating.Spawn_DTO<UserRatingModel, CreateUserRating>(); // from dto to domain model, we go in reverse
             _userRating.UserId = userId;
-            _userRating.TitleId = createUserRating.TitleId;
-            _userRating.Rating = createUserRating.Rating;
-            _userRating.CreatedAt = DateTime.Now;
-            _userRating.UpdatedAt = DateTime.Now;
 
             var success = await _userRatingRepository.Add(_userRating);
 

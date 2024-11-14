@@ -49,10 +49,8 @@ namespace MovieWebApi.Controllers.UserStuff
         {
             int userId = _authenticatorExtension.ExtractUserID(authorization);
 
-            var _userPersonBookmark = new UserPersonBookmarkModel();
+            var _userPersonBookmark = userPersonBookmark.Spawn_DTO<UserPersonBookmarkModel, CreateUserPersonBookmark>(); // from dto to domain model, we go in reverse
             _userPersonBookmark.UserId = userId;
-            _userPersonBookmark.Annotation = userPersonBookmark.Annotation; // space for improvement
-            _userPersonBookmark.PersonId = userPersonBookmark.PersonId;
 
             var success = await _userPersonBookmarkRepository.Add(_userPersonBookmark);
             if (!success) return BadRequest();

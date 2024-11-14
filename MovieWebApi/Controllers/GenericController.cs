@@ -55,14 +55,14 @@ namespace MovieWebApi.Controllers
             };
             return result;
         }
-        protected async Task<StatusCodeResult> Validate(int id, string Authorization)
-        {
-            var user = await _userRepository.Get(id);
-            if (user == null) return BadRequest();
-            bool isValidUser = _authenticatorExtension.ValidateUser(Authorization, user.Id, user.Email);
+        //protected async Task<StatusCodeResult> Validate(int id, string Authorization)
+        //{
+        //    var user = await _userRepository.Get(id);
+        //    if (user == null) return BadRequest();
+        //    bool isValidUser = _authenticatorExtension.ValidateUser(Authorization, user.Id, user.Email);
 
-            if (!isValidUser) return Unauthorized();
-            else return null;
-        }
+        //    if (!isValidUser) return Unauthorized();
+        //    else return null;
+        //}
     }
 }

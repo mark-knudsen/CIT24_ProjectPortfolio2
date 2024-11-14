@@ -1,6 +1,4 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using MovieDataLayer.DataService;
-
 
 namespace MovieDataLayer.Data_Service.User_Framework_Repository
 {
@@ -10,7 +8,7 @@ namespace MovieDataLayer.Data_Service.User_Framework_Repository
 
         public async Task<IList<UserSearchHistoryModel>> GetAllSearchHistoryByUserId(int id)
         {
-            return await _dbSet.AsNoTracking().Where(x => x.UserId.Equals(id)).ToListAsync();
+            return await _dbSet.AsNoTracking().Where(x => x.UserId == id).ToListAsync();
         }
         public async Task<UserSearchHistoryModel> Get(int userId, DateTime createdAt)
         {

@@ -28,5 +28,10 @@ namespace MovieDataLayer.Data_Service.User_Framework_Repository
         {
             return await _dbSet.Where(u => u.Id == id).FirstOrDefaultAsync();
         }
+
+        public async Task<UserModel> GetUserByEmail(string email)
+        {
+            return await _dbSet.Where(u => u.Email.Equals(email)).FirstOrDefaultAsync();
+        }
     }
 }

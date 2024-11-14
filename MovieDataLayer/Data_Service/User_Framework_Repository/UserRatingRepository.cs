@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 
 namespace MovieDataLayer.Data_Service.User_Framework_Repository
 {
@@ -14,12 +8,12 @@ namespace MovieDataLayer.Data_Service.User_Framework_Repository
 
         public async Task<IList<UserRatingModel>> GetAllUserRatingByUserId(int id)
         {
-            return await _dbSet.AsNoTracking().Where(x => x.UserId.Equals(id)).ToListAsync();
+            return await _dbSet.AsNoTracking().Where(x => x.UserId == id).ToListAsync();
         }
 
         public async Task<UserRatingModel> GetUserRating(int id, string titleId)
         {
-            return await _dbSet.AsNoTracking().Where(x => x.UserId.Equals(id) && x.TitleId.Equals(titleId)).FirstOrDefaultAsync();
+            return await _dbSet.AsNoTracking().Where(x => x.UserId == id && x.TitleId.Equals(titleId)).FirstOrDefaultAsync();
         }
 
         public async Task<bool> DeleteUserRating(int id, string titleId) 
@@ -30,7 +24,7 @@ namespace MovieDataLayer.Data_Service.User_Framework_Repository
                 if (entity != null)
                 {
                     _dbSet.Remove(entity);
-                    _context.SaveChanges();
+                    await _context.SaveChangesAsync();
                     return true;
                 }
                 else
