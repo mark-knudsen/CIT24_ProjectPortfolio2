@@ -17,4 +17,5 @@ ALL DONE
 - If yes: All CRUD operations in Datalayer should be made into the async version of the operation.
 - SpawnDTO needs to overloaded to take single entities and lists of entities
 - Bookmark should link to respective title/person, same for ratings. Need URL in DTO
+- Check valid email and password directly in the database on insert and update
 
