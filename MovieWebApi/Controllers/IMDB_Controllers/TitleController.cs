@@ -5,9 +5,11 @@ using MovieWebApi.Extensions;
 using MovieDataLayer.Data_Service.User_Framework_Repository;
 using MovieWebApi.SearchDTO;
 using MovieWebApi.DTO.IMDB_DTO;
+using Microsoft.AspNetCore.Cors;
 
 namespace MovieWebApi.Controllers.IMDB_Controllers
 {
+    //[DisableCors]
     [ApiController]
     [Route("api/titles")]
     public class TitleController : GenericController
@@ -27,6 +29,8 @@ namespace MovieWebApi.Controllers.IMDB_Controllers
             return Ok(title);
         }
 
+        // [DisableCors]
+        //[EnableCors("_myAllowSpecificOrigins")]
         [HttpGet(Name = nameof(GetAllTitle))] // this is not allowed to be named GetAll
         public async Task<IActionResult> GetAllTitle(int page = 0, int pageSize = 10) // We really just want the plot and poster at all times in the title, same with some of the collections
         {
@@ -61,12 +65,22 @@ namespace MovieWebApi.Controllers.IMDB_Controllers
         }
 
         [HttpGet("search")]
-        public async Task<IActionResult> Search([FromHeader] string? authorization, string searchTerm, int page = 0, int pageSize = 10) 
+        public async Task<IActionResult> Search([FromHeader] string? authorization, string searchTerm, int page = 0, int pageSize = 10)
         {
             int userId = 0;
-            if(authorization != null) userId = _authenticatorExtension.ExtractUserID(authorization);
+            if (authorization != null) userId = _authenticatorExtension.ExtractUserID(authorization);
 
-            var searchResult = (await _titleRepository.TitleSearch(userId, searchTerm)).MapTitleSearchResultModelToTitleSearchResultDTO();
+            // for development it is fine to return errors in http responses
+            // for production it is insecure returning errors in http responses as it reveals critical information, both from database and the web service
+            IEnumerable<TitleSearchResultDTO>? searchResult; 
+            try
+            {
+                searchResult = (await _titleRepository.TitleSearch(userId, searchTerm)).MapTitleSearchResultModelToTitleSearchResultDTO();
+            }
+            catch 
+            {
+                return BadRequest();
+            }
             if (searchResult == null || !searchResult.Any()) return NotFound();
             searchResult = CreateNavigationForSearchList(searchResult);
             var numberOfEntities = await _titleRepository.NumberOfElementsInTable();
@@ -76,7 +90,7 @@ namespace MovieWebApi.Controllers.IMDB_Controllers
         }
 
         [HttpGet("similar-titles")] // Discuss if it is ok to use this URL!
-        public async Task<IActionResult> SimilarTitles(string titleId) 
+        public async Task<IActionResult> SimilarTitles(string titleId)
         {
             var result = await _titleRepository.SimilarTitles(titleId);
             return Ok(result);
