@@ -4,10 +4,12 @@ using MovieDataLayer.Data_Service.User_Framework_Repository;
 using MovieDataLayer.Models.IMDB_Models;
 using MovieWebApi.DTO.IMDB_DTO;
 using MovieWebApi.Extensions;
+using Microsoft.AspNetCore.Cors;
 
 namespace MovieWebApi.Controllers.IMDB_Controllers
 {
     [ApiController]
+    [EnableCors("_myAllowSpecificOrigins")]
     [Route("api/persons")]
     public class PersonController : GenericController
     {

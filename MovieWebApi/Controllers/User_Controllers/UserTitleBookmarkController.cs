@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using MovieDataLayer;
 using MovieDataLayer.Data_Service.User_Framework_Repository;
@@ -8,6 +9,7 @@ using MovieWebApi.Extensions;
 namespace MovieWebApi.Controllers.User_Controllers
 {
     [Authorize]
+    [EnableCors("_myAllowSpecificOrigins")]
     [ApiController]
     [Route("api/bookmarks/title")]
     public class UserTitleBookmarkController : GenericController
@@ -16,11 +18,11 @@ namespace MovieWebApi.Controllers.User_Controllers
         public record UpdateUserTitleBookmark(string annotation);
 
         private readonly UserTitleBookmarkRepository _userTitleBookmarkRepository;
-        public UserTitleBookmarkController(UserTitleBookmarkRepository userTitleBookmarkRepository,LinkGenerator linkGenerator, UserRepository userRepository, AuthenticatorExtension authenticatorHelper) : base(linkGenerator, userRepository, authenticatorHelper)
+        public UserTitleBookmarkController(UserTitleBookmarkRepository userTitleBookmarkRepository, LinkGenerator linkGenerator, UserRepository userRepository, AuthenticatorExtension authenticatorHelper) : base(linkGenerator, userRepository, authenticatorHelper)
         {
             _userTitleBookmarkRepository = userTitleBookmarkRepository;
         }
-        
+
         [HttpGet("{titleId}", Name = nameof(GetTitleBookmark))]
         public async Task<IActionResult> GetTitleBookmark([FromHeader] string authorization, string titleId)
         {
@@ -39,12 +41,12 @@ namespace MovieWebApi.Controllers.User_Controllers
             int userId = _authenticatorExtension.ExtractUserID(authorization);
 
             var mappedResult = (await _userTitleBookmarkRepository.GetAll(userId)).Select(x => x.Spawn_DTO_WithPagination<UserBookmarkDTO, UserTitleBookmarkModel>(HttpContext, _linkGenerator, nameof(GetTitleBookmark)));
-            
+
             if (!mappedResult.Any() || mappedResult == null) return NotFound();
 
             return Ok(mappedResult);
         }
-        
+
         [HttpPost]
         public async Task<IActionResult> Post([FromHeader] string authorization, CreateUserTitleBookmark userTitleBookmark)
         {

@@ -5,9 +5,12 @@ using MovieWebApi.Extensions;
 using MovieDataLayer.Data_Service.User_Framework_Repository;
 using MovieWebApi.SearchDTO;
 using MovieWebApi.DTO.IMDB_DTO;
+using Microsoft.AspNetCore.Cors;
 
 namespace MovieWebApi.Controllers.IMDB_Controllers
 {
+   // [DisableCors]
+    [EnableCors("_myAllowSpecificOrigins")]
     [ApiController]
     [Route("api/titles")]
     public class TitleController : GenericController
@@ -27,6 +30,7 @@ namespace MovieWebApi.Controllers.IMDB_Controllers
             return Ok(title);
         }
 
+        // [DisableCors]
         [HttpGet(Name = nameof(GetAllTitle))] // this is not allowed to be named GetAll
         public async Task<IActionResult> GetAllTitle(int page = 0, int pageSize = 10) // We really just want the plot and poster at all times in the title, same with some of the collections
         {

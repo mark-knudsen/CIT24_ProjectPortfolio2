@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using MovieDataLayer;
 using MovieDataLayer.Data_Service.User_Framework_Repository;
@@ -8,6 +9,7 @@ using MovieWebApi.Extensions;
 namespace MovieWebApi.Controllers.User_Controllers
 {
     [Authorize]
+    [EnableCors("_myAllowSpecificOrigins")]
     [ApiController]
     [Route("api/user")]
     public class UserController : GenericController
@@ -44,7 +46,7 @@ namespace MovieWebApi.Controllers.User_Controllers
             if (!success) return BadRequest();
 
             var user = await _userRepository.GetUserByEmail(result.Email);
-            var token = _authenticatorExtension.GenerateJWTToken(user); 
+            var token = _authenticatorExtension.GenerateJWTToken(user);
 
             return Ok(token);
 

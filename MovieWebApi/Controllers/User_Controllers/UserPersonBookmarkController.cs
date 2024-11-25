@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using MovieDataLayer;
 using MovieDataLayer.Data_Service.User_Framework_Repository;
@@ -8,6 +9,7 @@ using MovieWebApi.Extensions;
 namespace MovieWebApi.Controllers.UserStuff
 {
     [Authorize]
+        [EnableCors("_myAllowSpecificOrigins")]
     [ApiController]
     [Route("api/bookmarks/person")]
     public class UserPersonBookmarkController : GenericController
