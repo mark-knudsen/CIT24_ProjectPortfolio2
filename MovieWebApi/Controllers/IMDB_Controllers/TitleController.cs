@@ -21,30 +21,30 @@ namespace MovieWebApi.Controllers.IMDB_Controllers
             _titleRepository = titleRepository;
         }
 
-        [HttpGet("{id}", Name = nameof(GetById))] // this is not allowed to be name Get
-        public async Task<IActionResult> GetById(string id) // id tt9126600
+        [HttpGet("{id}", Name = nameof(GetTitle))] // this is not allowed to be name Get
+        public async Task<IActionResult> GetTitle(string id) // id tt9126600
         {
-            var title = (await _titleRepository.GetTitle(id)).MapTitleToTitleDetailedDTO(HttpContext, _linkGenerator, nameof(GetById)); //Generic use of Method from DTO_Extensions, add URL to DTO
+            var title = (await _titleRepository.GetTitle(id)).MapTitleToTitleDetailedDTO(HttpContext, _linkGenerator, nameof(GetTitle)); //Generic use of Method from DTO_Extensions, add URL to DTO
             if (title == null) return NotFound();
 
             return Ok(title);
         }
 
         // [DisableCors]
-        [HttpGet(Name = nameof(GetAllTitle))] // this is not allowed to be named GetAll
-        public async Task<IActionResult> GetAllTitle(int page = 0, int pageSize = 10) // We really just want the plot and poster at all times in the title, same with some of the collections
+        [HttpGet(Name = nameof(GetAllTitles))] // this is not allowed to be named GetAll
+        public async Task<IActionResult> GetAllTitles(int page = 0, int pageSize = 10) // We really just want the plot and poster at all times in the title, same with some of the collections
         {
             // why not just set the defualt values if they values are invalid, no reason to throw a whole error in a ussers face?
             if (page < 0 || pageSize < 0) return BadRequest("Page and PageSize must be 0 or greater"); //If time, add this check to other endpoints too.. 
 
             //Generic use of Spawn_DTO, including URL mapped to the DTO
-            var titles = (await _titleRepository.GetAllTitles(page, pageSize)).Select(title => title.Spawn_DTO_WithPagination<TitleSimpleDTO, TitleModel>(HttpContext, _linkGenerator, nameof(GetById)));
+            var titles = (await _titleRepository.GetAllTitles(page, pageSize)).Select(title => title.Spawn_DTO_WithPagination<TitleSimpleDTO, TitleModel>(HttpContext, _linkGenerator, nameof(GetTitle)));
             if (titles == null || !titles.Any()) return NotFound();
 
             var numberOfEntities = await _titleRepository.NumberOfElementsInTable();
             //titles = CreateNavigationForTitleList(titles.ToList());
 
-            object result = CreatePaging(nameof(GetAllTitle), page, pageSize, numberOfEntities, titles);
+            object result = CreatePaging(nameof(GetAllTitles), page, pageSize, numberOfEntities, titles);
             if (result == null) return StatusCode(500, "Error while creating paginating in GetAllTitles"); //Custom StatusCode & message
 
             return Ok(result);
@@ -59,23 +59,24 @@ namespace MovieWebApi.Controllers.IMDB_Controllers
             if (titles == null) return NotFound();
 
             var numberOfEntities = await _titleRepository.NumberOfElementsInTable();
-            var titleDTOs = titles.Select(title => title.MapTitleToTitleDetailedDTO(HttpContext, _linkGenerator, nameof(GetById)));
+            var titleDTOs = titles.Select(title => title.MapTitleToTitleDetailedDTO(HttpContext, _linkGenerator, nameof(GetTitle)));
             object result = CreatePaging(nameof(GetTitleByGenre), page, pageSize, numberOfEntities, titleDTOs, id);
             return Ok(result);
         }
 
-        [HttpGet("search")]
-        public async Task<IActionResult> Search([FromHeader] string? authorization, string searchTerm, int page = 0, int pageSize = 10) 
+        [HttpGet("search/{id}", Name = nameof(SearchTitle))]
+        public async Task<IActionResult> SearchTitle([FromHeader] string? authorization, string id, int page = 0, int pageSize = 10) 
         {
             int userId = 0;
             if(authorization != null) userId = _authenticatorExtension.ExtractUserID(authorization);
-
-            var searchResult = (await _titleRepository.TitleSearch(userId, searchTerm)).MapTitleSearchResultModelToTitleSearchResultDTO();
+            var searchResult = (await _titleRepository.TitleSearch(userId, id,page, pageSize)).Select(tSearch => tSearch.Spawn_DTO_WithPagination<TitleSearchResultDTO, TitleSearchResultTempTable>(HttpContext, _linkGenerator, nameof(GetTitle)));
+           
             if (searchResult == null || !searchResult.Any()) return NotFound();
-            searchResult = CreateNavigationForSearchList(searchResult);
-            var numberOfEntities = await _titleRepository.NumberOfElementsInTable();
+           // searchResult = CreateNavigationForSearchList(searchResult);
+            //var numberOfEntities = await _titleRepository.NumberOfElementsInTable();
 
-            object result = CreatePaging(nameof(GetAllTitle), page, pageSize, numberOfEntities, searchResult);
+            //object result = CreatePaging(nameof(SearchTitle), page, pageSize, numberOfEntities, searchResult);
+            object result = CreatePaging(nameof(SearchTitle), page, pageSize, searchResult.Count(), searchResult, id); //Does does work
             return Ok(result);
         }
 
@@ -96,7 +97,7 @@ namespace MovieWebApi.Controllers.IMDB_Controllers
 
             foreach (var title in searchResultDTO)
             {
-                title.Url = GetUrl(nameof(GetById), new { title.Id });
+                title.Url = GetUrl(nameof(GetTitle), new { title.TitleId });
             }
             return searchResultDTO;
         }

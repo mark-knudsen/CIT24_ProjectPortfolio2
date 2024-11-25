@@ -49,9 +49,12 @@ namespace MovieDataLayer.DataService.IMDB_Repository
         }
         public async Task<IEnumerable<TitleSearchResultTempTable>> TitleSearch(int userId, string searchTerm, int page = 0, int pageSize = 10)
         {
-            string query = $"SELECT * FROM string_search('{userId}', '{searchTerm}')";
+            string query = $"SELECT * FROM title_search('{searchTerm}', '{userId}')";
+         
             return await _context.CallQuery<TitleSearchResultTempTable>(query, page, pageSize);
         }
+
+
         public async Task<IEnumerable<SimilarTitleSearchTempTable>> SimilarTitles(string titleID, int page = 0, int pageSize = 10) 
         {
             //Should fix so the distinct is made in the function in the DB, then use the shorter version below!

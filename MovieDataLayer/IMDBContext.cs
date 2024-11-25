@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using MovieDataLayer.Models.IMDB_Models;
+using MovieDataLayer.Models.IMDB_Models.IMDB_Temp_Tables;
 
 namespace MovieDataLayer
 {
@@ -26,6 +27,8 @@ namespace MovieDataLayer
         public DbSet<WriterModel> Writers { get; set; }
         public DbSet<TitleSearchResultTempTable> TitleSearchResult { get; set; }
         public DbSet<SimilarTitleSearchTempTable> SimilarTitleSearch { get; set; }
+        public DbSet<PersonSearchResultTempTable> PersonSearchResult { get; set; }
+
 
         //UserFramework tables:
         public DbSet<UserModel> Users { get; set; }
@@ -63,9 +66,11 @@ namespace MovieDataLayer
             MapWriter(modelBuilder);
             MapTitleGenre(modelBuilder);
 
-            // Speciel mapping for the functions in DB
-            MapUserTitleSearch(modelBuilder);
+            // Special mapping for the functions in DB
             MapTitleSearch(modelBuilder);
+            MapSimilarTitleSearch(modelBuilder);
+
+            MapPersonSearch(modelBuilder);
 
             //Configure the UserFramework model
             MapUser(modelBuilder);
@@ -141,14 +146,14 @@ namespace MovieDataLayer
             modelBuilder.Entity<UserSearchHistoryModel>().Property(p => p.CreatedAt).HasColumnName("created_at").HasColumnType("timestamp without time zone");
 
         }
-        private void MapUserTitleSearch(ModelBuilder modelBuilder)
+        private void MapTitleSearch(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<TitleSearchResultTempTable>().HasNoKey();
             //columns
             modelBuilder.Entity<TitleSearchResultTempTable>().Property(p => p.TitleId).HasColumnName("title_id");
             modelBuilder.Entity<TitleSearchResultTempTable>().Property(p => p.PrimaryTitle).HasColumnName("primary_title");
         }
-        private void MapTitleSearch(ModelBuilder modelBuilder)
+        private void MapSimilarTitleSearch(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<SimilarTitleSearchTempTable>().HasNoKey();
             //columns
@@ -157,6 +162,17 @@ namespace MovieDataLayer
             modelBuilder.Entity<SimilarTitleSearchTempTable>().Property(p => p.Genres).HasColumnName("genres");
             modelBuilder.Entity<SimilarTitleSearchTempTable>().Property(p => p.IsAdult).HasColumnName("isadult");
             modelBuilder.Entity<SimilarTitleSearchTempTable>().Property(p => p.TitleType).HasColumnName("title_type");
+        }
+
+        private void MapPersonSearch(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<PersonSearchResultTempTable>().HasNoKey();
+            modelBuilder.Entity<PersonSearchResultTempTable>().Property(p => p.PersonId).HasColumnName("person_id");
+            modelBuilder.Entity<PersonSearchResultTempTable>().Property(p => p.PrimaryName).HasColumnName("primary_name");
+            modelBuilder.Entity<PersonSearchResultTempTable>().Property(p => p.BirthYear).HasColumnName("birth_year");
+            modelBuilder.Entity<PersonSearchResultTempTable>().Property(p => p.DeathYear).HasColumnName("death_year");
+            modelBuilder.Entity<PersonSearchResultTempTable>().Property(p => p.PersonAverageRating).HasColumnName("person_average_rating");
+
         }
 
         private void MapPerson(ModelBuilder modelBuilder)

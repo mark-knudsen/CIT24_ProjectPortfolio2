@@ -1,7 +1,10 @@
-﻿using Mapster;
+﻿using System;
+using Mapster;
 using MovieDataLayer;
 using MovieDataLayer.Models.IMDB_Models;
+using MovieDataLayer.Models.IMDB_Models.IMDB_Temp_Tables;
 using MovieWebApi.DTO.IMDB_DTO;
+using MovieWebApi.DTO.Search_DTO;
 using MovieWebApi.DTO.User_DTO;
 using MovieWebApi.SearchDTO;
 
@@ -32,6 +35,12 @@ namespace MovieWebApi.Extensions
                     break;
                 case UserBookmarkDTO userBookmarkDTO when entity is UserPersonBookmarkModel userPersonBookmark && typeof(TModel) == typeof(UserBookmarkDTO):
                     model = (TModel)(object)MapUserPersonBookmarkToUserBookmarkDTO(userPersonBookmark, httpContext, linkGenerator, routeName);
+                    break;
+                case TitleSearchResultDTO titleSearchResultDTO when entity is TitleSearchResultTempTable titleSearchResultTempTable && typeof(TModel) == typeof(TitleSearchResultDTO):
+                    model = (TModel)(object)MapTitleSearchResultModelToTitleSearchResultDTO(titleSearchResultTempTable, httpContext, linkGenerator, routeName);
+                    break;
+                case PersonSearchResultDTO personSearchResultDTO when entity is PersonSearchResultTempTable personSearchResultTempTable && typeof(TModel) == typeof(PersonSearchResultDTO):
+                    model = (TModel)(object)MapPersonSearchResultModelToPersonSearchResultDTO(personSearchResultTempTable, httpContext, linkGenerator, routeName);
                     break;
             }
             return model;
@@ -109,16 +118,22 @@ namespace MovieWebApi.Extensions
             return model;
         }
 
-        public static TitleSearchResultDTO MapOneTitleSearchResultModelToTitleSearchResultDTO(this TitleSearchResultTempTable titleSearchResultModel)
+        public static TitleSearchResultDTO MapTitleSearchResultModelToTitleSearchResultDTO(this TitleSearchResultTempTable titleSearchResultModel, HttpContext httpContext, LinkGenerator linkGenerator, string routeName)
         {
             var model = titleSearchResultModel.Adapt<TitleSearchResultDTO>();
+            if (model == null) return null;
+            model.Url = linkGenerator.GetUriByName(httpContext, routeName, new { id = titleSearchResultModel.TitleId });
             return model;
         }
-        public static IEnumerable<TitleSearchResultDTO> MapTitleSearchResultModelToTitleSearchResultDTO(this IEnumerable<TitleSearchResultTempTable> titleSearchResultModel)
+
+
+        public static PersonSearchResultDTO MapPersonSearchResultModelToPersonSearchResultDTO(this PersonSearchResultTempTable personSearchResultModel, HttpContext httpContext, LinkGenerator linkGenerator, string routeName)
         {
-            var models = new List<TitleSearchResultDTO>();
-            foreach (var searchResult in titleSearchResultModel) models.Add(searchResult.MapOneTitleSearchResultModelToTitleSearchResultDTO());  // Really not that elegant looking
-            return models;
+            var model = personSearchResultModel.Adapt<PersonSearchResultDTO>();
+            if (model == null) return null;
+            model.Url = linkGenerator.GetUriByName(httpContext, routeName, new { id = personSearchResultModel.PersonId});
+
+            return model;
         }
     }
 }

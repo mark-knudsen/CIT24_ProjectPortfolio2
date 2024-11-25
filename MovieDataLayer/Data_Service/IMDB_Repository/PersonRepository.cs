@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using MovieDataLayer.Data_Service;
 using MovieDataLayer.Models.IMDB_Models;
+using MovieDataLayer.Models.IMDB_Models.IMDB_Temp_Tables;
 
 namespace MovieDataLayer.DataService.IMDB_Repository
 {
@@ -15,6 +16,12 @@ namespace MovieDataLayer.DataService.IMDB_Repository
             .Include(p => p.MostRelevantTitles).ThenInclude(t => t.Title).FirstOrDefaultAsync();
             return p;
 
+        }
+
+        public async Task<IEnumerable<PersonSearchResultTempTable>> PersonSearch(int userId, string searchTerm, int page = 0, int pageSize = 10)
+        {
+            string query = $"SELECT * FROM person_search('{searchTerm}', '{userId}')";
+            return await _context.CallQuery<PersonSearchResultTempTable>(query, page, pageSize);
         }
     }
 }

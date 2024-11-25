@@ -25,6 +25,7 @@ namespace MovieWebApi.Controllers
         protected string? GetLink(string pathName, int page, int pageSize, IComparable? id = null)
         {
             if (id == null) return GetUrl(pathName, new { page, pageSize });
+           
 
             return GetUrl(pathName, new { page, pageSize, id }); //if id is not null, it will be added to the URL. E.g. if we want to have navigation url to a path with id
         }
