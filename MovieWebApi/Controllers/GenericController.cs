@@ -22,16 +22,27 @@ namespace MovieWebApi.Controllers
             return _linkGenerator.GetUriByName(HttpContext, pathName, entity);
         }
 
-        protected string? GetLink(string pathName, int page, int pageSize, IComparable? id = null)
+        protected string? GetLink(string pathName, int page, int pageSize, string? parameterName = null, IComparable? value = null)
         {
-            if (id == null) return GetUrl(pathName, new { page, pageSize });
-           
+            var queryParams = new Dictionary<string, object> { }; //Key is string, and each key has a value of type object. Eg. key is pageSize and value is the int value, eg. 10
 
-            return GetUrl(pathName, new { page, pageSize, id }); //if id is not null, it will be added to the URL. E.g. if we want to have navigation url to a path with id
+
+            if (!string.IsNullOrEmpty(parameterName) && value != null)
+            {
+                queryParams.Add(parameterName, value); //Append the parameter to url. Otherwise queryParams just has page and pageSize
+            }
+            //The two below could also be added when queryParams gets initialized. However, no AddFirst method avaible for Dictionary, hence we want to append page and pageSize last (as parameterName is to be desired added first??
+            queryParams.Add("page", page);
+            queryParams.Add("pageSize", pageSize);
+
+
+
+            return GetUrl(pathName, queryParams); //if id is not null, it will be added to the URL. E.g. if we want to have navigation url to a path with id
         }
 
-        protected object CreatePaging<T>(string pathName, int pageNumber, int pageSize, int total, IEnumerable<T>? entities, IComparable? id = null) //id is the id of an entity, could fx. be id for a specific genre.
-                                                                                                                                                     //is object, so accepts both string and int. 
+        protected object CreatePaging<T>(string pathName, int pageNumber, int pageSize, int total, IEnumerable<T>? entities, string? parameterName = null, IComparable? value = null) //parameterName is what we want parameter to be named in URL, so e.g. "id" or "searchTerm".
+                                                                                                                                                                                      //Value is the parameter value, so eg. 1, or "batman". 
+
         {
             const int maxPageSize = 10;
 
@@ -39,11 +50,11 @@ namespace MovieWebApi.Controllers
 
             var numberOfPages = (int)Math.Ceiling(total / (double)pageSize); //Calculates the number of pages and adds an extra page if there is a remainder
 
-            var currentPageUrl = GetLink(pathName, pageNumber, pageSize, id); //Gets the current page
+            var currentPageUrl = GetLink(pathName, pageNumber, pageSize, parameterName, value); //Gets the current page
 
-            var nextPageUrl = pageNumber < numberOfPages - 1 ? GetLink(pathName, pageNumber + 1, pageSize, id) : null; //NumberOfPages - 1, because we start on page 1. If 10 pages we can click "next page" 9 times
+            var nextPageUrl = pageNumber < numberOfPages - 1 ? GetLink(pathName, pageNumber + 1, pageSize, parameterName, value) : null; //NumberOfPages - 1, because we start on page 1. If 10 pages we can click "next page" 9 times
 
-            var previousPageUrl = pageNumber > 0 ? GetLink(pathName, pageNumber - 1, pageSize, id) : null;
+            var previousPageUrl = pageNumber > 0 ? GetLink(pathName, pageNumber - 1, pageSize, parameterName, value) : null;
 
             var result = new
             {

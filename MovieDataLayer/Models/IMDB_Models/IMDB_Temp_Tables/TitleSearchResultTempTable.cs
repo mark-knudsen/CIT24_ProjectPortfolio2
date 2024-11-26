@@ -4,5 +4,6 @@
     {
         public string TitleId { get; set; }
         public string PrimaryTitle { get; set; }
+        public int? TotalElements { get; set; }
     }
 }

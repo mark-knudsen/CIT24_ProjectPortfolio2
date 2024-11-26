@@ -47,15 +47,18 @@ namespace MovieDataLayer.DataService.IMDB_Repository
                 .Include(t => t.GenresList).ThenInclude(g => g.Genre)
                 .Include(t => t.PrincipalCastList).ThenInclude(p => p.Person).Where(x => x.GenresList.Any(x => x.GenreId == id)).Skip(page * pageSize).Take(pageSize).ToListAsync();
         }
-        public async Task<IEnumerable<TitleSearchResultTempTable>> TitleSearch(int userId, string searchTerm, int page = 0, int pageSize = 10)
+        public async Task<(IEnumerable<TitleSearchResultTempTable> SearchResult, int totalEntities)> TitleSearch(int userId, string searchTerm, int page = 0, int pageSize = 10)
         {
-            string query = $"SELECT * FROM title_search('{searchTerm}', '{userId}')";
-         
-            return await _context.CallQuery<TitleSearchResultTempTable>(query, page, pageSize);
+            string query = $"SELECT * FROM title_search_test('{searchTerm}', '{userId}')"; //Currently uses a title_search test function, needs to be changed if merging into main..
+
+            var searchResult = await _context.CallQuery<TitleSearchResultTempTable>(query, page, pageSize);
+            int totalElements = searchResult.FirstOrDefault()?.TotalElements ?? 0; //Defaults to 0, if no elements. Maybe not needed, as 404 is returned if no search result matched
+
+            return (searchResult, totalElements);
         }
 
 
-        public async Task<IEnumerable<SimilarTitleSearchTempTable>> SimilarTitles(string titleID, int page = 0, int pageSize = 10) 
+        public async Task<IEnumerable<SimilarTitleSearchTempTable>> SimilarTitles(string titleID, int page = 0, int pageSize = 10)
         {
             //Should fix so the distinct is made in the function in the DB, then use the shorter version below!
             //string query = $"SELECT * FROM find_similar_movies('{titleID}') LIMIT 8;";
@@ -64,8 +67,8 @@ namespace MovieDataLayer.DataService.IMDB_Repository
         }
         public async Task<int> CountByGenre(int genreId)
         {
-            return await _dbSet.AsNoTracking().Where(title => title.GenresList.Any(g => g.GenreId == genreId)).CountAsync(); 
+            return await _dbSet.AsNoTracking().Where(title => title.GenresList.Any(g => g.GenreId == genreId)).CountAsync();
         }
-        
+
     }
 }

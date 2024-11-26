@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Cors;
 
 namespace MovieWebApi.Controllers.IMDB_Controllers
 {
-   // [DisableCors]
+    // [DisableCors]
     [EnableCors("_myAllowSpecificOrigins")]
     [ApiController]
     [Route("api/titles")]
@@ -60,28 +60,29 @@ namespace MovieWebApi.Controllers.IMDB_Controllers
 
             var numberOfEntities = await _titleRepository.NumberOfElementsInTable();
             var titleDTOs = titles.Select(title => title.MapTitleToTitleDetailedDTO(HttpContext, _linkGenerator, nameof(GetTitle)));
-            object result = CreatePaging(nameof(GetTitleByGenre), page, pageSize, numberOfEntities, titleDTOs, id);
+            object result = CreatePaging(nameof(GetTitleByGenre), page, pageSize, numberOfEntities, titleDTOs, "id", id);
             return Ok(result);
         }
 
-        [HttpGet("search/{id}", Name = nameof(SearchTitle))]
-        public async Task<IActionResult> SearchTitle([FromHeader] string? authorization, string id, int page = 0, int pageSize = 10) 
+        [HttpGet("search/", Name = nameof(SearchTitle))]
+        public async Task<IActionResult> SearchTitle([FromHeader] string? authorization, [FromQuery] string searchTerm, int page = 0, int pageSize = 10)
         {
             int userId = 0;
-            if(authorization != null) userId = _authenticatorExtension.ExtractUserID(authorization);
-            var searchResult = (await _titleRepository.TitleSearch(userId, id,page, pageSize)).Select(tSearch => tSearch.Spawn_DTO_WithPagination<TitleSearchResultDTO, TitleSearchResultTempTable>(HttpContext, _linkGenerator, nameof(GetTitle)));
-           
-            if (searchResult == null || !searchResult.Any()) return NotFound();
-           // searchResult = CreateNavigationForSearchList(searchResult);
+            if (authorization != null) userId = _authenticatorExtension.ExtractUserID(authorization);
+            var (searchResult, totalCount) = await _titleRepository.TitleSearch(userId, searchTerm, page, pageSize); //TitleSearch returns tuple, namely the searchresult and the total number of entities from the search result
+            var searchResultMapped = searchResult.Select(tSearch => tSearch.Spawn_DTO_WithPagination<TitleSearchResultDTO, TitleSearchResultTempTable>(HttpContext, _linkGenerator, nameof(GetTitle)));
+
+            if (searchResultMapped == null || !searchResultMapped.Any()) return NotFound();
+            // searchResult = CreateNavigationForSearchList(searchResult);
             //var numberOfEntities = await _titleRepository.NumberOfElementsInTable();
 
             //object result = CreatePaging(nameof(SearchTitle), page, pageSize, numberOfEntities, searchResult);
-            object result = CreatePaging(nameof(SearchTitle), page, pageSize, searchResult.Count(), searchResult, id); //Does does work
+            object result = CreatePaging(nameof(SearchTitle), page, pageSize, totalCount, searchResultMapped, "searchTerm", searchTerm); //5th parameter, is the query parameter name(in string format)
             return Ok(result);
         }
 
         [HttpGet("similar-titles")] // Discuss if it is ok to use this URL!
-        public async Task<IActionResult> SimilarTitles(string titleId) 
+        public async Task<IActionResult> SimilarTitles(string titleId)
         {
             var result = await _titleRepository.SimilarTitles(titleId);
             return Ok(result);

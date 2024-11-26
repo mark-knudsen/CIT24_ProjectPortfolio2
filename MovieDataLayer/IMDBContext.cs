@@ -152,6 +152,7 @@ namespace MovieDataLayer
             //columns
             modelBuilder.Entity<TitleSearchResultTempTable>().Property(p => p.TitleId).HasColumnName("title_id");
             modelBuilder.Entity<TitleSearchResultTempTable>().Property(p => p.PrimaryTitle).HasColumnName("primary_title");
+            modelBuilder.Entity<TitleSearchResultTempTable>().Property(p => p.TotalElements).HasColumnName("number_of_entities");
         }
         private void MapSimilarTitleSearch(ModelBuilder modelBuilder)
         {
