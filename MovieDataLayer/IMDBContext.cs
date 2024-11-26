@@ -173,6 +173,7 @@ namespace MovieDataLayer
             modelBuilder.Entity<PersonSearchResultTempTable>().Property(p => p.BirthYear).HasColumnName("birth_year");
             modelBuilder.Entity<PersonSearchResultTempTable>().Property(p => p.DeathYear).HasColumnName("death_year");
             modelBuilder.Entity<PersonSearchResultTempTable>().Property(p => p.PersonAverageRating).HasColumnName("person_average_rating");
+            modelBuilder.Entity<PersonSearchResultTempTable>().Property(p => p.TotalElements).HasColumnName("number_of_entities");
 
         }
 

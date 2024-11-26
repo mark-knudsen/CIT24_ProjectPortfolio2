@@ -18,10 +18,15 @@ namespace MovieDataLayer.DataService.IMDB_Repository
 
         }
 
-        public async Task<IEnumerable<PersonSearchResultTempTable>> PersonSearch(int userId, string searchTerm, int page = 0, int pageSize = 10)
+        public async Task<(IEnumerable<PersonSearchResultTempTable> SearchResult, int totalEntities)> PersonSearch(int userId, string searchTerm, int page = 0, int pageSize = 10)
         {
             string query = $"SELECT * FROM person_search('{searchTerm}', '{userId}')";
-            return await _context.CallQuery<PersonSearchResultTempTable>(query, page, pageSize);
+            var searchResult = await _context.CallQuery<PersonSearchResultTempTable>(query, page, pageSize);
+            int totalElements = searchResult.FirstOrDefault()?.TotalElements ?? 0; //Defaults to 0, if no elements. Maybe not needed, as 404 is returned if no search result matched
+
+            return (searchResult, totalElements);
         }
+
+
     }
 }

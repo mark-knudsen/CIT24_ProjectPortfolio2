@@ -7,6 +7,7 @@ using MovieWebApi.Extensions;
 using Microsoft.AspNetCore.Cors;
 using MovieDataLayer.Models.IMDB_Models.IMDB_Temp_Tables;
 using MovieWebApi.DTO.Search_DTO;
+using MovieWebApi.SearchDTO;
 
 namespace MovieWebApi.Controllers.IMDB_Controllers
 {
@@ -40,22 +41,21 @@ namespace MovieWebApi.Controllers.IMDB_Controllers
             //Properties MostRelevantTitles and PrimaryProfessions, should be considered removed from DTO, as they are not needed in the list?
         }
 
-        [HttpGet("search")]
-        public async Task<IActionResult> SearchPerson([FromHeader] string? authorization, string searchTerm, int page = 0, int pageSize = 10)
+        [HttpGet("search", Name = nameof(SearchPerson))]
+        public async Task<IActionResult> SearchPerson([FromHeader] string? authorization, [FromQuery] string searchTerm, int page = 0, int pageSize = 10)
         {
             int userId = 0;
             if (authorization != null) userId = _authenticatorExtension.ExtractUserID(authorization);
 
-            var searchResult = (await _personRepository.PersonSearch(userId, searchTerm)).Select(pSearch => pSearch.Spawn_DTO_WithPagination<PersonSearchResultDTO, PersonSearchResultTempTable>(HttpContext, _linkGenerator, nameof(GetPerson)));
-            if (searchResult == null || !searchResult.Any()) return NotFound();
+            var (searchResult, totalCount) = await _personRepository.PersonSearch(userId, searchTerm, page, pageSize);
+            var searchResultMapped = searchResult.Select(pSearch => pSearch.Spawn_DTO_WithPagination<PersonSearchResultDTO, PersonSearchResultTempTable>(HttpContext, _linkGenerator, nameof(GetPerson)));
+
+            if (searchResultMapped == null || !searchResultMapped.Any()) return NotFound();
             //searchResult = CreateNavigationForSearchList(searchResult);
-            var numberOfEntities = await _personRepository.NumberOfElementsInTable();
-
-            object result = CreatePaging(nameof(GetAllPersons), page, pageSize, numberOfEntities, searchResult);
+            object result = CreatePaging(nameof(SearchPerson), page, pageSize, totalCount, searchResultMapped, "searchTerm", searchTerm);
             return Ok(result);
-
-
         }
+
 
         // should still use the extension spawn dto instead
         private IEnumerable<PersonSearchResultDTO>? CreateNavigationForSearchList(IEnumerable<PersonSearchResultDTO>? searchResultDTO)

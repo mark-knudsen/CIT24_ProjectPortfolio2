@@ -13,5 +13,7 @@ namespace MovieDataLayer.Models.IMDB_Models.IMDB_Temp_Tables
         public int? BirthYear { get; set; }
         public int? DeathYear { get; set; }
         public int? PersonAverageRating { get; set; }
+        public int? TotalElements { get; set; }
+
     }
 }
