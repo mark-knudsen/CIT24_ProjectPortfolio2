@@ -32,7 +32,7 @@ namespace MovieWebApi.Controllers
                 queryParams.Add(parameterName, value); //Append the parameter to url. Otherwise queryParams just has page and pageSize
             }
             //The two below could also be added when queryParams gets initialized. However, no AddFirst method avaible for Dictionary, hence we want to append page and pageSize last (as parameterName is to be desired added first??
-            queryParams.Add("page", page);
+            queryParams.Add("page", page); //Order seems to be preserved in this case, however not ensured as nature of Dictionary. However, benefits of Dictionary seems to uphold, as it does ensure unique entries. 
             queryParams.Add("pageSize", pageSize);
 
 
