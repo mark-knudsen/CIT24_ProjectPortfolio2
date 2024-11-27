@@ -22,7 +22,7 @@ namespace MovieDataLayer.DataService.IMDB_Repository
         {
             string query = $"SELECT * FROM person_search('{searchTerm}', '{userId}')";
             var searchResult = await _context.CallQuery<PersonSearchResultTempTable>(query, page, pageSize);
-            int totalElements = searchResult.FirstOrDefault()?.TotalElements ?? 0; //Defaults to 0, if no elements. Maybe not needed, as 404 is returned if no search result matched
+            int totalElements = searchResult.FirstOrDefault().TotalElements;
 
             return (searchResult, totalElements);
         }

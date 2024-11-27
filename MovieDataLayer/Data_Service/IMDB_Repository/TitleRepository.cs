@@ -52,7 +52,7 @@ namespace MovieDataLayer.DataService.IMDB_Repository
             string query = $"SELECT * FROM title_search('{searchTerm}', '{userId}')"; //Currently uses a title_search test function, needs to be changed if merging into main..
 
             var searchResult = await _context.CallQuery<TitleSearchResultTempTable>(query, page, pageSize);
-            int totalElements = searchResult.FirstOrDefault()?.TotalElements ?? 0; //Defaults to 0, if no elements. Maybe not needed, as 404 is returned if no search result matched
+            int totalElements = searchResult.FirstOrDefault().TotalElements;
             return (searchResult, totalElements);
         }
 
