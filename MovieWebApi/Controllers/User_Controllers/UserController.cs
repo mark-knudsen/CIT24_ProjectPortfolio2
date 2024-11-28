@@ -16,6 +16,7 @@ namespace MovieWebApi.Controllers.User_Controllers
     {
         public record PasswordModel(string password);
         public record UpdateUserModel(string email, string firstName, string password);
+        public record UserLoginResponseDTO(string token, string firstName);
         public UserController(UserRepository userRepository, LinkGenerator linkGenerator, AuthenticatorExtension authenticatorExtension) : base(linkGenerator, userRepository, authenticatorExtension)
         {
         }
@@ -108,7 +109,10 @@ namespace MovieWebApi.Controllers.User_Controllers
 
             if (user == null) return Unauthorized();
             var token = _authenticatorExtension.GenerateJWTToken(user);
-            return Ok(token);
+
+            var response = new UserLoginResponseDTO(token, user.FirstName);
+
+            return Ok(response);
         }
     }
 }
