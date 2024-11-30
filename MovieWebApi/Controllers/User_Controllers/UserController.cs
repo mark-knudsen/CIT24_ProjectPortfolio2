@@ -49,7 +49,10 @@ namespace MovieWebApi.Controllers.User_Controllers
             var user = await _userRepository.GetUserByEmail(result.Email);
             var token = _authenticatorExtension.GenerateJWTToken(user);
 
-            return Ok(token);
+            var response = new UserLoginResponseDTO(token, user.FirstName);
+
+
+            return Ok(response);
 
             //return Created("", result);
         }
