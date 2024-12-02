@@ -21,10 +21,10 @@ namespace MovieWebApi.Extensions
             switch (model) //Casting to TModel object, idk maybe we can improve?
             {
                 case TitleDetailedDTO titleDetailedDTO when entity is TitleModel title && typeof(TModel) == typeof(TitleDetailedDTO):
-                    model = (TModel)(object)MapTitleToTitleDetailedDTO(title, httpContext, linkGenerator, routeName); 
+                    model = (TModel)(object)MapTitleToTitleDetailedDTO(title, httpContext, linkGenerator, routeName);
                     break;
                 case TitleSimpleDTO titleSimpleDTO when entity is TitleModel title && typeof(TModel) == typeof(TitleSimpleDTO):
-                    model = (TModel)(object)MapTitleToTitleSimpleDTO(title, httpContext, linkGenerator, routeName); 
+                    model = (TModel)(object)MapTitleToTitleSimpleDTO(title, httpContext, linkGenerator, routeName);
                     break;
 
                 case PersonDetailedDTO personDetailedDTO when entity is PersonModel person && typeof(TModel) == typeof(PersonDetailedDTO):
@@ -42,9 +42,14 @@ namespace MovieWebApi.Extensions
                 case PersonSearchResultDTO personSearchResultDTO when entity is PersonSearchResultTempTable personSearchResultTempTable && typeof(TModel) == typeof(PersonSearchResultDTO):
                     model = (TModel)(object)MapPersonSearchResultModelToPersonSearchResultDTO(personSearchResultTempTable, httpContext, linkGenerator, routeName);
                     break;
+                case UserRatingDTO userRatingDTO when entity is UserRatingModel userRatingModel && typeof(TModel) == typeof(UserRatingDTO):
+                    model = (TModel)(object)MapUserRatingModelToUserRatingDTO(userRatingModel, httpContext, linkGenerator, routeName);
+                    break;
             }
             return model;
         }
+
+
 
         public static TModel? Spawn_DTO<TModel, TEntity>(this TEntity entity) where TEntity : class where TModel : class
         {
@@ -55,8 +60,16 @@ namespace MovieWebApi.Extensions
 
         // IMPORTANT, sometimes some values are null, but that will throw an axception when trying to set it here
         // add nullable in DTO and in here
-       
-        public static TitleDetailedDTO MapTitleToTitleDetailedDTO(this TitleModel title, HttpContext httpContext, LinkGenerator linkGenerator, string routeName) 
+
+        public static UserRatingDTO MapUserRatingModelToUserRatingDTO(this UserRatingModel userRating, HttpContext httpContext, LinkGenerator linkGenerator, string routeName)
+        {
+            var model = userRating.Adapt<UserRatingDTO>();
+            model.PrimaryTitle = userRating.Title.PrimaryTitle;
+            model.Url = linkGenerator.GetUriByName(httpContext, routeName, new { titleId = userRating.TitleId });
+            return model;
+        }
+
+        public static TitleDetailedDTO MapTitleToTitleDetailedDTO(this TitleModel title, HttpContext httpContext, LinkGenerator linkGenerator, string routeName)
         {
             var model = title.Adapt<TitleDetailedDTO>();
             model.GenresList = title.GenresList?.Select(x => x.Genre.Name).ToList();
@@ -71,7 +84,7 @@ namespace MovieWebApi.Extensions
             return model;
         }
 
-        public static TitleSimpleDTO MapTitleToTitleSimpleDTO(this TitleModel title, HttpContext httpContext, LinkGenerator linkGenerator, string routeName) 
+        public static TitleSimpleDTO MapTitleToTitleSimpleDTO(this TitleModel title, HttpContext httpContext, LinkGenerator linkGenerator, string routeName)
         {
             var model = title.Adapt<TitleSimpleDTO>();
             model.GenresList = title.GenresList?.Select(x => x.Genre.Name).ToList();
@@ -131,7 +144,7 @@ namespace MovieWebApi.Extensions
         {
             var model = personSearchResultModel.Adapt<PersonSearchResultDTO>();
             if (model == null) return null;
-            model.Url = linkGenerator.GetUriByName(httpContext, routeName, new { id = personSearchResultModel.PersonId});
+            model.Url = linkGenerator.GetUriByName(httpContext, routeName, new { id = personSearchResultModel.PersonId });
 
             return model;
         }
