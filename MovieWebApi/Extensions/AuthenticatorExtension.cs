@@ -3,6 +3,7 @@ using MovieDataLayer;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
+using System.Text.RegularExpressions;
 
 namespace MovieWebApi.Extensions
 {
@@ -50,6 +51,36 @@ namespace MovieWebApi.Extensions
 
             int userId = Int32.Parse(key.Claims.First(x => x.Type == ClaimTypes.NameIdentifier).Value);        
             return userId;
+        }
+
+        public bool ValidUser(UserModel userModel)
+        {
+            if (userModel == null) return false;
+            if(userModel.FirstName.Length < 8) return false;
+
+            if (!ValidPassword(userModel.Password) || !ValidEmail(userModel.Email))
+            {
+                return false;
+            }
+            return true;
+        }
+
+        public bool ValidPassword(string password)
+        {
+            if (password == null) return false;
+
+            // // match at least one digit, special character and upper cased character, minimum length of 8 characters
+            Regex r = new Regex(@"^(?=.*\d)(?=.*[A-Z])(?=.*[!@#$%^&*()_+\-=\[\]{};':""\\|,.<>\/?]).{8,}$");  // did not make this
+
+            return r.Match(password).Success;
+        }
+        public bool ValidEmail(string email)
+        {
+            if (email == null) return false;
+
+            Regex r = new Regex(@"^.+@.*\.[a-z]{2,}$"); // did make this, don't know if it is fully encapsulating enough
+
+            return r.Match(email).Success;
         }
 
     }

@@ -42,6 +42,9 @@ namespace MovieWebApi.Controllers.User_Controllers
         public async Task<IActionResult> Post(UserRegistrationDTO userRegistrationDTO) // password 8 char speciale
         {
             var result = Extension.Spawn_DTO<UserModel, UserRegistrationDTO>(userRegistrationDTO);
+
+            if(_authenticatorExtension.ValidUser(result) is false) return BadRequest();
+
             bool success = await _userRepository.Add(result);
 
             if (!success) return BadRequest();
@@ -69,6 +72,8 @@ namespace MovieWebApi.Controllers.User_Controllers
                 user.Password = updateUserModel.password != "" ? updateUserModel.password : user.Password; // would argue to make a request solely for changeing password
             }
             else return NotFound();
+            if (_authenticatorExtension.ValidUser(user) is false) return BadRequest();
+
             bool success = await _userRepository.Update(user);
             if (!success) return BadRequest();
 
@@ -80,6 +85,8 @@ namespace MovieWebApi.Controllers.User_Controllers
         [HttpPut("password-reset")] // make new password
         public async Task<IActionResult> Put([FromHeader] string authorization, PasswordModel PasswordModel)
         {
+            if (_authenticatorExtension.ValidPassword(PasswordModel.password) is false) return BadRequest();
+
             int userId = _authenticatorExtension.ExtractUserID(authorization);
             UserModel user = await _userRepository.Get(userId);
 
