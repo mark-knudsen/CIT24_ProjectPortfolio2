@@ -1,15 +1,18 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.RazorPages;
 using MovieDataLayer;
 using MovieDataLayer.Data_Service.User_Framework_Repository;
+using MovieDataLayer.Models.IMDB_Models;
 using MovieWebApi.DTO.User_DTO;
 using MovieWebApi.Extensions;
+using static MovieWebApi.Controllers.IMDB_Controllers.GenreController;
 
 namespace MovieWebApi.Controllers.User_Controllers
 {
     [Authorize]
-        [EnableCors("_myAllowSpecificOrigins")]
+    [EnableCors("_myAllowSpecificOrigins")]
     [ApiController]
     [Route("api/users/rating")]
     public class UserRatingController : GenericController
@@ -24,7 +27,7 @@ namespace MovieWebApi.Controllers.User_Controllers
             _userRatingRepository = userRatingRepository;
         }
 
-        [HttpGet("{titleId}")]
+        [HttpGet("{titleId}", Name = nameof(Get))]
         public async Task<IActionResult> Get([FromHeader] string authorization, string titleId)
         {
             int userId = _authenticatorExtension.ExtractUserID(authorization);
@@ -37,7 +40,8 @@ namespace MovieWebApi.Controllers.User_Controllers
         public async Task<IActionResult> GetAll([FromHeader] string authorization)
         {
             int userId = _authenticatorExtension.ExtractUserID(authorization);
-            var result = (await _userRatingRepository.GetAllUserRatingByUserId(userId)).Select(Extension.Spawn_DTO<UserRatingDTO, UserRatingModel>);
+            var result = (await _userRatingRepository.GetAllUserRatingByUserId(userId)).Select(rating => rating.Spawn_DTO_WithPagination<UserRatingDTO, UserRatingModel>(HttpContext, _linkGenerator, nameof(Get)));
+            //var result = (await _dataService.GetAllWithPaging(page, pageSize)).Select(genre => genre.Spawn_DTO_WithPagination<ReadGenreModel, GenreModel>(HttpContext, _linkGenerator, nameof(GetAll)));
             if (result == null) return NotFound();
             return Ok(result);
         }

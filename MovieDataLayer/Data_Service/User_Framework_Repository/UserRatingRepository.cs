@@ -8,7 +8,7 @@ namespace MovieDataLayer.Data_Service.User_Framework_Repository
 
         public async Task<IList<UserRatingModel>> GetAllUserRatingByUserId(int id)
         {
-            return await _dbSet.AsNoTracking().Where(x => x.UserId == id).ToListAsync();
+            return await _dbSet.AsNoTracking().Where(x => x.UserId == id).Include(t => t.Title).ToListAsync();
         }
 
         public async Task<UserRatingModel> GetUserRating(int id, string titleId)
@@ -16,7 +16,7 @@ namespace MovieDataLayer.Data_Service.User_Framework_Repository
             return await _dbSet.AsNoTracking().Where(x => x.UserId == id && x.TitleId.Equals(titleId)).FirstOrDefaultAsync();
         }
 
-        public async Task<bool> DeleteUserRating(int id, string titleId) 
+        public async Task<bool> DeleteUserRating(int id, string titleId)
         {
             try
             {

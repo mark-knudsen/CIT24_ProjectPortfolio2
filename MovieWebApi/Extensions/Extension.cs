@@ -42,9 +42,14 @@ namespace MovieWebApi.Extensions
                 case PersonSearchResultDTO personSearchResultDTO when entity is PersonSearchResultTempTable personSearchResultTempTable && typeof(TModel) == typeof(PersonSearchResultDTO):
                     model = (TModel)(object)MapPersonSearchResultModelToPersonSearchResultDTO(personSearchResultTempTable, httpContext, linkGenerator, routeName);
                     break;
+                case UserRatingDTO userRatingDTO when entity is UserRatingModel userRatingModel && typeof(TModel) == typeof(UserRatingDTO):
+                    model = (TModel)(object)MapUserRatingModelToUserRatingDTO(userRatingModel, httpContext, linkGenerator, routeName);
+                    break;
             }
             return model;
         }
+
+
 
         public static TModel? Spawn_DTO<TModel, TEntity>(this TEntity entity) where TEntity : class where TModel : class
         {
@@ -55,6 +60,14 @@ namespace MovieWebApi.Extensions
 
         // IMPORTANT, sometimes some values are null, but that will throw an axception when trying to set it here
         // add nullable in DTO and in here
+
+        public static UserRatingDTO MapUserRatingModelToUserRatingDTO(this UserRatingModel userRating, HttpContext httpContext, LinkGenerator linkGenerator, string routeName)
+        {
+            var model = userRating.Adapt<UserRatingDTO>();
+            model.PrimaryTitle = userRating.Title.PrimaryTitle;
+            model.Url = linkGenerator.GetUriByName(httpContext, routeName, new { titleId = userRating.TitleId });
+            return model;
+        }
 
         public static TitleDetailedDTO MapTitleToTitleDetailedDTO(this TitleModel title, HttpContext httpContext, LinkGenerator linkGenerator, string routeName)
         {
