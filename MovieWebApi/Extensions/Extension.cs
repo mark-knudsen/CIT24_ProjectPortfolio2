@@ -21,10 +21,10 @@ namespace MovieWebApi.Extensions
             switch (model) //Casting to TModel object, idk maybe we can improve?
             {
                 case TitleDetailedDTO titleDetailedDTO when entity is TitleModel title && typeof(TModel) == typeof(TitleDetailedDTO):
-                    model = (TModel)(object)MapTitleToTitleDetailedDTO(title, httpContext, linkGenerator, routeName); 
+                    model = (TModel)(object)MapTitleToTitleDetailedDTO(title, httpContext, linkGenerator, routeName);
                     break;
                 case TitleSimpleDTO titleSimpleDTO when entity is TitleModel title && typeof(TModel) == typeof(TitleSimpleDTO):
-                    model = (TModel)(object)MapTitleToTitleSimpleDTO(title, httpContext, linkGenerator, routeName); 
+                    model = (TModel)(object)MapTitleToTitleSimpleDTO(title, httpContext, linkGenerator, routeName);
                     break;
 
                 case PersonDetailedDTO personDetailedDTO when entity is PersonModel person && typeof(TModel) == typeof(PersonDetailedDTO):
@@ -55,12 +55,13 @@ namespace MovieWebApi.Extensions
 
         // IMPORTANT, sometimes some values are null, but that will throw an axception when trying to set it here
         // add nullable in DTO and in here
-       
-        public static TitleDetailedDTO MapTitleToTitleDetailedDTO(this TitleModel title, HttpContext httpContext, LinkGenerator linkGenerator, string routeName) 
+
+        public static TitleDetailedDTO MapTitleToTitleDetailedDTO(this TitleModel title, HttpContext httpContext, LinkGenerator linkGenerator, string routeName)
         {
-            var model = title.Adapt<TitleDetailedDTO>();
-            model.GenresList = title.GenresList?.Select(x => x.Genre.Name).ToList();
-            model.PosterUrl = title.Poster?.PosterUrl;
+            var model = title?.Adapt<TitleDetailedDTO>();
+            if (model == null) return null;
+            model.GenresList = title?.GenresList?.Select(x => x.Genre.Name).ToList();
+            model.PosterUrl = title?.Poster?.PosterUrl;
             model.WritersList = title.WritersList?.Select(x => x.Person.Name).ToList();
             model.Plot = title.Plot?.PlotOfTitle;
             model.VoteCount = title.Rating?.VoteCount;
@@ -71,9 +72,10 @@ namespace MovieWebApi.Extensions
             return model;
         }
 
-        public static TitleSimpleDTO MapTitleToTitleSimpleDTO(this TitleModel title, HttpContext httpContext, LinkGenerator linkGenerator, string routeName) 
+        public static TitleSimpleDTO MapTitleToTitleSimpleDTO(this TitleModel title, HttpContext httpContext, LinkGenerator linkGenerator, string routeName)
         {
             var model = title.Adapt<TitleSimpleDTO>();
+            if (model == null) return null;
             model.GenresList = title.GenresList?.Select(x => x.Genre.Name).ToList();
             model.PosterUrl = title.Poster?.PosterUrl;
             model.AverageRating = title.Rating?.AverageRating;
@@ -131,7 +133,7 @@ namespace MovieWebApi.Extensions
         {
             var model = personSearchResultModel.Adapt<PersonSearchResultDTO>();
             if (model == null) return null;
-            model.Url = linkGenerator.GetUriByName(httpContext, routeName, new { id = personSearchResultModel.PersonId});
+            model.Url = linkGenerator.GetUriByName(httpContext, routeName, new { id = personSearchResultModel.PersonId });
 
             return model;
         }
