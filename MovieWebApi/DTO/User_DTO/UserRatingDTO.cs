@@ -2,7 +2,7 @@
 
 public class UserRatingDTO
 {
-    public string Url { get; set; }
+    public string? Url { get; set; }
     public int UserId { get; set; }
     public string TitleId { get; set; }
     public string PrimaryTitle { get; set; }
