@@ -65,6 +65,7 @@ namespace MovieWebApi.Extensions
         {
             var model = userRating.Adapt<UserRatingDTO>();
             model.PrimaryTitle = userRating.Title.PrimaryTitle;
+            model.PosterUrl = userRating.Title.Poster.PosterUrl;
             model.Url = linkGenerator.GetUriByName(httpContext, routeName, new { titleId = userRating.TitleId });
             return model;
         }

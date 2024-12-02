@@ -133,6 +133,7 @@ namespace MovieDataLayer
             modelBuilder.Entity<UserRatingModel>().Property(p => p.CreatedAt).HasColumnName("created_at").HasColumnType("timestamp without time zone");
             modelBuilder.Entity<UserRatingModel>().Property(p => p.UpdatedAt).HasColumnName("updated_at").HasColumnType("timestamp without time zone");
 
+
         }
 
         private void MapUserSearchHistory(ModelBuilder modelBuilder)
@@ -351,6 +352,7 @@ namespace MovieDataLayer
             //columns
             modelBuilder.Entity<PosterModel>().Property(x => x.TitleId).HasColumnName("title_id");
             modelBuilder.Entity<PosterModel>().Property(x => x.PosterUrl).HasColumnName("poster");
+
 
         }
         private void MapRating(ModelBuilder modelBuilder)

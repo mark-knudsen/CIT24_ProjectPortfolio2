@@ -8,7 +8,7 @@ namespace MovieDataLayer.Data_Service.User_Framework_Repository
 
         public async Task<IList<UserRatingModel>> GetAllUserRatingByUserId(int id)
         {
-            return await _dbSet.AsNoTracking().Where(x => x.UserId == id).Include(t => t.Title).ToListAsync();
+            return await _dbSet.AsNoTracking().Where(x => x.UserId == id).Include(t => t.Title).ThenInclude(p => p.Poster).ToListAsync();
         }
 
         public async Task<UserRatingModel> GetUserRating(int id, string titleId)
