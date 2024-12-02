@@ -42,7 +42,7 @@ namespace MovieWebApi.Controllers.IMDB_Controllers
             var numberOfEntities = await _titleRepository.NumberOfElementsInTable();
             //titles = CreateNavigationForTitleList(titles.ToList());
 
-            object result = CreatePaging(nameof(GetAllTitles), page, pageSize, numberOfEntities, titles);
+            object result = CreatePaging(nameof(GetAllTitle), page, pageSize, numberOfEntities, titles);
             if (result == null) return StatusCode(500, "Error while creating paginating in GetAllTitles"); //Custom StatusCode & message
 
             return Ok(result);
