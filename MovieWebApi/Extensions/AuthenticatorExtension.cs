@@ -56,6 +56,7 @@ namespace MovieWebApi.Extensions
         public bool ValidUser(UserModel userModel)
         {
             if (userModel == null) return false;
+            if(userModel.FirstName.Length < 8) return false;
 
             if (!ValidPassword(userModel.Password) || !ValidEmail(userModel.Email))
             {
