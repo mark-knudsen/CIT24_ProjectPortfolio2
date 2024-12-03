@@ -29,8 +29,8 @@ namespace MovieWebApi.Controllers.IMDB_Controllers
             return Ok(title);
         }
 
-        [HttpGet(Name = nameof(GetAllTitle))] // this is not allowed to be named GetAll
-        public async Task<IActionResult> GetAllTitle(int page = 0, int pageSize = 10) // We really just want the plot and poster at all times in the title, same with some of the collections
+        [HttpGet(Name = nameof(GetAllTitles))] // this is not allowed to be named GetAll
+        public async Task<IActionResult> GetAllTitles(int page = 0, int pageSize = 10) // We really just want the plot and poster at all times in the title, same with some of the collections
         {
             // why not just set the defualt values if they values are invalid, no reason to throw a whole error in a ussers face?
             if (page < 0 || pageSize < 0) return BadRequest("Page and PageSize must be 0 or greater"); //If time, add this check to other endpoints too.. 

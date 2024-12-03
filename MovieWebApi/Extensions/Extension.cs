@@ -107,14 +107,15 @@ namespace MovieWebApi.Extensions
             return model;
         }
 
-        public static PersonDetailedDTO MapUserTitleBookmarkToUserTitleBookmarkDTO(this PersonModel person)
-        {
-            var model = person.Adapt<PersonDetailedDTO>();
-            if (model == null) return null;
-            model.MostRelevantTitles = person?.MostRelevantTitles?.Select(x => x.Title.PrimaryTitle).ToList();
-            model.PrimaryProfessions = person?.PrimaryProfessions?.Select(x => x.Profession.Name).ToList();
-            return model;
-        }
+        // this function was never used, also it's name doesn't really corelate with what it does, as the param and return type
+        //public static PersonDetailedDTO MapUserTitleBookmarkToUserTitleBookmarkDTO(this PersonModel person)
+        //{
+        //    var model = person.Adapt<PersonDetailedDTO>();
+        //    if (model == null) return null;
+        //    model.MostRelevantTitles = person?.MostRelevantTitles?.Select(x => x.Title.PrimaryTitle).ToList();
+        //    model.PrimaryProfessions = person?.PrimaryProfessions?.Select(x => x.Profession.Name).ToList();
+        //    return model;
+        //}
 
         public static UserBookmarkDTO MapUserTitleBookmarkToUserBookmarkDTO(this UserTitleBookmarkModel userTitleBookmark, HttpContext httpContext, LinkGenerator linkGenerator, string routeName)
         {
@@ -142,13 +143,11 @@ namespace MovieWebApi.Extensions
             return model;
         }
 
-
         public static PersonSearchResultDTO MapPersonSearchResultModelToPersonSearchResultDTO(this PersonSearchResultTempTable personSearchResultModel, HttpContext httpContext, LinkGenerator linkGenerator, string routeName)
         {
             var model = personSearchResultModel.Adapt<PersonSearchResultDTO>();
             if (model == null) return null;
             model.Url = linkGenerator.GetUriByName(httpContext, routeName, new { id = personSearchResultModel.PersonId });
-
             return model;
         }
     }
