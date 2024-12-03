@@ -42,14 +42,9 @@ namespace MovieWebApi.Extensions
                 case PersonSearchResultDTO personSearchResultDTO when entity is PersonSearchResultTempTable personSearchResultTempTable && typeof(TModel) == typeof(PersonSearchResultDTO):
                     model = (TModel)(object)MapPersonSearchResultModelToPersonSearchResultDTO(personSearchResultTempTable, httpContext, linkGenerator, routeName);
                     break;
-                case UserRatingDTO userRatingDTO when entity is UserRatingModel userRatingModel && typeof(TModel) == typeof(UserRatingDTO):
-                    model = (TModel)(object)MapUserRatingModelToUserRatingDTO(userRatingModel, httpContext, linkGenerator, routeName);
-                    break;
             }
             return model;
         }
-
-
 
         public static TModel? Spawn_DTO<TModel, TEntity>(this TEntity entity) where TEntity : class where TModel : class
         {
@@ -60,15 +55,6 @@ namespace MovieWebApi.Extensions
 
         // IMPORTANT, sometimes some values are null, but that will throw an axception when trying to set it here
         // add nullable in DTO and in here
-
-        public static UserRatingDTO MapUserRatingModelToUserRatingDTO(this UserRatingModel userRating, HttpContext httpContext, LinkGenerator linkGenerator, string routeName)
-        {
-            var model = userRating.Adapt<UserRatingDTO>();
-            model.PrimaryTitle = userRating.Title.PrimaryTitle;
-            model.PosterUrl = userRating.Title.Poster.PosterUrl;
-            model.Url = linkGenerator.GetUriByName(httpContext, routeName, new { titleId = userRating.TitleId });
-            return model;
-        }
 
         public static TitleDetailedDTO MapTitleToTitleDetailedDTO(this TitleModel title, HttpContext httpContext, LinkGenerator linkGenerator, string routeName)
         {
@@ -106,16 +92,6 @@ namespace MovieWebApi.Extensions
             model.Url = linkGenerator.GetUriByName(httpContext, routeName, new { id = person.Id });
             return model;
         }
-
-        // this function was never used, also it's name doesn't really corelate with what it does, as the param and return type
-        //public static PersonDetailedDTO MapUserTitleBookmarkToUserTitleBookmarkDTO(this PersonModel person)
-        //{
-        //    var model = person.Adapt<PersonDetailedDTO>();
-        //    if (model == null) return null;
-        //    model.MostRelevantTitles = person?.MostRelevantTitles?.Select(x => x.Title.PrimaryTitle).ToList();
-        //    model.PrimaryProfessions = person?.PrimaryProfessions?.Select(x => x.Profession.Name).ToList();
-        //    return model;
-        //}
 
         public static UserBookmarkDTO MapUserTitleBookmarkToUserBookmarkDTO(this UserTitleBookmarkModel userTitleBookmark, HttpContext httpContext, LinkGenerator linkGenerator, string routeName)
         {
