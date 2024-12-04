@@ -68,9 +68,9 @@ namespace MovieWebApi.Controllers.IMDB_Controllers
             int userId = 0;
             if (authorization != null) userId = _authenticatorExtension.ExtractUserID(authorization);
             var (searchResult, totalCount) = await _titleRepository.TitleSearch(userId, searchTerm, page, pageSize); //TitleSearch returns tuple, namely the searchresult and the total number of entities from the search result
-            var searchResultMapped = searchResult.Select(tSearch => tSearch.Spawn_DTO_WithPagination<TitleSearchResultDTO, TitleSearchResultTempTable>(HttpContext, _linkGenerator, nameof(GetTitle)));
+            if(!searchResult.Any()) return NotFound();
 
-            if (searchResultMapped == null || !searchResultMapped.Any()) return NotFound();
+            var searchResultMapped = searchResult.Select(tSearch => tSearch.Spawn_DTO_WithPagination<TitleSearchResultDTO, TitleSearchResultTempTable>(HttpContext, _linkGenerator, nameof(GetTitle)));
             // searchResult = CreateNavigationForSearchList(searchResult);
             //var numberOfEntities = await _titleRepository.NumberOfElementsInTable();
 
