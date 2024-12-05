@@ -65,8 +65,8 @@ namespace MovieWebApi.Extensions
             model.WritersList = title.WritersList?.Select(x => x.Person.Name).ToList();
             model.Plot = title.Plot?.PlotOfTitle;
             model.VoteCount = title.Rating?.VoteCount;
-            model.PrincipalCastList = title.PrincipalCastList?.Select(x => x.Person.Name).ToList();
-            model.DirectorsList = title.DirectorsList?.Select(x => x.Person.Name).ToList();
+            model.PrincipalCastList = title.PrincipalCastList?.Select(x => x.Person.Name + "/id:" + x.Person.Id).ToList();  /// HACKS
+            model.DirectorsList = title.DirectorsList?.Select(x => x.Person.Name + "/id:" + x.Person.Id).ToList();
             model.AverageRating = title.Rating?.AverageRating;
             model.Url = linkGenerator.GetUriByName(httpContext, routeName, new { id = title.Id });
             return model;

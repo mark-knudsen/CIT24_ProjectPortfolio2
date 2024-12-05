@@ -16,7 +16,7 @@ public class TitleDetailedDTO
     public int? VoteCount { get; set; }
     public IList<string> GenresList { get; set; } 
     public IList<string> LocalizedTitlesList { get; set; }
-    public IList<string> PrincipalCastList { get; set; }
-    public IList<string> WritersList { get; set; }
+    public IList<string> PrincipalCastList { get; set; } // these two needs the id as well
+    public IList<string> WritersList { get; set; } // and me
     public IList<string> DirectorsList { get; set; }
 }
