@@ -22,7 +22,6 @@ namespace MovieDataLayer.DataService.IMDB_Repository
                 .Include(t => t.WritersList).ThenInclude(w => w.Person)
                 .Include(t => t.DirectorsList).ThenInclude(d => d.Person)
                 .Include(t => t.GenresList).ThenInclude(g => g.Genre)
-                .Include(t => t.Poster).ThenInclude(p => p.PosterUrl)
                 .Include(t => t.PrincipalCastList).ThenInclude(p => p.Person).FirstOrDefaultAsync();
         }
 
