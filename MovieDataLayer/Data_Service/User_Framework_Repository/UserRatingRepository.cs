@@ -13,7 +13,7 @@ namespace MovieDataLayer.Data_Service.User_Framework_Repository
 
         public async Task<UserRatingModel> GetUserRating(int id, string titleId)
         {
-            return await _dbSet.AsNoTracking().Where(x => x.UserId == id && x.TitleId.Equals(titleId)).FirstOrDefaultAsync();
+            return await _dbSet.AsNoTracking().Where(x => x.UserId == id && x.TitleId.Equals(titleId)).Include(t => t.Title).ThenInclude(p => p.Poster).FirstOrDefaultAsync();
         }
 
         public async Task<bool> DeleteUserRating(int id, string titleId)

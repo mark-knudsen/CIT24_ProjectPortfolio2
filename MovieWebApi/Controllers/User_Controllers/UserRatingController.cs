@@ -31,9 +31,10 @@ namespace MovieWebApi.Controllers.User_Controllers
         public async Task<IActionResult> Get([FromHeader] string authorization, string titleId)
         {
             int userId = _authenticatorExtension.ExtractUserID(authorization);
-            var rating = Extension.Spawn_DTO<UserRatingDTO, UserRatingModel>(await _userRatingRepository.GetUserRating(userId, titleId));
+            var rating = await _userRatingRepository.GetUserRating(userId, titleId);
             if (rating == null) return NotFound();
-            return Ok(rating);
+            var result = rating.Spawn_DTO_WithPagination<UserRatingDTO, UserRatingModel>(HttpContext, _linkGenerator, nameof(Get));
+            return Ok(result);
         }
 
         [HttpGet]
