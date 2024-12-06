@@ -154,6 +154,10 @@ namespace MovieDataLayer
             modelBuilder.Entity<TitleSearchResultTempTable>().Property(p => p.TitleId).HasColumnName("title_id");
             modelBuilder.Entity<TitleSearchResultTempTable>().Property(p => p.PrimaryTitle).HasColumnName("primary_title");
             modelBuilder.Entity<TitleSearchResultTempTable>().Property(p => p.TotalElements).HasColumnName("number_of_entities");
+            modelBuilder.Entity<TitleSearchResultTempTable>().Property(p => p.StartYear).HasColumnName("start_year");
+            modelBuilder.Entity<TitleSearchResultTempTable>().Property(p => p.EndYear).HasColumnName("end_year");
+            modelBuilder.Entity<TitleSearchResultTempTable>().Property(p => p.OriginalTitle).HasColumnName("original_title");
+            modelBuilder.Entity<TitleSearchResultTempTable>().Property(p => p.PosterUrl).HasColumnName("poster");
         }
         private void MapSimilarTitleSearch(ModelBuilder modelBuilder)
         {
