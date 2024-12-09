@@ -19,6 +19,6 @@ public class TitleDetailedDTO
    // public IList<string> PrincipalCastList { get; set; } // these two needs the id as well
     public List<PrincipalCastDTO> PrincipalCastList { get; set; }
 
-    public IList<string> WritersList { get; set; } // and me
-    public IList<string> DirectorsList { get; set; }
+    public List<WritersListDTO> WritersList { get; set; } // and me
+    public List<DirectorsListDTO> DirectorsList { get; set; }
 }
