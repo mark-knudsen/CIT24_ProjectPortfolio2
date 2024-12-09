@@ -7,7 +7,7 @@ namespace MovieDataLayer.Data_Service.User_Framework_Repository
         public UserPersonBookmarkRepository(IMDBContext context) : base(context) { }
         public async Task<IList<UserPersonBookmarkModel>> GetAll(int id)
         {
-            return await _dbSet.AsNoTracking().Where(x => x.UserId == id).ToListAsync();
+            return await _dbSet.AsNoTracking().Where(x => x.UserId == id).Include(p => p.Person).ToListAsync();
         }
         public async Task<UserPersonBookmarkModel> Get(int userId, string personId)
         {

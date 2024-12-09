@@ -4,6 +4,8 @@
     {
         public string? Url { get; set; }
         public string? TitleId { get; set; }
+        public string TitlePrimaryTitle { get; set; }
+        public string PersonName { get; set; }
         public string? PersonId { get; set; }
         public DateTime? CreatedAt { get; set; }
         public string Annotation { get; set; }

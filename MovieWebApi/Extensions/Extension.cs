@@ -111,6 +111,7 @@ namespace MovieWebApi.Extensions
             var model = userTitleBookmark.Adapt<UserBookmarkDTO>();
             if (model == null) return null;
             model.Url = linkGenerator.GetUriByName(httpContext, routeName, new { titleId = userTitleBookmark.TitleId });
+            model.TitlePrimaryTitle = userTitleBookmark?.Title?.PrimaryTitle;
             model.CreatedAt = userTitleBookmark.CreatedAt;
             return model;
         }
@@ -119,6 +120,7 @@ namespace MovieWebApi.Extensions
         {
             var model = userPersonBookmark.Adapt<UserBookmarkDTO>();
             if (model == null) return null;
+            model.PersonName = userPersonBookmark?.Person?.Name;
             model.Url = linkGenerator.GetUriByName(httpContext, routeName, new { personId = userPersonBookmark.PersonId });
             model.CreatedAt = userPersonBookmark.CreatedAt;
             return model;
