@@ -163,11 +163,12 @@ namespace MovieDataLayer
         {
             modelBuilder.Entity<SimilarTitleSearchTempTable>().HasNoKey();
             //columns
-            modelBuilder.Entity<SimilarTitleSearchTempTable>().Property(p => p.SimilarTitleId).HasColumnName("similar_title_id");
+            modelBuilder.Entity<SimilarTitleSearchTempTable>().Property(p => p.TitleId).HasColumnName("title_id");
             modelBuilder.Entity<SimilarTitleSearchTempTable>().Property(p => p.PrimaryTitle).HasColumnName("primary_title");
             modelBuilder.Entity<SimilarTitleSearchTempTable>().Property(p => p.Genres).HasColumnName("genres");
             modelBuilder.Entity<SimilarTitleSearchTempTable>().Property(p => p.IsAdult).HasColumnName("isadult");
             modelBuilder.Entity<SimilarTitleSearchTempTable>().Property(p => p.TitleType).HasColumnName("title_type");
+            modelBuilder.Entity<SimilarTitleSearchTempTable>().Property(p => p.PosterUrl).HasColumnName("poster");
         }
 
         private void MapPersonSearch(ModelBuilder modelBuilder)
