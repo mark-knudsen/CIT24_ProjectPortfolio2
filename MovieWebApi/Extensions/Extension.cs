@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Runtime.CompilerServices;
 using Mapster;
 using MovieDataLayer;
 using MovieDataLayer.Models.IMDB_Models;
@@ -7,6 +8,7 @@ using MovieWebApi.DTO.IMDB_DTO;
 using MovieWebApi.DTO.Search_DTO;
 using MovieWebApi.DTO.User_DTO;
 using MovieWebApi.SearchDTO;
+
 
 namespace MovieWebApi.Extensions
 {
@@ -75,7 +77,7 @@ namespace MovieWebApi.Extensions
             model.WritersList = title.WritersList?.Select(x => x.Person.Name).ToList();
             model.Plot = title.Plot?.PlotOfTitle;
             model.VoteCount = title.Rating?.VoteCount;
-            model.PrincipalCastList = title.PrincipalCastList?.Select(x => x.Person.Name + "/id:" + x.Person.Id).ToList();  /// HACKS
+            model.PrincipalCastList = title?.PrincipalCastList?.Select(x => new PrincipalCastDTO{PersonId = x.Person.Id, PersonName = x.Person.Name}).Distinct().ToList();
             model.DirectorsList = title.DirectorsList?.Select(x => x.Person.Name + "/id:" + x.Person.Id).ToList();
             model.AverageRating = title.Rating?.AverageRating;
             model.Url = linkGenerator.GetUriByName(httpContext, routeName, new { id = title.Id });
@@ -92,6 +94,7 @@ namespace MovieWebApi.Extensions
             model.Url = linkGenerator.GetUriByName(httpContext, routeName, new { id = title.Id });
             return model;
         }
+
 
         public static PersonDetailedDTO MapPersonToPersonDTO(this PersonModel person, HttpContext httpContext, LinkGenerator linkGenerator, string routeName)
         {
