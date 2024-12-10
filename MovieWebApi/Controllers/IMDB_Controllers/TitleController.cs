@@ -67,7 +67,7 @@ namespace MovieWebApi.Controllers.IMDB_Controllers
         {
             int userId = 0;
             if (authorization != null) userId = _authenticatorExtension.ExtractUserID(authorization);
-            var (searchResult, totalCount) = await _titleRepository.TitleSearch(userId, searchTerm, page, pageSize); //TitleSearch returns tuple, namely the searchresult and the total number of entities from the search result
+            var (searchResult, totalCount) = await _titleRepository.TitleSearch(searchTerm, userId, page, pageSize); //TitleSearch returns tuple, namely the searchresult and the total number of entities from the search result
             if(!searchResult.Any()) return NotFound();
 
             var searchResultMapped = searchResult.Select(tSearch => tSearch.Spawn_DTO_WithPagination<TitleSearchResultDTO, TitleSearchResultTempTable>(HttpContext, _linkGenerator, nameof(GetTitle)));
@@ -76,6 +76,20 @@ namespace MovieWebApi.Controllers.IMDB_Controllers
 
             //object result = CreatePaging(nameof(SearchTitle), page, pageSize, numberOfEntities, searchResult);
             object result = CreatePaging(nameof(SearchTitle), page, pageSize, totalCount, searchResultMapped, "searchTerm", searchTerm); //5th parameter, is the query parameter name(in string format)
+            return Ok(result);
+        }
+        
+        [HttpGet("advanced-search/", Name = nameof(AdvancedSearchTitle))]
+        public async Task<IActionResult> AdvancedSearchTitle([FromHeader] string? authorization, [FromQuery] string? searchTerm, [FromQuery] int? genreId, int page = 0, int pageSize = 10)
+        {
+            int userId = 0;
+            if (authorization != null) userId = _authenticatorExtension.ExtractUserID(authorization);
+            var (searchResult, totalCount) = await _titleRepository.AdvancedTitleSearch(searchTerm, userId, genreId, page, pageSize); //TitleSearch returns tuple, namely the searchresult and the total number of entities from the search result
+            if(!searchResult.Any()) return NotFound();
+
+            var searchResultMapped = searchResult.Select(tSearch => tSearch.Spawn_DTO_WithPagination<TitleSearchResultDTO, TitleSearchResultTempTable>(HttpContext, _linkGenerator, nameof(GetTitle)));
+ 
+            object result = CreatePaging(nameof(SearchTitle), page, pageSize, totalCount, searchResultMapped, "searchTerm", searchTerm); 
             return Ok(result);
         }
 

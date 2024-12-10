@@ -47,7 +47,7 @@ namespace MovieDataLayer.DataService.IMDB_Repository
                 .Include(t => t.GenresList).ThenInclude(g => g.Genre)
                 .Include(t => t.PrincipalCastList).ThenInclude(p => p.Person).Where(x => x.GenresList.Any(x => x.GenreId == id)).Skip(page * pageSize).Take(pageSize).ToListAsync();
         }
-        public async Task<(IEnumerable<TitleSearchResultTempTable> SearchResult, int totalEntities)> TitleSearch(int userId, string searchTerm, int page = 0, int pageSize = 10)
+        public async Task<(IEnumerable<TitleSearchResultTempTable> SearchResult, int totalEntities)> TitleSearch(string searchTerm, int userId, int page = 0, int pageSize = 10)
         {
             string query = $"SELECT * FROM title_search('{searchTerm}', '{userId}')"; //Currently uses a title_search test function, needs to be changed if merging into main..
 
@@ -67,6 +67,18 @@ namespace MovieDataLayer.DataService.IMDB_Repository
             // string query = $"SELECT DISTINCT ON(primary_title) similar_title_id, primary_title, isadult, title_type, genres FROM find_similar_movies('{titleID}') ORDER BY primary_title DESC LIMIT 8";
             string query = $"SELECT * FROM find_similar_movies('{titleID}') ORDER BY primary_title DESC LIMIT 8"; // fixed the distinct in sql function
             return await _context.CallQuery<SimilarTitleSearchTempTable>(query, page, pageSize);
+        }
+        public async  Task<(IEnumerable<TitleSearchResultTempTable> SearchResult, int totalEntities)> AdvancedTitleSearch(string searchTerm, int userId, int? genreId, int page = 0, int pageSize = 10)
+        {
+            string query = $"SELECT * FROM advanced_search('{searchTerm}', {userId}, {genreId})";
+            if(genreId == null) query = $"SELECT * FROM advanced_search('{searchTerm}', {userId})"; 
+          
+            var searchResult = await _context.CallQuery<TitleSearchResultTempTable>(query, page, pageSize);
+            
+            if (!searchResult.Any()) return (searchResult, 0); //this line allows for searchResult to not contain anything when returned to API/frontend.
+            int totalElements = searchResult.FirstOrDefault().TotalElements;
+
+            return (searchResult, totalElements);
         }
         public async Task<int> CountByGenre(int genreId)
         {
