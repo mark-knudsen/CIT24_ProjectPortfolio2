@@ -37,13 +37,22 @@ namespace MovieWebApi.Controllers.User_Controllers
             return Ok(result);
         }
 
-        [HttpGet]
-        public async Task<IActionResult> GetAll([FromHeader] string authorization)
+        [HttpGet(Name = nameof(GetAllUserRatings))]
+        public async Task<IActionResult> GetAllUserRatings([FromHeader] string authorization, [FromQuery] int page = 0, int pageSize = 10)
         {
+            // why not just set the defualt values if they values are invalid, no reason to throw a whole error in a ussers face?
+            if (page < 0 || pageSize < 0) return BadRequest("Page and PageSize must be 0 or greater"); //If time, add this check to other endpoints too.. 
+
             int userId = _authenticatorExtension.ExtractUserID(authorization);
-            var result = (await _userRatingRepository.GetAllUserRatingByUserId(userId)).Select(rating => rating.Spawn_DTO_WithPagination<UserRatingDTO, UserRatingModel>(HttpContext, _linkGenerator, nameof(Get)));
-            //var result = (await _dataService.GetAllWithPaging(page, pageSize)).Select(genre => genre.Spawn_DTO_WithPagination<ReadGenreModel, GenreModel>(HttpContext, _linkGenerator, nameof(GetAll)));
-            if (result == null) return NotFound();
+            var userRatings = (await _userRatingRepository.GetAllUserRatingByUserId(userId, page, pageSize)).Select(rating => rating.Spawn_DTO_WithPagination<UserRatingDTO, UserRatingModel>(HttpContext, _linkGenerator, nameof(Get)));
+
+            if (!userRatings.Any() || userRatings == null) return NotFound();
+
+            var numberOfEntities = await _userRatingRepository.NumOfElemInUserTable(userId);
+
+            object result = CreatePaging(nameof(GetAllUserRatings), page, pageSize, numberOfEntities, userRatings);
+            if (result == null) return StatusCode(500, "Error while creating paginating in GetAllUserRatings"); //Custom StatusCode & message
+
             return Ok(result);
         }
 

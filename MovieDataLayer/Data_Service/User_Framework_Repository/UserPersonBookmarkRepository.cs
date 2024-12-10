@@ -5,9 +5,9 @@ namespace MovieDataLayer.Data_Service.User_Framework_Repository
     public class UserPersonBookmarkRepository : Repository<UserPersonBookmarkModel>
     {
         public UserPersonBookmarkRepository(IMDBContext context) : base(context) { }
-        public async Task<IList<UserPersonBookmarkModel>> GetAll(int id)
+        public async Task<IList<UserPersonBookmarkModel>> GetAll(int id, int page = 0, int pageSize = 10)
         {
-            return await _dbSet.AsNoTracking().Where(x => x.UserId == id).Include(p => p.Person).ToListAsync();
+            return await _dbSet.AsNoTracking().Where(x => x.UserId == id).Include(p => p.Person).Skip(page * pageSize).Take(pageSize).ToListAsync();
         }
         public async Task<UserPersonBookmarkModel> Get(int userId, string personId)
         {
@@ -56,6 +56,11 @@ namespace MovieDataLayer.Data_Service.User_Framework_Repository
             {
                 return false;
             }
+        }
+
+        public async Task<int> NumOfElemInUserTable(int userId)
+        {
+            return await _dbSet.AsNoTracking().Where(x => x.UserId == userId).CountAsync();
         }
 
     }

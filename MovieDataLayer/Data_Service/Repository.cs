@@ -91,6 +91,5 @@ namespace MovieDataLayer.Data_Service
             return await _dbSet.AsNoTracking().CountAsync();
         }
 
-
     }
 }

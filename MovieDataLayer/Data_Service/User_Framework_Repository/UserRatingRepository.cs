@@ -6,9 +6,9 @@ namespace MovieDataLayer.Data_Service.User_Framework_Repository
     {
         public UserRatingRepository(IMDBContext context) : base(context) { }
 
-        public async Task<IList<UserRatingModel>> GetAllUserRatingByUserId(int id)
+        public async Task<IList<UserRatingModel>> GetAllUserRatingByUserId(int id, int page = 0, int pageSize = 10)
         {
-            return await _dbSet.AsNoTracking().Where(x => x.UserId == id).Include(t => t.Title).ThenInclude(p => p.Poster).ToListAsync();
+            return await _dbSet.AsNoTracking().Where(x => x.UserId == id).Include(t => t.Title).ThenInclude(p => p.Poster).Skip(page * pageSize).Take(pageSize).ToListAsync();
         }
 
         public async Task<UserRatingModel> GetUserRating(int id, string titleId)
@@ -57,6 +57,11 @@ namespace MovieDataLayer.Data_Service.User_Framework_Repository
             {
                 return false;
             }
+        }
+
+        public async Task<int> NumOfElemInUserTable(int userId)
+        {
+            return await _dbSet.AsNoTracking().Where(x => x.UserId == userId).CountAsync();
         }
     }
 }

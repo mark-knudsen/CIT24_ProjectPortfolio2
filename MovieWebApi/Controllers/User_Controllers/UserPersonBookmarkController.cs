@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.RazorPages;
 using MovieDataLayer;
 using MovieDataLayer.Data_Service.User_Framework_Repository;
 using MovieWebApi.DTO.User_DTO;
@@ -9,7 +10,7 @@ using MovieWebApi.Extensions;
 namespace MovieWebApi.Controllers.UserStuff
 {
     [Authorize]
-        [EnableCors("_myAllowSpecificOrigins")]
+    [EnableCors("_myAllowSpecificOrigins")]
     [ApiController]
     [Route("api/bookmarks/person")]
     public class UserPersonBookmarkController : GenericController
@@ -23,15 +24,23 @@ namespace MovieWebApi.Controllers.UserStuff
             _userPersonBookmarkRepository = userPersonBookmarkRepository;
         }
 
-        [HttpGet]
-        public async Task<IActionResult> GetAll([FromHeader] string authorization)
+        [HttpGet(Name = nameof(GetAllPersonBookmarks))]
+        public async Task<IActionResult> GetAllPersonBookmarks([FromHeader] string authorization, [FromQuery] int page = 0, int pageSize = 10)
         {
+            // why not just set the defualt values if they values are invalid, no reason to throw a whole error in a ussers face?
+            if (page < 0 || pageSize < 0) return BadRequest("Page and PageSize must be 0 or greater"); //If time, add this check to other endpoints too.. 
+
             int userId = _authenticatorExtension.ExtractUserID(authorization);
 
-            var mappedResult = (await _userPersonBookmarkRepository.GetAll(userId)).Select(x => x.Spawn_DTO_WithPagination<UserBookmarkDTO, UserPersonBookmarkModel>(HttpContext, _linkGenerator, nameof(GetPersonBookmark)));
+            var personBookmarks = (await _userPersonBookmarkRepository.GetAll(userId, page, pageSize)).Select(x => x.Spawn_DTO_WithPagination<UserBookmarkDTO, UserPersonBookmarkModel>(HttpContext, _linkGenerator, nameof(GetPersonBookmark)));
 
-            if (!mappedResult.Any() || mappedResult == null) return NotFound();
-            return Ok(mappedResult);
+            if (!personBookmarks.Any() || personBookmarks == null) return NotFound();
+
+            var numberOfEntities = await _userPersonBookmarkRepository.NumOfElemInUserTable(userId);
+
+            object result = CreatePaging(nameof(GetAllPersonBookmarks), page, pageSize, numberOfEntities, personBookmarks);
+            if (result == null) return StatusCode(500, "Error while creating paginating in GetAllPersonBookmarks"); //Custom StatusCode & message
+            return Ok(result);
         }
 
         [HttpGet("{personId}", Name = nameof(GetPersonBookmark))]

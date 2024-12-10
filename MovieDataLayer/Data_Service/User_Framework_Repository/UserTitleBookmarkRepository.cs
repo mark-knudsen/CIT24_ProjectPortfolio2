@@ -60,5 +60,10 @@ namespace MovieDataLayer.Data_Service.User_Framework_Repository
                 return false;
             }
         }
+
+        public async Task<int> NumOfElemInUserTable(int userId)
+        {
+            return await _dbSet.AsNoTracking().Where(x => x.UserId == userId).CountAsync();
+        }
     }
 }

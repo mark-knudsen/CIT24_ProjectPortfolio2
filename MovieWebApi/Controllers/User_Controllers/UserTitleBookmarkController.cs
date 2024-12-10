@@ -37,8 +37,8 @@ namespace MovieWebApi.Controllers.User_Controllers
             return Ok(finalResult);
         }
 
-        [HttpGet(Name = nameof(GetAll))]
-        public async Task<IActionResult> GetAll([FromHeader] string authorization, [FromQuery] int page = 0, int pageSize = 10)
+        [HttpGet(Name = nameof(GetAllTitleBookmarks))]
+        public async Task<IActionResult> GetAllTitleBookmarks([FromHeader] string authorization, [FromQuery] int page = 0, int pageSize = 10)
         {
             // why not just set the defualt values if they values are invalid, no reason to throw a whole error in a ussers face?
             if (page < 0 || pageSize < 0) return BadRequest("Page and PageSize must be 0 or greater"); //If time, add this check to other endpoints too.. 
@@ -49,10 +49,10 @@ namespace MovieWebApi.Controllers.User_Controllers
 
             if (!titleBookmarks.Any() || titleBookmarks == null) return NotFound();
 
-            var numberOfEntities = await _userTitleBookmarkRepository.NumberOfElementsInTable();
+            var numberOfEntities = await _userTitleBookmarkRepository.NumOfElemInUserTable(userId);
 
-            object result = CreatePaging(nameof(GetAll), page, pageSize, numberOfEntities, titleBookmarks);
-            if (result == null) return StatusCode(500, "Error while creating paginating in GetAllTitles"); //Custom StatusCode & message
+            object result = CreatePaging(nameof(GetAllTitleBookmarks), page, pageSize, numberOfEntities, titleBookmarks);
+            if (result == null) return StatusCode(500, "Error while creating paginating in GetAllTitleBookmarks"); //Custom StatusCode & message
 
             return Ok(result);
         }
