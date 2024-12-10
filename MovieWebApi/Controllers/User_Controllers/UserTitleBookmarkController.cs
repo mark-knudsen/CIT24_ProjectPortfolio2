@@ -1,8 +1,10 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.RazorPages;
 using MovieDataLayer;
 using MovieDataLayer.Data_Service.User_Framework_Repository;
+using MovieDataLayer.DataService.IMDB_Repository;
 using MovieWebApi.DTO.User_DTO;
 using MovieWebApi.Extensions;
 
@@ -35,16 +37,24 @@ namespace MovieWebApi.Controllers.User_Controllers
             return Ok(finalResult);
         }
 
-        [HttpGet]
-        public async Task<IActionResult> GetAll([FromHeader] string authorization)
+        [HttpGet(Name = nameof(GetAll))]
+        public async Task<IActionResult> GetAll([FromHeader] string authorization, [FromQuery] int page = 0, int pageSize = 10)
         {
+            // why not just set the defualt values if they values are invalid, no reason to throw a whole error in a ussers face?
+            if (page < 0 || pageSize < 0) return BadRequest("Page and PageSize must be 0 or greater"); //If time, add this check to other endpoints too.. 
+
             int userId = _authenticatorExtension.ExtractUserID(authorization);
 
-            var mappedResult = (await _userTitleBookmarkRepository.GetAll(userId)).Select(x => x.Spawn_DTO_WithPagination<UserBookmarkDTO, UserTitleBookmarkModel>(HttpContext, _linkGenerator, nameof(GetTitleBookmark)));
+            var titleBookmarks = (await _userTitleBookmarkRepository.GetAll(userId, page, pageSize)).Select(x => x.Spawn_DTO_WithPagination<UserBookmarkDTO, UserTitleBookmarkModel>(HttpContext, _linkGenerator, nameof(GetTitleBookmark)));
 
-            if (!mappedResult.Any() || mappedResult == null) return NotFound();
+            if (!titleBookmarks.Any() || titleBookmarks == null) return NotFound();
 
-            return Ok(mappedResult);
+            var numberOfEntities = await _userTitleBookmarkRepository.NumberOfElementsInTable();
+
+            object result = CreatePaging(nameof(GetAll), page, pageSize, numberOfEntities, titleBookmarks);
+            if (result == null) return StatusCode(500, "Error while creating paginating in GetAllTitles"); //Custom StatusCode & message
+
+            return Ok(result);
         }
 
         [HttpPost]

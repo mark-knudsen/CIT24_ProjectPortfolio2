@@ -1,14 +1,16 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using MovieDataLayer.Models.IMDB_Models;
 
 namespace MovieDataLayer.Data_Service.User_Framework_Repository
 {
     public class UserTitleBookmarkRepository : Repository<UserTitleBookmarkModel>
     {
         public UserTitleBookmarkRepository(IMDBContext context) : base(context) { }
-        public async Task<IList<UserTitleBookmarkModel>> GetAll(int id)
+        public async Task<IList<UserTitleBookmarkModel>> GetAll(int id, int page = 0, int pageSize = 10)
         {
-            return await _dbSet.AsNoTracking().Where(x => x.UserId == id).Include(p => p.Title).ToListAsync();
+            return await _dbSet.AsNoTracking().Where(x => x.UserId == id).Include(p => p.Title).Skip(page * pageSize).Take(pageSize).ToListAsync();
         }
+
         public async Task<UserTitleBookmarkModel> Get(int userId, string titleId)
         {
             return await _dbSet.AsNoTracking().Where(x => x.UserId == userId && x.TitleId.Equals(titleId)).FirstOrDefaultAsync();
