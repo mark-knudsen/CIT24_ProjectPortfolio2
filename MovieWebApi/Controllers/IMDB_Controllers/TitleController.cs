@@ -67,7 +67,7 @@ namespace MovieWebApi.Controllers.IMDB_Controllers
         {
             int userId = 0;
             if (authorization != null) userId = _authenticatorExtension.ExtractUserID(authorization);
-            var (searchResult, totalCount) = await _titleRepository.TitleSearch(searchTerm, userId, page, pageSize); //TitleSearch returns tuple, namely the searchresult and the total number of entities from the search result
+            var (searchResult, totalCount) = await _titleRepository.TitleSearch(searchTerm.Trim(), userId, page, pageSize); //TitleSearch returns tuple, namely the searchresult and the total number of entities from the search result
             if(!searchResult.Any()) return NotFound();
 
             var searchResultMapped = searchResult.Select(tSearch => tSearch.Spawn_DTO_WithPagination<TitleSearchResultDTO, TitleSearchResultTempTable>(HttpContext, _linkGenerator, nameof(GetTitle)));
@@ -80,11 +80,11 @@ namespace MovieWebApi.Controllers.IMDB_Controllers
         }
         
         [HttpGet("advanced-search/", Name = nameof(AdvancedSearchTitle))]
-        public async Task<IActionResult> AdvancedSearchTitle([FromHeader] string? authorization, [FromQuery] string? searchTerm, [FromQuery] int? genreId, int page = 0, int pageSize = 10)
+        public async Task<IActionResult> AdvancedSearchTitle([FromHeader] string? authorization, [FromQuery] string? searchTerm, [FromQuery] int? genreId, [FromQuery] int? startYear, [FromQuery] int? endYear, int page = 0, int pageSize = 10)
         {
             int userId = 0;
             if (authorization != null) userId = _authenticatorExtension.ExtractUserID(authorization);
-            var (searchResult, totalCount) = await _titleRepository.AdvancedTitleSearch(searchTerm, userId, genreId, page, pageSize); //TitleSearch returns tuple, namely the searchresult and the total number of entities from the search result
+            var (searchResult, totalCount) = await _titleRepository.AdvancedTitleSearch(searchTerm?.Trim(), userId, genreId, startYear, endYear, page, pageSize); //TitleSearch returns tuple, namely the searchresult and the total number of entities from the search result
             if(!searchResult.Any()) return NotFound();
 
             var searchResultMapped = searchResult.Select(tSearch => tSearch.Spawn_DTO_WithPagination<TitleSearchResultDTO, TitleSearchResultTempTable>(HttpContext, _linkGenerator, nameof(GetTitle)));

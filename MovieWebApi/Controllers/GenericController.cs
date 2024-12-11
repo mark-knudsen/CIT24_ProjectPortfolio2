@@ -40,9 +40,7 @@ namespace MovieWebApi.Controllers
             return GetUrl(pathName, queryParams); //if id is not null, it will be added to the URL. E.g. if we want to have navigation url to a path with id
         }
 
-        protected object CreatePaging<T>(string pathName, int pageNumber, int pageSize, int total, IEnumerable<T>? entities, string? parameterName = null, IComparable? value = null) //parameterName is what we want parameter to be named in URL, so e.g. "id" or "searchTerm".
-                                                                                                                                                                                      //Value is the parameter value, so eg. 1, or "batman". 
-
+        protected object CreatePaging<T>(string pathName, int pageNumber, int pageSize, int total, IEnumerable<T>? entities, string? parameterName = null, IComparable? value = null) //parameterName is what we want parameter to be named in URL, so e.g. "id" or "searchTerm".                                                                                                                                                                            
         {
             const int maxPageSize = 10;
 

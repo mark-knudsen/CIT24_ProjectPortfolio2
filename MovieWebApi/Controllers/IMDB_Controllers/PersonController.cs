@@ -46,7 +46,7 @@ namespace MovieWebApi.Controllers.IMDB_Controllers
         {
             int userId = 0;
             if (authorization != null) userId = _authenticatorExtension.ExtractUserID(authorization);
-            var (searchResult, totalCount) = await _personRepository.PersonSearch(userId, searchTerm, page, pageSize);
+            var (searchResult, totalCount) = await _personRepository.PersonSearch(userId, searchTerm.Trim(), page, pageSize);
             if (!searchResult.Any()) return NotFound();
             var searchResultMapped = searchResult.Select(pSearch => pSearch.Spawn_DTO_WithPagination<PersonSearchResultDTO, PersonSearchResultTempTable>(HttpContext, _linkGenerator, nameof(GetPerson)));
 

@@ -9,7 +9,7 @@ using MovieWebApi.Extensions;
 namespace MovieWebApi.Controllers.User_Controllers
 {
     [Authorize]
-        [EnableCors("_myAllowSpecificOrigins")]
+    [EnableCors("_myAllowSpecificOrigins")]
     [ApiController]
     [Route("api/search-history")]
     public class UserSearchHistoryController : GenericController
