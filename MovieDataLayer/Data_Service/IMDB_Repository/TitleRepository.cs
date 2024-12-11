@@ -60,13 +60,15 @@ namespace MovieDataLayer.DataService.IMDB_Repository
         }
 
 
-        public async Task<IEnumerable<SimilarTitleSearchTempTable>> SimilarTitles(string titleID, int page = 0, int pageSize = 10)
+        public async Task<IEnumerable<SimilarTitleSearchTempTable>> SimilarTitles(string titleID)
         {
+            var page = new Random().Next(1, 100);
+
             //Should fix so the distinct is made in the function in the DB, then use the shorter version below!
             //string query = $"SELECT * FROM find_similar_movies('{titleID}') LIMIT 8;";
             // string query = $"SELECT DISTINCT ON(primary_title) similar_title_id, primary_title, isadult, title_type, genres FROM find_similar_movies('{titleID}') ORDER BY primary_title DESC LIMIT 8";
-            string query = $"SELECT * FROM find_similar_movies('{titleID}') ORDER BY primary_title DESC LIMIT 8"; // fixed the distinct in sql function
-            return await _context.CallQuery<SimilarTitleSearchTempTable>(query, page, pageSize);
+            string query = $"SELECT * FROM find_similar_movies('{titleID}')"; // fixed the distinct in sql function
+            return await _context.CallQuery<SimilarTitleSearchTempTable>(query, page, 10);
         }
         public async  Task<(IEnumerable<TitleSearchResultTempTable> SearchResult, int totalEntities)> AdvancedTitleSearch(string searchTerm, int userId, int? genreId, int? startYear, int? endYear, int page = 0, int pageSize = 10)
         {
