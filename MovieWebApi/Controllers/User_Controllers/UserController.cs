@@ -54,7 +54,6 @@ namespace MovieWebApi.Controllers.User_Controllers
 
             var response = new UserLoginResponseDTO(token, user.FirstName);
 
-
             return Ok(response);
 
             //return Created("", result);
@@ -90,7 +89,7 @@ namespace MovieWebApi.Controllers.User_Controllers
             int userId = _authenticatorExtension.ExtractUserID(authorization);
             UserModel user = await _userRepository.Get(userId);
 
-            if (user != null) // should we care to check in the web api, or solely do it in db, and then depending on what the db does throws of error we then react accordingly
+            if (user != null)
             {
                 user.Password = PasswordModel.password;
             }
@@ -99,7 +98,7 @@ namespace MovieWebApi.Controllers.User_Controllers
             bool success = await _userRepository.Update(user);
             if (!success) return BadRequest();
 
-            return Ok(user);
+            return Ok();
         }
 
         [HttpDelete]
