@@ -27,8 +27,8 @@ namespace MovieWebApi.Controllers.UserStuff
         [HttpGet(Name = nameof(GetAllPersonBookmarks))]
         public async Task<IActionResult> GetAllPersonBookmarks([FromHeader] string authorization, [FromQuery] int page = 0, int pageSize = 10)
         {
-            // why not just set the defualt values if they values are invalid, no reason to throw a whole error in a ussers face?
-            if (page < 0 || pageSize < 0) return BadRequest("Page and PageSize must be 0 or greater"); //If time, add this check to other endpoints too.. 
+            page = page < 0 ? 0 : page;
+            pageSize = pageSize <= 0 ? 10 : pageSize;
 
             int userId = _authenticatorExtension.ExtractUserID(authorization);
 

@@ -34,7 +34,8 @@ namespace MovieWebApi.Controllers.IMDB_Controllers
         [HttpGet(Name = nameof(GetAllPersons))]
         public async Task<IActionResult> GetAllPersons(int page = 0, int pageSize = 10)
         {
-            if (page < 0 || pageSize <= 0) return BadRequest("Page and PageSize must be 0 or greater");
+            page = page < 0 ? 0 : page;
+            pageSize = pageSize <= 0 ? 10 : pageSize;
             var result = (await _personRepository.GetAllWithPaging(page, pageSize)).Select(person => person.Spawn_DTO_WithPagination<PersonDetailedDTO, PersonModel>(HttpContext, _linkGenerator, nameof(GetPerson)));
             if (result == null || !result.Any()) return NotFound();
             return Ok(result);

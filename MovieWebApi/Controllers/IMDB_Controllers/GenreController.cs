@@ -23,7 +23,8 @@ namespace MovieWebApi.Controllers.IMDB_Controllers
         [HttpGet]
         public async Task<IActionResult> GetAll(int page = 0, int pageSize = 30)
         {
-            if (page < 0 || pageSize <= 0) return BadRequest("Page and PageSize must be 0 or greater");
+            page = page < 0 ? 0 : page;
+            pageSize = pageSize <= 0 ? 30 : pageSize;
 
             //Generic use of Spawn_DTO, including URL mapped to the DTO
             var result = (await _dataService.GetAllWithPaging(page, pageSize)).Select(genre => genre.Spawn_DTO_WithPagination<ReadGenreModel, GenreModel>(HttpContext, _linkGenerator, nameof(GetAll)));

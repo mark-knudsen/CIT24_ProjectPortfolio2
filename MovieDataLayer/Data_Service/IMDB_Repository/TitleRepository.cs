@@ -58,6 +58,21 @@ namespace MovieDataLayer.DataService.IMDB_Repository
 
             return (searchResult, totalElements);
         }
+        
+        public async Task<(IEnumerable<TitleSearchResultTempTable> SearchResult, int totalEntities)> BestMatchTitleSearch(string searchTerm, int userId, int page = 0, int pageSize = 10)
+        {
+            string query = $"SELECT * FROM title_search('{searchTerm}', '{userId}')";
+
+
+            string query2 = $"  SELECT distinct(T.title_id), T.title_type, T.primary_title, T.original_title, T.start_year, T.end_year, T.runtime, T.isadult, P.poster FROM\r\n  \r\n     (((SELECT * from best_match({searchTerm})) AS B\r\n      NATURAL JOIN title as T\r\n      NATURAL JOIN title_genre \r\n      NATURAL JOIN genre_list) \r\n      full JOIN rating R ON B.title_id = R.title_id) \r\n      full JOIN poster P ON P.title_id = B.title_id WHERE T.title_id is not null";
+
+            var searchResult = await _context.CallQuery<TitleSearchResultTempTable>(query, page, pageSize);
+
+            if (!searchResult.Any()) return (searchResult, 0); 
+            int totalElements = searchResult.FirstOrDefault().TotalElements;
+
+            return (searchResult, totalElements);
+        }
 
 
         public async Task<IEnumerable<SimilarTitleSearchTempTable>> SimilarTitles(string titleID)
@@ -72,6 +87,11 @@ namespace MovieDataLayer.DataService.IMDB_Repository
         }
         public async  Task<(IEnumerable<TitleSearchResultTempTable> SearchResult, int totalEntities)> AdvancedTitleSearch(string searchTerm, int userId, int? genreId, int? startYear, int? endYear, int? rating, int page = 0, int pageSize = 10)
         {
+            /// FIX
+            /// bestmatch uses variadic which means it takes a list of words as input
+            /// meaning it doesn't work as intended when searching with more than one word
+
+
             string query = $"SELECT * FROM advanced_search('{searchTerm}', {userId}, " +
                 $"{(genreId is not null ? genreId : "null")}, " +
                 $"{(startYear is not null ? startYear : "0")}, " +
