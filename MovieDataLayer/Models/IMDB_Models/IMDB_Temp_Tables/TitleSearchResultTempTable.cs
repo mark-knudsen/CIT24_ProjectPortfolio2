@@ -8,6 +8,6 @@
         public int StartYear { get; set; }
         public int? EndYear { get; set; }
         public string OriginalTitle { get; set; }
-        public string PosterUrl { get; set; }
+        public string? PosterUrl { get; set; }
     }
 }
