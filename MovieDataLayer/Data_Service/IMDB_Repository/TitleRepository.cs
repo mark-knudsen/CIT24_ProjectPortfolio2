@@ -71,7 +71,8 @@ namespace MovieDataLayer.DataService.IMDB_Repository
         }
         public async  Task<(IEnumerable<TitleSearchResultTempTable> SearchResult, int totalEntities)> AdvancedTitleSearch(string searchTerm, int userId, int? genreId, int? startYear, int? endYear, int? rating, int page = 0, int pageSize = 10)
         {
-            string[] words;   
+            string[] words;
+            if(searchTerm == null) searchTerm = "";
             words = searchTerm.Split(null);
 
             string queryWordSyntax = "array[";

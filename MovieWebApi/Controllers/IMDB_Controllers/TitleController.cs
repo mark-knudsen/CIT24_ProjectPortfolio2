@@ -93,7 +93,7 @@ namespace MovieWebApi.Controllers.IMDB_Controllers
 
             var searchResultMapped = searchResult.Select(tSearch => tSearch.Spawn_DTO_WithPagination<TitleSearchResultDTO, TitleSearchResultTempTable>(HttpContext, _linkGenerator, nameof(GetTitle)));
  
-            object result = CreatePaging(nameof(SearchTitle), page, pageSize, totalCount, searchResultMapped, "searchTerm", searchTerm); 
+            object result = CreatePaging(nameof(AdvancedSearchTitle), page, pageSize, totalCount, searchResultMapped, "searchTerm", searchTerm); 
             return Ok(result);
         }
 
