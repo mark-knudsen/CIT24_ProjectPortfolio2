@@ -33,7 +33,9 @@ namespace MovieWebApi.Controllers.IMDB_Controllers
         public async Task<IActionResult> GetAllTitles(int page = 0, int pageSize = 10) // We really just want the plot and poster at all times in the title, same with some of the collections
         {
             // why not just set the defualt values if they values are invalid, no reason to throw a whole error in a ussers face?
-            if (page < 0 || pageSize < 0) return BadRequest("Page and PageSize must be 0 or greater"); //If time, add this check to other endpoints too.. 
+            //if (page < 0 || pageSize < 0) return BadRequest("Page and PageSize must be 0 or greater"); //If time, add this check to other endpoints too.. 
+            page = page < 0 ? 0 : page;
+            pageSize = pageSize <= 0 ? 10 : pageSize;
 
             //Generic use of Spawn_DTO, including URL mapped to the DTO
             var titles = (await _titleRepository.GetAllTitles(page, pageSize)).Select(title => title.Spawn_DTO_WithPagination<TitleSimpleDTO, TitleModel>(HttpContext, _linkGenerator, nameof(GetTitle)));
