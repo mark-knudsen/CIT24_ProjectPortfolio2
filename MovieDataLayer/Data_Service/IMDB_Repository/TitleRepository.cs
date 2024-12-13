@@ -58,29 +58,6 @@ namespace MovieDataLayer.DataService.IMDB_Repository
 
             return (searchResult, totalElements);
         }
-        public async Task<(IEnumerable<TitleSearchResultTempTable> SearchResult, int totalEntities)> BestMatchTitleSearch(string searchTerm, int userId, int page = 0, int pageSize = 10)
-        {
-            string[] words;   
-            words = searchTerm.Split(null);
-
-            string queryWordSyntax = "array[";
-
-            foreach (var item in words)
-            {
-                queryWordSyntax += "'item',";
-            }
-            queryWordSyntax.Remove(queryWordSyntax.Length - 1, 1);
-
-            string query = $"SELECT * FROM advanced_search({queryWordSyntax}, '{userId}')"; //Currently uses a title_search test function, needs to be changed if merging into main..
-
-            var searchResult = await _context.CallQuery<TitleSearchResultTempTable>(query, page, pageSize);
-
-            if (!searchResult.Any()) return (searchResult, 0); //this line allows for searchResult to not contain anything when returned to API/frontend.
-            int totalElements = searchResult.FirstOrDefault().TotalElements;
-
-            return (searchResult, totalElements);
-        }
-
 
         public async Task<IEnumerable<SimilarTitleSearchTempTable>> SimilarTitles(string titleID)
         {
@@ -105,7 +82,6 @@ namespace MovieDataLayer.DataService.IMDB_Repository
             }
             queryWordSyntax = queryWordSyntax.Remove(queryWordSyntax.Length - 1, 1);
             queryWordSyntax += "]";
-
 
             string query = $"SELECT * FROM advanced_search({queryWordSyntax}, {userId}, " +
                 $"{(genreId is not null ? genreId : "null")}, " +
