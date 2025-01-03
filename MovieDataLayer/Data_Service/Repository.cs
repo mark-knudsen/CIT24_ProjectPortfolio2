@@ -21,7 +21,7 @@ namespace MovieDataLayer.Data_Service
 
         }
 
-        public async Task<IList<T>> GetAllWithPaging(int page = 0, int pageSize = 10) //should not use default values when fully implemented?
+        public async Task<IList<T>> GetAllWithPaging(int page = 0, int pageSize = 10) //should not use default values when fully implemented? //did not implement functionality for user to set page size, which was the reason for the comment
         {
             const int maxPageSize = 26; //Max size of page retrieved from DB
 
