@@ -6,8 +6,9 @@
         public string Name { get; set; }
         public int? BirthYear { get; set; }
         public int? DeathYear { get; set; }
-        public ICollection<MostRelevantModel> MostRelevantTitles { get; set; } = new List<MostRelevantModel>();
-        public ICollection<PrimaryProfessionModel>? PrimaryProfessions { get; set; } = new List<PrimaryProfessionModel>(); // do we wish to return an empty list or null?
+        public ICollection<MostRelevantModel> MostRelevantTitles { get; set; } = new List<MostRelevantModel>(); 
+        public ICollection<PrimaryProfessionModel>? PrimaryProfessions { get; set; } = new List<PrimaryProfessionModel>(); // do we wish to return an empty list or null? 
+        //Not required to be declared explicitly as usage in Extension.js generates a empty list by default
 
     }
 }

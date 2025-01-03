@@ -100,7 +100,7 @@ namespace MovieWebApi.Extensions
         {
             var model = person.Adapt<PersonDetailedDTO>();
             if (model == null) return null;
-            model.MostRelevantTitles = person?.MostRelevantTitles?.Select(x => x.Title.PrimaryTitle).ToList();
+            model.MostRelevantTitles = person?.MostRelevantTitles?.Select(x => x.Title.PrimaryTitle).ToList(); //neither needs to be nullable as we perform nullchecks 
             model.PrimaryProfessions = person?.PrimaryProfessions?.Select(x => x.Profession.Name).ToList();
             model.Url = linkGenerator.GetUriByName(httpContext, routeName, new { id = person.Id });
             return model;
