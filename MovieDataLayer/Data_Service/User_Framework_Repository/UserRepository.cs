@@ -24,6 +24,7 @@ namespace MovieDataLayer.Data_Service.User_Framework_Repository
             }
         }
 
+        //Not used, UserController uses Get method from Repository.cs instead
         public async Task<UserModel> GetUser(int id)
         {
             return await _dbSet.Where(u => u.Id == id).FirstOrDefaultAsync();
