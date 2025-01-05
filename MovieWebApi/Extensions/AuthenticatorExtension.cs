@@ -22,14 +22,14 @@ namespace MovieWebApi.Extensions
                 expires: DateTime.UtcNow.AddDays(30),
                 signingCredentials: new SigningCredentials(
                     new SymmetricSecurityKey(
-                       Encoding.UTF8.GetBytes(configuration["ApplicationSettings:JWT_Secret"]!)
+                       Encoding.UTF8.GetBytes(configuration["ApplicationSettings:JWT_Secret"]!) //Should be added as a secret instead of being public on GitHub.. ! sign means that it cannot be null
                         ),
                     SecurityAlgorithms.HmacSha256Signature)
                 );
             return new JwtSecurityTokenHandler().WriteToken(jwtToken);
         }
 
-        public bool ValidateUser(string token, int userId, string email)
+        public bool ValidateUser(string token, int userId, string email) //Deprecated, as Authorize middleware handles this logic. 
         {
             var tokenHandler = new JwtSecurityTokenHandler();
             var key = tokenHandler.ReadJwtToken(token.Substring(7)); //Removes 7 letter word "Bearer " from token
@@ -44,12 +44,12 @@ namespace MovieWebApi.Extensions
             return false;
         }
 
-        public int ExtractUserID(string token) 
+        public int ExtractUserID(string token)
         {
             var tokenHandler = new JwtSecurityTokenHandler();
             var key = tokenHandler.ReadJwtToken(token.Substring(7)); //Removes 7 letter word "Bearer " from token
 
-            int userId = Int32.Parse(key.Claims.First(x => x.Type == ClaimTypes.NameIdentifier).Value);        
+            int userId = Int32.Parse(key.Claims.First(x => x.Type == ClaimTypes.NameIdentifier).Value);
             return userId;
         }
 
@@ -61,7 +61,7 @@ namespace MovieWebApi.Extensions
             userModel.Email = userModel.Email.Trim();
             userModel.Password = userModel.Password.Trim();
 
-            if(userModel.FirstName.Length < 2) return false;
+            if (userModel.FirstName.Length < 2) return false;
 
             if (!ValidPassword(userModel.Password) || !ValidEmail(userModel.Email))
             {
@@ -70,6 +70,7 @@ namespace MovieWebApi.Extensions
             return true;
         }
 
+        //HELPER METHODS BELOW:
         public bool ValidPassword(string password)
         {
             if (password == null) return false;

@@ -8,7 +8,7 @@ namespace MovieDataLayer
     {
         //Nice to have, configure context in Program.cs instead: https://learn.microsoft.com/en-us/ef/core/dbcontext-configuration/
 
-        //IMDB tables:
+        //IMDB tables: //IMDB tables & UserFramework tables should have been removed, as its abstracted away in Repository (DBset<T>). Children of Repository inherits Dbset<T> according to the childs type. Fx. TitleModel.
         public DbSet<PersonModel> Persons { get; set; }
         public DbSet<TitleModel> Titles { get; set; }
         public DbSet<MostRelevantModel> MostRelevants { get; set; }

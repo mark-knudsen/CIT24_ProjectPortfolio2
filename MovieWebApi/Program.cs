@@ -32,18 +32,18 @@ builder.Services.AddControllers();
 
 builder.Services.AddDbContext<IMDBContext>();
 
-builder.Services.AddScoped(typeof(IRepository<>), typeof(Repository<>)); //Dependency Injection for Repository base class.
+builder.Services.AddScoped(typeof(IRepository<>), typeof(Repository<>)); //Deprecated, not used anymore.. Dependency Injection for Repository base class. Can be removed, if GenreRepository is added
 builder.Services.AddScoped<TitleRepository>(); //Dependency InjectionS for related class, concrete.
 builder.Services.AddScoped<PersonRepository>();
 
-builder.Services.AddScoped<UserRepository>(); 
+builder.Services.AddScoped<UserRepository>();
 builder.Services.AddScoped<UserRatingRepository>();
 builder.Services.AddScoped<UserTitleBookmarkRepository>();
 builder.Services.AddScoped<UserPersonBookmarkRepository>();
 builder.Services.AddScoped<UserSearchHistoryRepository>();
 builder.Services.AddSingleton<AuthenticatorExtension>();
 
-//Adds JWT Authentication configuration:
+//Adds JWT Authentication configuration:, source: https://medium.com/@sajadshafi/jwt-authentication-in-c-net-core-7-web-api-b825b3aee11d
 builder.Services.AddAuthentication(cfg =>
 {
     cfg.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;

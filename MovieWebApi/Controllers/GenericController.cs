@@ -28,7 +28,7 @@ namespace MovieWebApi.Controllers
             var queryParams = new Dictionary<string, object> { }; //Key is string, and each key has a value of type object. Eg. key is pageSize and value is the int value, eg. 10
 
 
-            if (!string.IsNullOrEmpty(parameterName) && value != null)
+            if (!string.IsNullOrEmpty(parameterName) && value != null) //if paraterName and value IS NOT NULL
             {
                 queryParams.Add(parameterName, value); //Append the parameter to url. Otherwise queryParams just has page and pageSize
             }
@@ -41,7 +41,7 @@ namespace MovieWebApi.Controllers
             return GetUrl(pathName, queryParams); //if id is not null, it will be added to the URL. E.g. if we want to have navigation url to a path with id
         }
 
-        protected object CreatePaging<T>(string pathName, int pageNumber, int pageSize, int total, IEnumerable<T>? entities, string? parameterName = null, IComparable? value = null) //parameterName is what we want parameter to be named in URL, so e.g. "id" or "searchTerm".                                                                                                                                                                            
+        protected object CreatePaging<T>(string pathName, int pageNumber, int pageSize, int total, IEnumerable<T>? entities, string? parameterName = null, IComparable? value = null) //parameterName is what we want parameter to be named in pagenation URL, so e.g. "id" or "searchTerm". Value = search parameter value                                                                                                                                                                    
         {
             const int maxPageSize = 10;
 
