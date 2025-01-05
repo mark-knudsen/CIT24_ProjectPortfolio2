@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
-using MovieDataLayer.Data_Service.User_Framework_Repository;
-using MovieDataLayer.Interfaces;
+using MovieDataLayer.Data_Service.IMDB_Repository;
 using MovieDataLayer.Models.IMDB_Models;
 using MovieWebApi.Extensions;
 
@@ -14,8 +13,8 @@ namespace MovieWebApi.Controllers.IMDB_Controllers
     {
         public record ReadGenreModel(string Name);
 
-        private readonly IRepository<GenreModel> _dataService;
-        public GenreController(IRepository<GenreModel> dataService, LinkGenerator linkGenerator, AuthenticatorExtension authenticatorHelper) : base(linkGenerator, authenticatorHelper)
+        private readonly GenreRepository _dataService;
+        public GenreController(GenreRepository dataService, LinkGenerator linkGenerator, AuthenticatorExtension authenticatorHelper) : base(linkGenerator, authenticatorHelper)
         {
             _dataService = dataService;
         }

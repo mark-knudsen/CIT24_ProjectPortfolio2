@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using MovieDataLayer.DataService.IMDB_Repository;
-using MovieDataLayer.Data_Service.User_Framework_Repository;
+using MovieDataLayer.Data_Service.IMDB_Repository;
 using MovieDataLayer.Models.IMDB_Models;
 using MovieWebApi.DTO.IMDB_DTO;
 using MovieWebApi.Extensions;

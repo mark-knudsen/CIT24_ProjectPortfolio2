@@ -1,12 +1,10 @@
-using MovieDataLayer.Interfaces;
 using MovieDataLayer;
-using MovieDataLayer.DataService.IMDB_Repository;
 using MovieDataLayer.Data_Service.User_Framework_Repository;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using MovieWebApi.Extensions;
-using MovieDataLayer.Data_Service;
+using MovieDataLayer.Data_Service.IMDB_Repository;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -32,9 +30,9 @@ builder.Services.AddControllers();
 
 builder.Services.AddDbContext<IMDBContext>();
 
-builder.Services.AddScoped(typeof(IRepository<>), typeof(Repository<>)); //Dependency Injection for Repository base class.
 builder.Services.AddScoped<TitleRepository>(); //Dependency InjectionS for related class, concrete.
 builder.Services.AddScoped<PersonRepository>();
+builder.Services.AddScoped<GenreRepository>();
 
 builder.Services.AddScoped<UserRepository>(); 
 builder.Services.AddScoped<UserRatingRepository>();

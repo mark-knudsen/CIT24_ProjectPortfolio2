@@ -1,8 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using MovieDataLayer.DataService.IMDB_Repository;
+using MovieDataLayer.Data_Service.IMDB_Repository;
 using MovieDataLayer.Models.IMDB_Models;
 using MovieWebApi.Extensions;
-using MovieDataLayer.Data_Service.User_Framework_Repository;
 using MovieWebApi.SearchDTO;
 using MovieWebApi.DTO.IMDB_DTO;
 using Microsoft.AspNetCore.Cors;

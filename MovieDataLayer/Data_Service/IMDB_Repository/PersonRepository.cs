@@ -1,9 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using MovieDataLayer.Data_Service;
 using MovieDataLayer.Models.IMDB_Models;
 using MovieDataLayer.Models.IMDB_Models.IMDB_Temp_Tables;
 
-namespace MovieDataLayer.DataService.IMDB_Repository
+namespace MovieDataLayer.Data_Service.IMDB_Repository
 {
     public class PersonRepository : Repository<PersonModel>
     {

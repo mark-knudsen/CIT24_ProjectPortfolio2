@@ -4,7 +4,6 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using MovieDataLayer;
 using MovieDataLayer.Data_Service.User_Framework_Repository;
-using MovieDataLayer.DataService.IMDB_Repository;
 using MovieWebApi.DTO.User_DTO;
 using MovieWebApi.Extensions;
 
