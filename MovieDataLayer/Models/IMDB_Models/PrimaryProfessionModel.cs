@@ -4,7 +4,7 @@
     {
         public int ProfessionId { get; set; }
         public string PersonId { get; set; }
-        public PersonModel Person { get; set; } = null!; //required ref. navigation
+        public PersonModel Person { get; set; }
         public ProfessionModel Profession { get; set; }
     }
 }

@@ -10,8 +10,7 @@ namespace MovieDataLayer.Models.IMDB_Models
         public string CharacterName { get; set; }
         public string Category { get; set; }
         public string Job { get; set; }
-        [JsonIgnore]
-        public TitleModel Title { get; set; } = null!; //required ref. navigation
-        public PersonModel Person { get; set; } = null!; //required ref. navigation
+        public TitleModel Title { get; set; }
+        public PersonModel Person { get; set; }
     }
 }

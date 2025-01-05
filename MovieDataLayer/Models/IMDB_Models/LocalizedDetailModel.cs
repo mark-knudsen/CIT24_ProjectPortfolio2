@@ -9,8 +9,8 @@
         public string Region { get; set; }
         public string Type { get; set; }
         public string Attribute { get; set; }
-        public TitleModel Title { get; set; } = null!; //required ref. navigation
-        public string TitleId { get; set; } //FK
+        public TitleModel Title { get; set; }
+        public string TitleId { get; set; }
         public LocalizedTitleModel LocalizedTitle { get; set; } = null!;
     }
 }
