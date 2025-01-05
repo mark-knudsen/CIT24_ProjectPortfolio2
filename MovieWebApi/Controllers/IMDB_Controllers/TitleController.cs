@@ -70,7 +70,7 @@ namespace MovieWebApi.Controllers.IMDB_Controllers
             int userId = 0;
             if (authorization != null) userId = _authenticatorExtension.ExtractUserID(authorization);
             // var (searchResult, totalCount) = await _titleRepository.TitleSearch(searchTerm.Trim(), userId, page, pageSize); //TitleSearch returns tuple, namely the searchresult and the total number of entities from the search result
-            var (searchResult, totalCount) = await _titleRepository.AdvancedTitleSearch(searchTerm?.Trim(), userId, null, null, null, page, pageSize); //TitleSearch returns tuple, namely the searchresult and the total number of entities from the search result
+            var (searchResult, totalCount) = await _titleRepository.AdvancedTitleSearch(searchTerm?.Trim(), userId, null, null, null, null, page, pageSize); //TitleSearch returns tuple, namely the searchresult and the total number of entities from the search result
                                                                                                                                                        //The above has bug, AdvancedTitleSearch, from titlerepo, missing null parameter. Thus searching for batman, searches for rating of 0... as rating parameter is by accident using value of page which defaults to 0   
             if (!searchResult.Any()) return NotFound();
 
