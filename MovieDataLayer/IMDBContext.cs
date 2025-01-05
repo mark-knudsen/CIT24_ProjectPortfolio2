@@ -6,38 +6,6 @@ namespace MovieDataLayer
 {
     public class IMDBContext : DbContext
     {
-        //Nice to have, configure context in Program.cs instead: https://learn.microsoft.com/en-us/ef/core/dbcontext-configuration/
-
-        //IMDB tables:
-        public DbSet<PersonModel> Persons { get; set; }
-        public DbSet<TitleModel> Titles { get; set; }
-        public DbSet<MostRelevantModel> MostRelevants { get; set; }
-        public DbSet<ProfessionModel> Professions { get; set; }
-        public DbSet<LocalizedTitleModel> LocalizedTitles { get; set; }
-        public DbSet<PrincipalCastModel> PrincipalCasts { get; set; }
-        public DbSet<GenreModel> Genres { get; set; }
-        public DbSet<LocalizedDetailModel> LocalizedDetails { get; set; }
-        public DbSet<PrimaryProfessionModel> PrimaryProfessions { get; set; }
-        public DbSet<DirectorModel> Directors { get; set; }
-        public DbSet<EpisodeFromSeriesModel> EpisodeFromSeries { get; set; }
-        public DbSet<PlotModel> Plots { get; set; }
-        public DbSet<TitleGenreModel> TitleGenres { get; set; }
-        public DbSet<PosterModel> Posters { get; set; }
-        public DbSet<RatingModel> Ratings { get; set; }
-        public DbSet<WriterModel> Writers { get; set; }
-        public DbSet<TitleSearchResultTempTable> TitleSearchResult { get; set; }
-        public DbSet<SimilarTitleSearchTempTable> SimilarTitleSearch { get; set; }
-        public DbSet<PersonSearchResultTempTable> PersonSearchResult { get; set; }
-
-
-        //UserFramework tables:
-        public DbSet<UserModel> Users { get; set; }
-        public DbSet<UserPersonBookmarkModel> UserPersonBookmarks { get; set; }
-        public DbSet<UserTitleBookmarkModel> UserTitleBookmarks { get; set; }
-        public DbSet<UserRatingModel> UserRatings { get; set; }
-        public DbSet<UserSearchHistoryModel> UserSearchHistory { get; set; }
-
-
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             optionsBuilder.EnableSensitiveDataLogging();
