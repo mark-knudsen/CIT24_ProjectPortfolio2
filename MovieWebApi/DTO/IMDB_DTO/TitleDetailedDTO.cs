@@ -14,9 +14,9 @@ public class TitleDetailedDTO
     public string Plot { get; set; }
     public float? AverageRating { get; set; }
     public int? VoteCount { get; set; }
-    public IList<string> GenresList { get; set; } 
+    public IList<string> GenresList { get; set; } //Could be string[], as "list" is fixed sized 
     public IList<string> LocalizedTitlesList { get; set; }
-   // public IList<string> PrincipalCastList { get; set; } // these two needs the id as well
+    // public IList<string> PrincipalCastList { get; set; } // these two needs the id as well
     public List<PrincipalCastDTO> PrincipalCastList { get; set; }
 
     public List<WritersListDTO> WritersList { get; set; } // and me

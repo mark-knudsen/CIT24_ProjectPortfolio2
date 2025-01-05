@@ -4,7 +4,7 @@
     {
         public string TitleId { get; set; }
         public string PersonId { get; set; }
-        public TitleModel Title { get; set; } = null!; //required ref. navigation
+        public TitleModel Title { get; set; } = null!; //required ref. navigation // = null! is unnecesary
         public PersonModel Person { get; set; } = null!; //required ref. navigation
 
     }

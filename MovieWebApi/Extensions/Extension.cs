@@ -14,16 +14,17 @@ namespace MovieWebApi.Extensions
 {
     public static class Extension
     {
-        public static TModel? Spawn_DTO_WithPagination<TModel, TEntity>(this TEntity entity, HttpContext httpContext, LinkGenerator linkGenerator, string routeName) where TEntity : class where TModel : class
+        // The method, Spawn_DTO_WithPagination, mostly serves to confuse without providing benefits. 
+        public static TModel? Spawn_DTO_WithPagination<TModel, TEntity>(this TEntity entity, HttpContext httpContext, LinkGenerator linkGenerator, string routeName) where TEntity : class where TModel : class //can't be object, as everything derives from object. TModel should be named DTO
         {
             if (entity == null) return null;
 
             var model = entity.Adapt<TModel>();
 
-            switch (model) //Casting to TModel object, idk maybe we can improve?
+            switch (model) //Casting to TModel object, idk maybe we can improve? -- Defo
             {
                 case TitleDetailedDTO titleDetailedDTO when entity is TitleModel title && typeof(TModel) == typeof(TitleDetailedDTO):
-                    model = (TModel)(object)MapTitleToTitleDetailedDTO(title, httpContext, linkGenerator, routeName);
+                    model = (TModel)(object)MapTitleToTitleDetailedDTO(title, httpContext, linkGenerator, routeName); //cast to object, as method returns object. Could instead just us "as TModel", instead of casting to TModel and object
                     break;
                 case TitleSimpleDTO titleSimpleDTO when entity is TitleModel title && typeof(TModel) == typeof(TitleSimpleDTO):
                     model = (TModel)(object)MapTitleToTitleSimpleDTO(title, httpContext, linkGenerator, routeName);
@@ -44,7 +45,7 @@ namespace MovieWebApi.Extensions
                 case PersonSearchResultDTO personSearchResultDTO when entity is PersonSearchResultTempTable personSearchResultTempTable && typeof(TModel) == typeof(PersonSearchResultDTO):
                     model = (TModel)(object)MapPersonSearchResultModelToPersonSearchResultDTO(personSearchResultTempTable, httpContext, linkGenerator, routeName);
                     break;
-                     case UserRatingDTO userRatingDTO when entity is UserRatingModel userRatingModel && typeof(TModel) == typeof(UserRatingDTO):
+                case UserRatingDTO userRatingDTO when entity is UserRatingModel userRatingModel && typeof(TModel) == typeof(UserRatingDTO):
                     model = (TModel)(object)MapUserRatingModelToUserRatingDTO(userRatingModel, httpContext, linkGenerator, routeName);
                     break;
             }
@@ -76,8 +77,8 @@ namespace MovieWebApi.Extensions
             model.PosterUrl = title?.Poster?.PosterUrl;
             model.Plot = title.Plot?.PlotOfTitle;
             model.VoteCount = title.Rating?.VoteCount;
-            model.PrincipalCastList = title?.PrincipalCastList?.Select(x => new PrincipalCastDTO{PersonId = x.Person.Id, PersonName = x.Person.Name}).Distinct().ToList();
-            model.WritersList = title?.WritersList?.Select(x => new WritersListDTO {PersonId = x.PersonId, PersonName = x.Person.Name }).Distinct().ToList();
+            model.PrincipalCastList = title?.PrincipalCastList?.Select(x => new PrincipalCastDTO { PersonId = x.Person.Id, PersonName = x.Person.Name }).Distinct().ToList();
+            model.WritersList = title?.WritersList?.Select(x => new WritersListDTO { PersonId = x.PersonId, PersonName = x.Person.Name }).Distinct().ToList();
             model.DirectorsList = title?.DirectorsList.Select(x => new DirectorsListDTO { PersonId = x.PersonId, PersonName = x.Person.Name }).Distinct().ToList();
             model.AverageRating = title.Rating?.AverageRating;
             model.Url = linkGenerator.GetUriByName(httpContext, routeName, new { id = title.Id });

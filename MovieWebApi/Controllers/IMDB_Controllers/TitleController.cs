@@ -69,9 +69,10 @@ namespace MovieWebApi.Controllers.IMDB_Controllers
         {
             int userId = 0;
             if (authorization != null) userId = _authenticatorExtension.ExtractUserID(authorization);
-           // var (searchResult, totalCount) = await _titleRepository.TitleSearch(searchTerm.Trim(), userId, page, pageSize); //TitleSearch returns tuple, namely the searchresult and the total number of entities from the search result
+            // var (searchResult, totalCount) = await _titleRepository.TitleSearch(searchTerm.Trim(), userId, page, pageSize); //TitleSearch returns tuple, namely the searchresult and the total number of entities from the search result
             var (searchResult, totalCount) = await _titleRepository.AdvancedTitleSearch(searchTerm?.Trim(), userId, null, null, null, page, pageSize); //TitleSearch returns tuple, namely the searchresult and the total number of entities from the search result
-            if(!searchResult.Any()) return NotFound();
+                                                                                                                                                       //The above has bug, AdvancedTitleSearch, from titlerepo, missing null parameter. Thus searching for batman, searches for rating of 0... as rating parameter is by accident using value of page which defaults to 0   
+            if (!searchResult.Any()) return NotFound();
 
             var searchResultMapped = searchResult.Select(tSearch => tSearch.Spawn_DTO_WithPagination<TitleSearchResultDTO, TitleSearchResultTempTable>(HttpContext, _linkGenerator, nameof(GetTitle)));
             // searchResult = CreateNavigationForSearchList(searchResult);
@@ -81,7 +82,7 @@ namespace MovieWebApi.Controllers.IMDB_Controllers
             object result = CreatePaging(nameof(SearchTitle), page, pageSize, totalCount, searchResultMapped, "searchTerm", searchTerm); //5th parameter, is the query parameter name(in string format)
             return Ok(result);
         }
-        
+
         [HttpGet("advanced-search/", Name = nameof(AdvancedSearchTitle))]
         public async Task<IActionResult> AdvancedSearchTitle([FromHeader] string? authorization, [FromQuery] string? searchTerm, [FromQuery] int? genreId, [FromQuery] int? startYear, [FromQuery] int? endYear, [FromQuery] int? rating, int page = 0, int pageSize = 10)
         {
@@ -89,11 +90,11 @@ namespace MovieWebApi.Controllers.IMDB_Controllers
             if (authorization != null) userId = _authenticatorExtension.ExtractUserID(authorization);
             //var (searchResult, totalCount) = await _titleRepository.AdvancedTitleSearch(searchTerm?.Trim(), userId, genreId, startYear, endYear, rating, page, pageSize); //TitleSearch returns tuple, namely the searchresult and the total number of entities from the search result
             var (searchResult, totalCount) = await _titleRepository.AdvancedTitleSearch(searchTerm?.Trim(), userId, genreId, startYear, endYear, rating, page, pageSize); //TitleSearch returns tuple, namely the searchresult and the total number of entities from the search result
-            if(!searchResult.Any()) return NotFound();
+            if (!searchResult.Any()) return NotFound();
 
             var searchResultMapped = searchResult.Select(tSearch => tSearch.Spawn_DTO_WithPagination<TitleSearchResultDTO, TitleSearchResultTempTable>(HttpContext, _linkGenerator, nameof(GetTitle)));
- 
-            object result = CreatePaging(nameof(AdvancedSearchTitle), page, pageSize, totalCount, searchResultMapped, "searchTerm", searchTerm); 
+
+            object result = CreatePaging(nameof(AdvancedSearchTitle), page, pageSize, totalCount, searchResultMapped, "searchTerm", searchTerm);
             return Ok(result);
         }
 
