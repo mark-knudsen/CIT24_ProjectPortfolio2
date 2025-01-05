@@ -15,7 +15,7 @@ namespace MovieWebApi.Controllers.User_Controllers
     public class UserSearchHistoryController : GenericController
     {
         readonly UserSearchHistoryRepository _repository;
-        public UserSearchHistoryController(UserSearchHistoryRepository userSearchHistoryRepository, UserRepository userRepository, LinkGenerator linkGenerator, AuthenticatorExtension authenticatorExtension) : base(linkGenerator, userRepository, authenticatorExtension)
+        public UserSearchHistoryController(UserSearchHistoryRepository userSearchHistoryRepository, LinkGenerator linkGenerator, AuthenticatorExtension authenticatorExtension) : base(linkGenerator, authenticatorExtension)
         {
             _repository = userSearchHistoryRepository;
         }

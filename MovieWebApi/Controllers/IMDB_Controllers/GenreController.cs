@@ -15,7 +15,7 @@ namespace MovieWebApi.Controllers.IMDB_Controllers
         public record ReadGenreModel(string Name);
 
         private readonly IRepository<GenreModel> _dataService;
-        public GenreController(IRepository<GenreModel> dataService, LinkGenerator linkGenerator, UserRepository userRepository, AuthenticatorExtension authenticatorHelper) : base(linkGenerator, userRepository, authenticatorHelper)
+        public GenreController(IRepository<GenreModel> dataService, LinkGenerator linkGenerator, AuthenticatorExtension authenticatorHelper) : base(linkGenerator, authenticatorHelper)
         {
             _dataService = dataService;
         }

@@ -20,7 +20,7 @@ namespace MovieWebApi.Controllers.User_Controllers
         public record UpdateUserTitleBookmark(string annotation);
 
         private readonly UserTitleBookmarkRepository _userTitleBookmarkRepository;
-        public UserTitleBookmarkController(UserTitleBookmarkRepository userTitleBookmarkRepository, LinkGenerator linkGenerator, UserRepository userRepository, AuthenticatorExtension authenticatorHelper) : base(linkGenerator, userRepository, authenticatorHelper)
+        public UserTitleBookmarkController(UserTitleBookmarkRepository userTitleBookmarkRepository, LinkGenerator linkGenerator, AuthenticatorExtension authenticatorHelper) : base(linkGenerator, authenticatorHelper)
         {
             _userTitleBookmarkRepository = userTitleBookmarkRepository;
         }

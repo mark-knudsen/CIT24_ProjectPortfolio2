@@ -22,7 +22,7 @@ namespace MovieWebApi.Controllers.User_Controllers
 
         readonly UserRatingRepository _userRatingRepository;
 
-        public UserRatingController(UserRatingRepository userRatingRepository, UserRepository userRepository, AuthenticatorExtension authenticatorExtension, LinkGenerator linkGenerator) : base(linkGenerator, userRepository, authenticatorExtension)
+        public UserRatingController(UserRatingRepository userRatingRepository, AuthenticatorExtension authenticatorExtension, LinkGenerator linkGenerator) : base(linkGenerator, authenticatorExtension)
         {
             _userRatingRepository = userRatingRepository;
         }

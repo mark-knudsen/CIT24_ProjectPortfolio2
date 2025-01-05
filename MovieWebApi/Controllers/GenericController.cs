@@ -8,13 +8,11 @@ namespace MovieWebApi.Controllers
     {
         //Instance fields, used for dependency injection
         protected readonly LinkGenerator _linkGenerator;
-        protected readonly UserRepository _userRepository;
         protected readonly AuthenticatorExtension _authenticatorExtension;
 
-        public GenericController(LinkGenerator linkgenerator, UserRepository userRepository, AuthenticatorExtension authenticatorHelper)
+        public GenericController(LinkGenerator linkgenerator, AuthenticatorExtension authenticatorHelper)
         {
             _linkGenerator = linkgenerator; //here happens Dependency injection
-            _userRepository = userRepository;
             _authenticatorExtension = authenticatorHelper;
         }
 

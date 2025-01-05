@@ -17,7 +17,7 @@ namespace MovieWebApi.Controllers.IMDB_Controllers
     public class PersonController : GenericController
     {
         private readonly PersonRepository _personRepository;
-        public PersonController(PersonRepository personRepository, LinkGenerator linkGenerator, UserRepository userRepository, AuthenticatorExtension authenticatorHelper) : base(linkGenerator, userRepository, authenticatorHelper)
+        public PersonController(PersonRepository personRepository, LinkGenerator linkGenerator, AuthenticatorExtension authenticatorHelper) : base(linkGenerator, authenticatorHelper)
         {
             _personRepository = personRepository;
         }

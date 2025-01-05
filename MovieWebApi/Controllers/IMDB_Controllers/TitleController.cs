@@ -15,7 +15,7 @@ namespace MovieWebApi.Controllers.IMDB_Controllers
     public class TitleController : GenericController
     {
         private readonly TitleRepository _titleRepository;
-        public TitleController(TitleRepository titleRepository, LinkGenerator linkGenerator, UserRepository userRepository, AuthenticatorExtension authenticatorHelper) : base(linkGenerator, userRepository, authenticatorHelper)
+        public TitleController(TitleRepository titleRepository, LinkGenerator linkGenerator, AuthenticatorExtension authenticatorHelper) : base(linkGenerator, authenticatorHelper)
         {
             _titleRepository = titleRepository;
         }
