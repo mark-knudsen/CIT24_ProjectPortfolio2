@@ -68,10 +68,11 @@ namespace MovieDataLayer.Data_Service.IMDB_Repository
             string query = $"SELECT * FROM find_similar_movies('{titleID}')"; // fixed the distinct in sql function
             return await _context.CallQuery<SimilarTitleSearchTempTable>(query, page, 10);
         }
-        public async  Task<(IEnumerable<TitleSearchResultTempTable> SearchResult, int totalEntities)> AdvancedTitleSearch(string searchTerm, int userId, int? genreId, int? startYear, int? endYear, int? rating, int page = 0, int pageSize = 10)
+        public async Task<(IEnumerable<TitleSearchResultTempTable> SearchResult, int totalEntities)> AdvancedTitleSearch(string searchTerm, int userId, int? genreId, int? startYear, int? endYear, int? rating, int page = 0, int pageSize = 10)
         {
             string[] words;
-            if(searchTerm == null) searchTerm = "";
+            if (searchTerm == null) searchTerm = "";
+            searchTerm = searchTerm.ToLower(); //needed as word_index in DB is always lowercase, user must be able to search with both upper and lowercase for titles 
             words = searchTerm.Split(null);
 
             string queryWordSyntax = "array[";
@@ -87,10 +88,10 @@ namespace MovieDataLayer.Data_Service.IMDB_Repository
                 $"{(genreId is not null ? genreId : "null")}, " +
                 $"{(startYear is not null ? startYear : "0")}, " +
                 $"{(endYear is not null ? endYear : "3000")}, " +
-                $"{(rating is not null ? rating: "null")})"; 
-          
+                $"{(rating is not null ? rating : "null")})";
+
             var searchResult = await _context.CallQuery<TitleSearchResultTempTable>(query, page, pageSize);
-            
+
             if (!searchResult.Any()) return (searchResult, 0); //this line allows for searchResult to not contain anything when returned to API/frontend.
             int totalElements = searchResult.FirstOrDefault().TotalElements;
 
