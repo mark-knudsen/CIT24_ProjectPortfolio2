@@ -6,7 +6,7 @@ public class TitleDetailedDTO
     public string TitleType { get; set; }
     public string PrimaryTitle { get; set; }
     public string OriginalTitle { get; set; }
-    public int StartYear { get; set; }
+    public int? StartYear { get; set; }
     public int? EndYear { get; set; }
     public int Runtime { get; set; }
     public bool IsAdult { get; set; }
