@@ -68,7 +68,7 @@ namespace MovieWebApi.Extensions
         {
             if (email == null) return false;
 
-            Regex r = new Regex(@"^.+@.*\.[a-z]{2,}$"); // did make this, don't know if it is fully encapsulating enough
+            Regex r = new Regex(@"^.+@.+\.[a-z]{2,}$"); // did make this, don't know if it is fully encapsulating enough
 
             return r.Match(email).Success;
         }
